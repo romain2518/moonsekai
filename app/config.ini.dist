@@ -1,0 +1,8 @@
+; This file is a template pushed on the remote.
+; To connect to database, copy this file and rename it config.ini.
+; Then you will have to enter your database logins in app/config.ini
+
+DB_HOST=
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
