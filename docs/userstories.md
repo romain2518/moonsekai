@@ -1,34 +1,43 @@
 # User stories
 
+Hiérarchie des roles : admin > modérateur > membre > visiteur
+
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
 | visiteur | pouvoir visualiser la page d'accueil | - |
-| visiteur | pouvoir rechercher par oeuvre (filtre a definir)| - | 
-| visiteur | pouvoir rechercher par membre (filtre a definir)| - | 
-| visiteur | pouvoir rechercher par platforme (filtre a definir)| - | 
+| visiteur | pouvoir rechercher par oeuvre (filtres a definir) | - |
+| visiteur | pouvoir rechercher par membre (filtres a definir) | - |
+| visiteur | pouvoir rechercher par platforme (filtres a definir) | - |
 
 ## Espace membres
 
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
 | visiteur | pouvoir créer un compte | - |
+| visiteur | pouvoir confirmer mon email | confirmer la création de mon compte |
 | visiteur | me connecter | - |
-| visiteur | modifier mes identifiants | - |
-| visiteur | acceder a mon profil | - |
-| visiteur | modifier mon profil (pdp / banniere / bio / Info extra ) | - |
-| admin | bannir des membres | - | 
-| admin | débannir des membres | - | 
-| admin | accéder à la liste des bans | - | 
-| admin | modifier le rang des membres | - | 
+| visiteur | accéder à un profil | - |
+| membre | enregistrer mes identifiants sur mon navigateur pendant une durée donnée (Option "Se souvenir de moi") | - |
+| membre | modifier mes identifiants | - |
+| membre | réinitialiser mon email | - |
+| membre | réinitialiser mon mot de passe | - |
+| membre | modifier mon profil (pdp / banniere / bio mis en forme / Info extra) | - |
+| membre | m'abonner aux newsletters | - |
+| membre | me désabonner aux newsletters | - |
+| modérateur | réinitialiser tout ou partie des profils des membres | éviter les comportements déplacés |
+| admin | bannir des membres | - |
+| admin | débannir des membres | - |
+| admin | accéder à la liste des bans | - |
+| admin | modifier le rang des membres | - |
 
 ## Platforme
 
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
 | visiteur | visualiser page des plaformes | - |
-| admin | ajouter les pages des plaformes | - |
-| admin | modifier les pages des plaformes | - |
-| admin | supprimer les pages des plaformes | - |
+| modérateur | ajouter les pages des plaformes | - |
+| modérateur | modifier les pages des plaformes | - |
+| modérateur | supprimer les pages des plaformes | - |
 
 ## Calendrier
 
@@ -36,56 +45,69 @@
 |--|--|--|
 | visiteur | visualiser calendrier général | - |
 | membre | visualiser calendrier perso | - |
-| admin | ajouter case du calendrier | - |
-| admin | modifier case du calendrier | - |
-| admin | supprimer case du calendrier | - |
+| modérateur | ajouter case du calendrier | - |
+| modérateur | modifier case du calendrier | - |
+| modérateur | supprimer case du calendrier | - |
 
 ## Oeuvre
 
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
 | visiteur | visualiser page de l'oeuvre (anime / manga / actu / note moyenne / date prochaine sortie / Liste ep/chap | - |
-| membre | ajouter note | - |
-| membre | follow oeuvre| but d'etre notifier des actu en rapport a l'oeuvre |
-| membre | unfollow oeuvre | but de ne plus être notifier des actu en rapport a l'oeuvre |
-| membre | noter a quel chapitre je me suis arreter | - |
-| membre | noter a quel episode je me suis arreter | - |
+| membre | follow oeuvre | d'etre notifier des actu en rapport a l'oeuvre |
+| membre | unfollow oeuvre | de ne plus être notifier des actu en rapport a l'oeuvre |
+| membre | noter a quel chapitre je me suis arreté | - |
+| membre | noter a quel episode je me suis arreté | - |
 | membre | noter un manga | - |
 | membre | noter un anime | - |
-| admin | ajouter une oeuvre | - |
-| admin | modifier une oeuvre | - |
-| admin | supprimer une oeuvre | - |
-| admin | ajouter un anime | - |
-| admin | modifier un anime | - |
-| admin | supprimer un anime | - |
-| admin | ajouter un manga | - |
-| admin | modifier un manga | - |
-| admin | supprimer un manga | - |
-| admin | ajouter une saison à un anime | - |
-| admin | modifier une saison à un anime | - |
-| admin | supprimer une saison à un anime | - |
-| admin | ajouter un épisode | - |
-| admin | modifier un épisode | - |
-| admin | supprimer un épisode | - |
-| admin | ajouter un chapitre | - |
-| admin | modifier un chapitre | - |
-| admin | supprimer un chapitre | - |
-| admin | ajouter un poste d'actualité | - |
-| admin | modifier un poste d'actualité | - |
-| admin | supprimer un poste d'actualité | - |
-
+| modérateur | ajouter une oeuvre | - |
+| modérateur | modifier une oeuvre | - |
+| modérateur | supprimer une oeuvre | - |
+| modérateur | ajouter un anime | - |
+| modérateur | modifier un anime | - |
+| modérateur | supprimer un anime | - |
+| modérateur | ajouter un manga | - |
+| modérateur | modifier un manga | - |
+| modérateur | supprimer un manga | - |
+| modérateur | ajouter une saison à un anime | - |
+| modérateur | modifier une saison à un anime | - |
+| modérateur | supprimer une saison à un anime | - |
+| modérateur | ajouter un épisode | - |
+| modérateur | modifier un épisode | - |
+| modérateur | supprimer un épisode | - |
+| modérateur | ajouter un volume | - |
+| modérateur | modifier un volume | - |
+| modérateur | supprimer un volume | - |
+| modérateur | ajouter un chapitre | - |
+| modérateur | modifier un chapitre | - |
+| modérateur | supprimer un chapitre | - |
+| modérateur | ajouter un poste d'actualité | - |
+| modérateur | modifier un poste d'actualité | - |
+| modérateur | supprimer un poste d'actualité | - |
+| modérateur | ajouter un film | - |
+| modérateur | modifier un film | - |
+| modérateur | supprimer un film | - |
 
 ## Commentaire
 
-membre / anime / manga 
+membre / anime / manga
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
-| membre | poster un commentaire | - |
+| membre | poster un commentaire mis en forme | - |
 | membre | modifier un commentaire | - |
 | membre | supprimer mon commentaire | - |
 | membre | répondre à un commentaire | - |
-| membre | mettre en forme mon commentaire ( gras / italique / spoiler ) | - |
-| admin | supprimer un commentaire | - |
+| modérateur | supprimer un commentaire | - |
+
+## Message
+
+| En tant que | Je veux | Afin de (si besoin/nécessaire) |
+|--|--|--|
+| membre | accéder à la conversation avec un membre | - |
+| membre | marquer un message comme non lu | - |
+| membre | envoyer un message à un autre membre | - |
+| membre | modifier un message | - |
+| membre | supprimer mon message | - |
 
 ## Notification
 
@@ -96,6 +118,18 @@ membre / anime / manga
 | membre | marquer comme non lu une notification | - |
 | membre | activer les notifications | - |
 | membre | desactiver les notifications | - |
-| membre | activer / desactiver redirection des notifications | - |
-| admin | ajouter des notifications | - |
-| admin | supprimer des notifications | - |
+| membre | activer / desactiver redirection des notifications | d'être notifier ou non en dehors du site |
+| membre | personnaliser mes notifications | - |
+
+## Contacte avec les administrateurs
+
+| En tant que | Je veux | Afin de (si besoin/nécessaire) |
+|--|--|--|
+| visiteur | contacter les administrateurs du site | - |
+| membre | avertir les administrateurs du mauvais comportement d'un utilisateur | - |
+| membre | avertir les administrateurs d'une erreur minime relatif à une page (syntaxe, orthographe, contexte etc.) | - |
+| membre | avertir les administrateurs d'un bug | - |
+| admin | lire les message de prise de contact | - |
+| admin | lire les rapports envoyés par les membres | - |
+| admin | marqué comme traité un rapport | - |
+| admin | marqué comme non traité un rapport | - |
