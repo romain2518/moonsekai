@@ -5,11 +5,11 @@ Hiérarchie des roles : admin > modérateur > membre > visiteur
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
 | visiteur | pouvoir visualiser la page d'accueil | - |
-| visiteur | pouvoir rechercher par oeuvre (filtres a definir) | - |
-| visiteur | pouvoir rechercher par membre (filtres a definir) | - |
-| visiteur | pouvoir rechercher par platforme (filtres a definir) | - |
+| visiteur | pouvoir rechercher par oeuvre (filtres à définir) | - |
+| visiteur | pouvoir rechercher par membre (filtres à définir) | - |
+| visiteur | pouvoir rechercher par platforme (filtres à définir) | - |
 
-## Espace membres
+## Espace membre
 
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
@@ -24,7 +24,9 @@ Hiérarchie des roles : admin > modérateur > membre > visiteur
 | membre | modifier mon profil (pdp / banniere / bio mis en forme / Info extra) | - |
 | membre | m'abonner aux newsletters | - |
 | membre | me désabonner aux newsletters | - |
+| membre | supprimer mon compte | - |
 | modérateur | réinitialiser tout ou partie des profils des membres | éviter les comportements déplacés |
+| admin | envoyer des newsletters | - |
 | admin | bannir des membres | - |
 | admin | débannir des membres | - |
 | admin | accéder à la liste des bans | - |
@@ -56,6 +58,8 @@ Hiérarchie des roles : admin > modérateur > membre > visiteur
 | visiteur | visualiser page de l'oeuvre (anime / manga / actu / note moyenne / date prochaine sortie / Liste ep/chap | - |
 | membre | follow oeuvre | d'etre notifier des actu en rapport a l'oeuvre |
 | membre | unfollow oeuvre | de ne plus être notifier des actu en rapport a l'oeuvre |
+| membre | marquer un anime comme en cours/à voir/ terminé/ en pause/ abandonné | - |
+| membre | marquer un manga comme en cours/à voir/ terminé/ en pause/ abandonné | - |
 | membre | noter a quel chapitre je me suis arreté | - |
 | membre | noter a quel episode je me suis arreté | - |
 | membre | noter un manga | - |
@@ -130,6 +134,12 @@ membre / anime / manga
 | membre | avertir les administrateurs d'une erreur minime relatif à une page (syntaxe, orthographe, contexte etc.) | - |
 | membre | avertir les administrateurs d'un bug | - |
 | admin | lire les message de prise de contact | - |
+| admin | marqué comme traité une demande de prise de contact | - |
+| admin | marqué comme non traité une demande de prise de contact | - |
+| admin | marqué comme important | - |
+| admin | marqué comme non-important | - |
 | admin | lire les rapports envoyés par les membres | - |
 | admin | marqué comme traité un rapport | - |
 | admin | marqué comme non traité un rapport | - |
+| admin | marqué comme important | - |
+| admin | marqué comme non-important | - |
