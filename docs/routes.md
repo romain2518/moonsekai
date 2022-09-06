@@ -1,0 +1,119 @@
+# Routes
+
+| URL | HTTPS Method | Controller | Method | Comment |
+|--|--|--|--|--|
+| / | GET | Main | home | |
+| /search | GET/POST | Main | search | |
+| /register | GET/POST | User | register | |
+| /login | GET/POST | User | login | |
+| /user/{limit}/{offset} | GET | Work | index | |
+| /profile | GET | User | profile | |
+| /profile/{id} | GET | User | profile | |
+| /profile/edit | GET/POST | User | editProfile | |
+| /register/confirm | GET/POT | User | registerConfirm | GET route will show a page to enter the code manually<br> Clicking on the link in the email will be enough as it uses POST route. |
+| /edit-logins | GET/POST | User | editLogins | |
+| /reset-password | GET/POST | User | resetPassword | Sends a mail to the given mail |
+| /reset-password/confirm | GET/POST | User | resetPasswordConfirm | Checks the secret code sent by email |
+| /reset-password/new-password | GET/POST | User | resetPasswordNewPassword | Replaces old password with le new one |
+| /subscribe-newsletter | GET/POST | Newsletter | subscribe | |
+| /unsubscribe-newsletter | GET/POST | Newsletter | unsubscribe | |
+| /notification/personalize | GET/POST | User | personalizeNotification | |
+| /notification/activate-redirection | GET | User | activateRedirection | |
+| /notification/deactivate-redirection | GET | User | deactivateRedirection | |
+| /notification/mark-as-read | POST | User | markNotificationAsRead | |
+| /notification/mark-as-unread | POST | User | markNotificationAsUnread | |
+| /platform/{limit}/{offset} | GET | Plateform | index | |
+| /platform/{id} | GET | Plateform | show | |
+| /platform/add | GET/POST | Plateform | new | |
+| /platform/{id}/edit | GET/POST | Plateform | edit | |
+| /platform/{id}/delete | POST | Plateform | delete | |
+| /work/{limit}/{offset} | GET | Work | index | |
+| /work/{id} | GET | Work | show | |
+| /work/{id}/follow | GET | User | follow | |
+| /work/{id}/unfollow | GET | User | unfollow | |
+| /work/add | GET/POST | Work | new | |
+| /work/{id}/edit | GET/POST | Work | edit | |
+| /work/{id}/delete | POST | Work | delete | |
+| /anime/{limit}/{offset} | GET | Anime | index | |
+| /work/{id}/anime/{id}/rate | POST | User | rateAnime | |
+| /work/{id}/anime/add | GET/POST | Anime | new | |
+| /work/{id}/anime/{id}/edit | GET/POST | Anime | edit | |
+| /work/{id}/anime/{id}/delete | POST | Anime | delete | |
+| /work/{id}/anime/{id}/season/add | GET/POST | Season | new | |
+| /work/{id}/anime/{id}/season/{id}/edit | GET/POST | Season | edit | |
+| /work/{id}/anime/{id}/season/{id}/delete | POST | Season | delete | |
+| /work/{id}/anime/{id}/season/{id}/episode/add | GET/POST | Episode | new | |
+| /work/{id}/anime/{id}/season/{id}/episode/{id}/edit | GET/POST | Episode | edit | |
+| /work/{id}/anime/{id}/season/{id}/episode/{id}/delete | POST | Episode | delete | |
+| /manga/{limit}/{offset} | GET | Manga | index | |
+| /work/{id}/manga/{id}/rate | POST | User | rateManga | |
+| /work/{id}/manga/add | GET/POST | Manga | new | |
+| /work/{id}/manga/{id}/edit | GET/POST | Manga | edit | |
+| /work/{id}/manga/{id}/delete | POST | Manga | delete | |
+| /work/{id}/manga/{id}/volume/add | GET/POST | Volume | new | |
+| /work/{id}/manga/{id}/volume/{id}/edit | GET/POST | Volume | edit | |
+| /work/{id}/manga/{id}/volume/{id}/delete | POST | Volume | delete | |
+| /work/{id}/manga/{id}/volume/{id}/chapter/add | GET/POST | Chapter | new | |
+| /work/{id}/manga/{id}/volume/{id}/chapter/{id}/edit | GET/POST | Chapter | edit | |
+| /work/{id}/manga/{id}/volume/{id}/chapter/{id}/delete | POST | Chapter | delete | |
+| /movie/{limit}/{offset} | GET | Movie | index | |
+| /work/{id}/movie/{id}/rate | POST | User | rateMovie | |
+| /work/{id}/movie/add | GET/POST | Movie | new | |
+| /work/{id}/movie/{id}/edit | GET/POST | Movie | edit | |
+| /work/{id}/movie/{id}/delete | POST | Movie | delete | |
+| /light-novel/{limit}/{offset} | GET | LightNovel | index | |
+| /work/{id}/light-novel/{id}/rate | POST | User | rateLightNovel | |
+| /work/{id}/light-novel/add | GET/POST | LightNovel | new | |
+| /work/{id}/light-novel/{id}/edit | GET/POST | LightNovel | edit | |
+| /work/{id}/light-novel/{id}/delete | POST | LightNovel | delete | |
+| /work/{id}/news/add | GET/POST | WorkNews | new | |
+| /work/{id}/news/{id}/edit | GET/POST | WorkNews | edit | |
+| /work/{id}/news/{id}/delete | POST | WorkNews | delete | |
+| /calendar | GET | | | |
+| /personal-calendar | GET | | | |
+| /private-message/{limit}/{offset} | GET | PrivateMessage | index | |
+| /private-message/{user_receiver_id} | GET | PrivateMessage | show | |
+| /private-message/{user_receiver_id}/add | GET/POST | PrivateMessage | new | |
+| /private-message/{user_receiver_id}/message/{id}/edit | GET/POST | PrivateMessage | edit | |
+| /private-message/{user_receiver_id}/message/{id}/mark-as-read | GET/POST | PrivateMessage | markAsRead | |
+| /private-message/{user_receiver_id}/message/{id}/mark-as-unread | GET/POST | PrivateMessage | markAsUnread | |
+| /private-message/{user_receiver_id}/message/{id}/delete | POST | PrivateMessage | delete | |
+| /comment/add | POST | Comment | new | |
+| /comment/{id}/edit | POST | Comment | edit | |
+| /comment/{id}/delete | POST | Comment | delete | |
+| /report | GET/POST | Report | new | |
+| /contact | GET/POST | Contact | new | |
+| /about | GET/POST | Main | about | |
+| /legal-mentions | GET/POST | Main | legalMentions | |
+| /back-office | GET | BackMain | index | |
+| /back-office/contact-list/{limit}/{offset} | GET | Contact | index | |
+| /back-office/contact-list/{id}/mark-as-processed | GET | Contact | markAsProcessed | |
+| /back-office/contact-list/{id}/mark-as-unprocessed | GET | Contact | markAsUnprocessed | |
+| /back-office/contact-list/{id}/mark-as-important | GET | Contact | markAsImportant | |
+| /back-office/contact-list/{id}/mark-as-not-important | GET | Contact | markAsNotImportant | |
+| /back-office/report-list/{limit}/{offset} | GET | Report | index | |
+| /back-office/report-list/{id}/mark-as-processed | GET | Report | markAsProcessed | |
+| /back-office/report-list/{id}/mark-as-unprocessed | GET | Report | markAsUnprocessed | |
+| /back-office/report-list/{id}/mark-as-important | GET | Report | markAsImportant | |
+| /back-office/report-list/{id}/mark-as-not-important | GET | Report | markAsNotImportant | |
+| /back-office/add-newsletter | GET/POST | Newsletter | new | |
+| /back-office/add-calendar-box | GET/POST |  |  | |
+| /news/{limit}/{offset} | GET | News | index | |
+| /back-office/news/{limit}/{offset} | GET | News | adminList | |
+| /back-office/news/add | GET/POST | News | new | |
+| /back-office/news/{id}/edit | GET/POST | News | edit | |
+| /back-office/news/{id}/delete | POST | News | delete | |
+| /back-office/user-management | GET | BackMain | userManagement | |
+| /back-office/user-management/comment/{limit}/{offset} | GET | Comment | adminList | |
+| /back-office/user-management/user/{limit}/{offset} | GET | User | adminList | |
+| /back-office/user-management/user/{id}/reset-picture | GET | User | resetPicture | |
+| /back-office/user-management/user/{id}/reset-banner | GET | User | resetBanner | |
+| /back-office/user-management/user/{id}/reset-pseudo | GET | User | resetPseudo | |
+| /back-office/user-management/user/{id}/reset-biography | GET | User | resetBiography | |
+| /back-office/user-management/user/{id}/reset-biography | GET | User | resetBiography | |
+| /back-office/user-management/user/{id}/mute | GET | User | mute | |
+| /back-office/user-management/user/{id}/unmute | GET | User | mute | |
+| /back-office/user-management/user/{id}/editRank/{rank} | GET | User | editRank | |
+| /back-office/user-management/ban/{limit}/{offset} | GET | Ban | index | |
+| /back-office/user-management/ban/{user_id} | GET | Ban | new | |
+| /back-office/user-management/ban/{id}/delete | GET | Ban | delete | |
