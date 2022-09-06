@@ -110,10 +110,9 @@
 | /back-office/user-management/user/{id}/reset-banner | GET | User | resetBanner | |
 | /back-office/user-management/user/{id}/reset-pseudo | GET | User | resetPseudo | |
 | /back-office/user-management/user/{id}/reset-biography | GET | User | resetBiography | |
-| /back-office/user-management/user/{id}/reset-biography | GET | User | resetBiography | |
 | /back-office/user-management/user/{id}/mute | GET | User | mute | |
-| /back-office/user-management/user/{id}/unmute | GET | User | mute | |
-| /back-office/user-management/user/{id}/editRank/{rank} | GET | User | editRank | |
+| /back-office/user-management/user/{id}/unmute | GET | User | unmute | |
+| /back-office/user-management/user/{id}/editRank | POST | User | editRank | |
 | /back-office/user-management/ban/{limit}/{offset} | GET | Ban | index | |
 | /back-office/user-management/ban/{user_id} | GET | Ban | new | |
 | /back-office/user-management/ban/{id}/delete | GET | Ban | delete | |
