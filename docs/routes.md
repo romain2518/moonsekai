@@ -18,15 +18,17 @@
 | /subscribe-newsletter | GET/POST | Newsletter | subscribe | |
 | /unsubscribe-newsletter | GET/POST | Newsletter | unsubscribe | |
 | /notification/personalize | GET/POST | User | personalizeNotification | |
-| /notification/activate-redirection | GET | User | activateRedirection | |
-| /notification/deactivate-redirection | GET | User | deactivateRedirection | |
-| /notification/mark-as-read | POST | User | markNotificationAsRead | |
-| /notification/mark-as-unread | POST | User | markNotificationAsUnread | |
+| /notification/enable-redirection | GET | User | enableRedirection | |
+| /notification/disable-redirection | GET | User | disableRedirection | |
+| /notification/{id}/mark-as-read | GET | Notification | markAsRead | |
+| /notification/{id}/mark-as-unread | GET | Notification | markAsUnread | |
+| /notification/{id}/delete | POST | Notification | delete | |
 | /platform/{limit}/{offset} | GET | Plateform | index | |
 | /platform/{id} | GET | Plateform | show | |
 | /platform/add | GET/POST | Plateform | new | |
 | /platform/{id}/edit | GET/POST | Plateform | edit | |
 | /platform/{id}/delete | POST | Plateform | delete | |
+| /follow/{limit}/{offset} | GET | User | listFollowedWork | |
 | /work/{limit}/{offset} | GET | Work | index | |
 | /work/{id} | GET | Work | show | |
 | /work/{id}/follow | GET | User | follow | |
@@ -69,14 +71,17 @@
 | /work/{id}/news/add | GET/POST | WorkNews | new | |
 | /work/{id}/news/{id}/edit | GET/POST | WorkNews | edit | |
 | /work/{id}/news/{id}/delete | POST | WorkNews | delete | |
-| /calendar | GET | | | |
-| /personal-calendar | GET | | | |
+| /calendar | GET | Calendar | index | |
+| /personal-calendar | GET | Calendar | personalCalendar | |
+| /calendar/add | POST | Calendar | new | |
+| /calendar/{id}/edit | POST | Calendar | edit | |
+| /calendar/{id}/delete | POST | Calendar | delete | |
 | /private-message/{limit}/{offset} | GET | PrivateMessage | index | |
 | /private-message/{user_receiver_id} | GET | PrivateMessage | show | |
 | /private-message/{user_receiver_id}/add | GET/POST | PrivateMessage | new | |
 | /private-message/{user_receiver_id}/message/{id}/edit | GET/POST | PrivateMessage | edit | |
-| /private-message/{user_receiver_id}/message/{id}/mark-as-read | GET/POST | PrivateMessage | markAsRead | |
-| /private-message/{user_receiver_id}/message/{id}/mark-as-unread | GET/POST | PrivateMessage | markAsUnread | |
+| /private-message/{user_receiver_id}/message/{id}/mark-as-read | GET | PrivateMessage | markAsRead | |
+| /private-message/{user_receiver_id}/message/{id}/mark-as-unread | GET | PrivateMessage | markAsUnread | |
 | /private-message/{user_receiver_id}/message/{id}/delete | POST | PrivateMessage | delete | |
 | /comment/add | POST | Comment | new | |
 | /comment/{id}/edit | POST | Comment | edit | |
@@ -97,12 +102,15 @@
 | /back-office/report-list/{id}/mark-as-important | GET | Report | markAsImportant | |
 | /back-office/report-list/{id}/mark-as-not-important | GET | Report | markAsNotImportant | |
 | /back-office/add-newsletter | GET/POST | Newsletter | new | |
-| /back-office/add-calendar-box | GET/POST |  |  | |
 | /news/{limit}/{offset} | GET | News | index | |
 | /back-office/news/{limit}/{offset} | GET | News | adminList | |
 | /back-office/news/add | GET/POST | News | new | |
 | /back-office/news/{id}/edit | GET/POST | News | edit | |
 | /back-office/news/{id}/delete | POST | News | delete | |
+| /back-office/tag/{limit}/{offset} | GET | Tag | adminList | |
+| /back-office/tag/add | GET/POST | Tag | new | |
+| /back-office/tag/{id}/edit | GET/POST | Tag | edit | |
+| /back-office/tag/{id}/delete | POST | Tag | delete | |
 | /back-office/user-management | GET | BackMain | userManagement | |
 | /back-office/user-management/comment/{limit}/{offset} | GET | Comment | adminList | |
 | /back-office/user-management/user/{limit}/{offset} | GET | User | adminList | |
@@ -115,4 +123,4 @@
 | /back-office/user-management/user/{id}/editRank | POST | User | editRank | |
 | /back-office/user-management/ban/{limit}/{offset} | GET | Ban | index | |
 | /back-office/user-management/ban/{user_id} | GET | Ban | new | |
-| /back-office/user-management/ban/{id}/delete | GET | Ban | delete | |
+| /back-office/user-management/ban/{id}/delete | POST | Ban | delete | |

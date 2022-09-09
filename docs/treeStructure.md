@@ -4,7 +4,11 @@
 Accueil
 └───Recherche
 └───Inscription
+|   └───Confirmation de compte
 └───Connexion
+|   └───Réinitialisation de mot de passe
+|   └───Confirmation de la réinitialisation de mot de passe
+|   └───Changement de mot de passe
 └───Profil
 |   └───Modification du profil
 |   └───Modification des identifiants
@@ -37,14 +41,19 @@ Accueil
 └───Calendrier perso
 └───Liste des conversation privées
 |   └───Liste des messages privés
-└───Envoi d'une demande de prise de contact
-└───Envoi d'un rapport
 └───Back office
  └───Liste de demande de prise de contact
  └───Liste de rapport
  └───Envoyer une newsletter
+ └───Ajouter manuellement un case de calendrier
  └───Espace de gestion des membres
   └───Liste des commentaires
   └───Liste des membres
   └───Liste des bannissements
+└───Envoi d'un rapport
+└───Envoi d'une demande de prise de contact
+└───A propos
+└───Mentions légales
+└───Erreur 403
+└───Erreur 404
 ```
