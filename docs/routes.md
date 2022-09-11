@@ -4,12 +4,12 @@
 |--|--|--|--|--|
 | / | GET | Main | home | |
 | /search | GET/POST | Main | search | |
-| /register | GET/POST | User | register | |
-| /login | GET/POST | User | login | |
-| /user/{limit}/{offset} | GET | Work | index | |
+| /register | GET/POST | | | |
+| /login | GET/POST | | | |
 | /profile | GET | User | profile | |
 | /profile/{id} | GET | User | profile | |
 | /profile/edit | GET/POST | User | editProfile | |
+| /profile/delete | GET/POST | User | delete | |
 | /register/confirm | GET/POT | User | registerConfirm | GET route will show a page to enter the code manually<br> Clicking on the link in the email will be enough as it uses POST route. |
 | /edit-logins | GET/POST | User | editLogins | |
 | /reset-password | GET/POST | User | resetPassword | Sends a mail to the given mail |
@@ -23,20 +23,18 @@
 | /notification/{id}/mark-as-read | GET | Notification | markAsRead | |
 | /notification/{id}/mark-as-unread | GET | Notification | markAsUnread | |
 | /notification/{id}/delete | POST | Notification | delete | |
-| /platform/{limit}/{offset} | GET | Plateform | index | |
 | /platform/{id} | GET | Plateform | show | |
 | /platform/add | GET/POST | Plateform | new | |
 | /platform/{id}/edit | GET/POST | Plateform | edit | |
 | /platform/{id}/delete | POST | Plateform | delete | |
 | /follow/{limit}/{offset} | GET | User | listFollowedWork | |
-| /work/{limit}/{offset} | GET | Work | index | |
 | /work/{id} | GET | Work | show | |
 | /work/{id}/follow | GET | User | follow | |
 | /work/{id}/unfollow | GET | User | unfollow | |
+| /work/{id}/mark-progress | POST | User | markProgress | |
 | /work/add | GET/POST | Work | new | |
 | /work/{id}/edit | GET/POST | Work | edit | |
 | /work/{id}/delete | POST | Work | delete | |
-| /anime/{limit}/{offset} | GET | Anime | index | |
 | /work/{id}/anime/{id}/rate | POST | User | rateAnime | |
 | /work/{id}/anime/add | GET/POST | Anime | new | |
 | /work/{id}/anime/{id}/edit | GET/POST | Anime | edit | |
@@ -47,7 +45,6 @@
 | /work/{id}/anime/{id}/season/{id}/episode/add | GET/POST | Episode | new | |
 | /work/{id}/anime/{id}/season/{id}/episode/{id}/edit | GET/POST | Episode | edit | |
 | /work/{id}/anime/{id}/season/{id}/episode/{id}/delete | POST | Episode | delete | |
-| /manga/{limit}/{offset} | GET | Manga | index | |
 | /work/{id}/manga/{id}/rate | POST | User | rateManga | |
 | /work/{id}/manga/add | GET/POST | Manga | new | |
 | /work/{id}/manga/{id}/edit | GET/POST | Manga | edit | |
@@ -58,12 +55,10 @@
 | /work/{id}/manga/{id}/volume/{id}/chapter/add | GET/POST | Chapter | new | |
 | /work/{id}/manga/{id}/volume/{id}/chapter/{id}/edit | GET/POST | Chapter | edit | |
 | /work/{id}/manga/{id}/volume/{id}/chapter/{id}/delete | POST | Chapter | delete | |
-| /movie/{limit}/{offset} | GET | Movie | index | |
 | /work/{id}/movie/{id}/rate | POST | User | rateMovie | |
 | /work/{id}/movie/add | GET/POST | Movie | new | |
 | /work/{id}/movie/{id}/edit | GET/POST | Movie | edit | |
 | /work/{id}/movie/{id}/delete | POST | Movie | delete | |
-| /light-novel/{limit}/{offset} | GET | LightNovel | index | |
 | /work/{id}/light-novel/{id}/rate | POST | User | rateLightNovel | |
 | /work/{id}/light-novel/add | GET/POST | LightNovel | new | |
 | /work/{id}/light-novel/{id}/edit | GET/POST | LightNovel | edit | |
@@ -80,8 +75,8 @@
 | /private-message/{user_receiver_id} | GET | PrivateMessage | show | |
 | /private-message/{user_receiver_id}/add | GET/POST | PrivateMessage | new | |
 | /private-message/{user_receiver_id}/message/{id}/edit | GET/POST | PrivateMessage | edit | |
-| /private-message/{user_receiver_id}/message/{id}/mark-as-read | GET | PrivateMessage | markAsRead | |
-| /private-message/{user_receiver_id}/message/{id}/mark-as-unread | GET | PrivateMessage | markAsUnread | |
+| /private-message/{user_receiver_id}/mark-as-read | GET | PrivateMessage | markConversationAsRead | |
+| /private-message/{user_receiver_id}/message/{id}/mark-as-unread | GET | PrivateMessage | markMessageAsUnread | |
 | /private-message/{user_receiver_id}/message/{id}/delete | POST | PrivateMessage | delete | |
 | /comment/add | POST | Comment | new | |
 | /comment/{id}/edit | POST | Comment | edit | |
@@ -102,7 +97,6 @@
 | /back-office/report-list/{id}/mark-as-important | GET | Report | markAsImportant | |
 | /back-office/report-list/{id}/mark-as-not-important | GET | Report | markAsNotImportant | |
 | /back-office/add-newsletter | GET/POST | Newsletter | new | |
-| /news/{limit}/{offset} | GET | News | index | |
 | /back-office/news/{limit}/{offset} | GET | News | adminList | |
 | /back-office/news/add | GET/POST | News | new | |
 | /back-office/news/{id}/edit | GET/POST | News | edit | |
@@ -111,16 +105,15 @@
 | /back-office/tag/add | GET/POST | Tag | new | |
 | /back-office/tag/{id}/edit | GET/POST | Tag | edit | |
 | /back-office/tag/{id}/delete | POST | Tag | delete | |
-| /back-office/user-management | GET | BackMain | userManagement | |
-| /back-office/user-management/comment/{limit}/{offset} | GET | Comment | adminList | |
-| /back-office/user-management/user/{limit}/{offset} | GET | User | adminList | |
-| /back-office/user-management/user/{id}/reset-picture | GET | User | resetPicture | |
-| /back-office/user-management/user/{id}/reset-banner | GET | User | resetBanner | |
-| /back-office/user-management/user/{id}/reset-pseudo | GET | User | resetPseudo | |
-| /back-office/user-management/user/{id}/reset-biography | GET | User | resetBiography | |
-| /back-office/user-management/user/{id}/mute | GET | User | mute | |
-| /back-office/user-management/user/{id}/unmute | GET | User | unmute | |
-| /back-office/user-management/user/{id}/editRank | POST | User | editRank | |
-| /back-office/user-management/ban/{limit}/{offset} | GET | Ban | index | |
-| /back-office/user-management/ban/{user_id} | GET | Ban | new | |
-| /back-office/user-management/ban/{id}/delete | POST | Ban | delete | |
+| /back-office/comment/{limit}/{offset} | GET | Comment | adminList | |
+| /back-office/user/{limit}/{offset} | GET | User | adminList | |
+| /back-office/user/{id}/reset-picture | GET | User | resetPicture | |
+| /back-office/user/{id}/reset-banner | GET | User | resetBanner | |
+| /back-office/user/{id}/reset-pseudo | GET | User | resetPseudo | |
+| /back-office/user/{id}/reset-biography | GET | User | resetBiography | |
+| /back-office/user/{id}/mute | GET | User | mute | |
+| /back-office/user/{id}/unmute | GET | User | unmute | |
+| /back-office/user/{id}/editRank | POST | User | editRank | |
+| /back-office/ban/{limit}/{offset} | GET | Ban | index | |
+| /back-office/ban/{user_id} | GET | Ban | new | |
+| /back-office/ban/{id}/delete | POST | Ban | delete | |

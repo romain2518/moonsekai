@@ -42,14 +42,13 @@ Accueil
 └───Liste des conversation privées
 |   └───Liste des messages privés
 └───Back office
- └───Liste de demande de prise de contact
- └───Liste de rapport
- └───Envoyer une newsletter
- └───Ajouter manuellement un case de calendrier
- └───Espace de gestion des membres
-  └───Liste des commentaires
-  └───Liste des membres
-  └───Liste des bannissements
+|   └───Espace de gestion des demandes de prise de contact
+|   └───Espace de gestion des rapports
+|   └───Envoyer une newsletter
+|   └───Espace de gestion des cases de calendrier
+|   └───Espace de gestion des commentaires
+|   └───Espace de gestion des membres
+|   └───Espace de gestion des bannissements
 └───Envoi d'un rapport
 └───Envoi d'une demande de prise de contact
 └───A propos
