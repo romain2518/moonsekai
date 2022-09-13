@@ -104,7 +104,7 @@
 | user_id | ENTITY | Foreign key | |
 | target_table | VARCHAR(255) | Not null, index | |
 | target_id | int | Unsigned, not null, index | |
-| rate | int | Index, not null | min: 1<br> max: 1440<br> Notblank |
+| rate | int | Not null | min: 0<br> max: 5<br> Notblank |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 

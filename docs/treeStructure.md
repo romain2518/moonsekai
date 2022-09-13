@@ -53,6 +53,7 @@ Accueil
 └───Envoi d'une demande de prise de contact
 └───A propos
 └───Mentions légales
+└───Notes de mise à jour
 └───Erreur 403
 └───Erreur 404
 ```

@@ -15,7 +15,8 @@ Hiérarchie des roles : admin > modérateur > membre > visiteur
 | visiteur | rechercher une platforme | - |
 | visiteur | rechercher une news | - |
 | visiteur | visualiser la page à propos | - |
-| visiteur | visualiser la page de mentions légales | - |
+| visiteur | visualiser la page des mentions légales | - |
+| visiteur | visualiser la page des notes de mise à jour  | - |
 | modérateur | accéder à l'espace de gestion | - |
 
 ## Espace membre

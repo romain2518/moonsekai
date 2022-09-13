@@ -83,8 +83,9 @@
 | /comment/{id}/delete | POST | Comment | delete | |
 | /report | GET/POST | Report | new | |
 | /contact | GET/POST | Contact | new | |
-| /about | GET/POST | Main | about | |
-| /legal-mentions | GET/POST | Main | legalMentions | |
+| /about | GET | Main | about | |
+| /legal-mentions | GET | Main | legalMentions | |
+| /patch-notes | GET/POST | Main | patchNotes | |
 | /back-office | GET | BackMain | index | |
 | /back-office/contact-list/{limit}/{offset} | GET | Contact | index | |
 | /back-office/contact-list/{id}/mark-as-processed | GET | Contact | markAsProcessed | |
