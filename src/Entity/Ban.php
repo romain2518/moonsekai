@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\BanRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: BanRepository::class)]
+#[UniqueEntity('email')]
 class Ban
 {
     #[ORM\Id]
@@ -15,9 +18,18 @@ class Ban
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\Length(
+        min: 3,
+        max: 180,
+    )]
+    #[Assert\Email]
+    #[Assert\NotBlank]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $message = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

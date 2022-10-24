@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RateRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RateRepository::class)]
 class Rate
@@ -21,6 +22,11 @@ class Rate
     private ?int $targetId = null;
 
     #[ORM\Column]
+    #[Assert\Range(
+        min: 0,
+        max: 5,
+    )]
+    #[Assert\NotBlank]
     private ?int $rate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProgressRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProgressRepository::class)]
 class Progress
@@ -15,6 +16,14 @@ class Progress
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Choice(
+        'in progress',
+        'to see',
+        'finished',
+        'paused',
+        'abandoned',
+    )]
+    #[Assert\NotBlank]
     private ?string $progress = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

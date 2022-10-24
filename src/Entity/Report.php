@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReportRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 class Report
@@ -15,19 +16,34 @@ class Report
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+    )]
+    #[Assert\NotBlank]
     private ?string $message = null;
 
     #[ORM\Column(length: 60)]
+    #[Assert\Choice([
+        'user behaviour',
+        'minor error',
+        'bug',
+    ])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 12,
+        max: 255,
+    )]
+    #[Assert\Url]
     private ?string $url = null;
 
     #[ORM\Column]
-    private ?bool $isProcessed = null;
+    private ?bool $isProcessed = false;
 
     #[ORM\Column]
-    private ?bool $isImportant = null;
+    private ?bool $isImportant = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
