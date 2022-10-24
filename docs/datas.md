@@ -54,7 +54,7 @@
 | user_id | ENTITY | Foreign key | |
 | message | VARCHAR(255) | Not null | min: 5<br> max: 255<br> Notblank |
 | type | VARCHAR(60) | Not null | Choices |
-| url | VARCHAR(255) | Not null | min: 12<br> max: 255 |
+| url | VARCHAR(255) | Not null | min: 12<br> max: 255<br> UrlType |
 | is_processed | boolean | Not null | Default False |
 | is_important | boolean | Not null | Default False |
 | created_at | datetime | Not null | |
