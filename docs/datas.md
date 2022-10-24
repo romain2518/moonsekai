@@ -92,7 +92,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | email | VARCHAR(180) | Not null, unique | min: 3<br> max: 180<br> EmailType<br> Notblank<br> Unique |
-| message | VARCHAR(255) | Null | max: 255<br> Notblank |
+| message | VARCHAR(255) | Null | max: 255 |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 
