@@ -29,8 +29,8 @@
 | title | VARCHAR(20) | Not null | min: 2<br> max: 20<br> Notblank |
 | message | VARCHAR(255) | Not null | min: 5<br> max: 255<br> Notblank |
 | is_read | boolean | Not null | Default False |
-| target_table | VARCHAR(255) | Not null, index | |
-| target_id | int | Unsigned, not null, index | |
+| target_table | VARCHAR(255) | Null, index | |
+| target_id | int | Unsigned, Null, index | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 
@@ -54,7 +54,7 @@
 | user_id | ENTITY | Foreign key | |
 | message | VARCHAR(255) | Not null | min: 5<br> max: 255<br> Notblank |
 | type | VARCHAR(60) | Not null | Choices |
-| url | VARCHAR(255) | Not null | min: 12<br> max: 255 |
+| url | VARCHAR(255) | Not null | min: 12<br> max: 255<br> UrlType |
 | is_processed | boolean | Not null | Default False |
 | is_important | boolean | Not null | Default False |
 | created_at | datetime | Not null | |
@@ -92,7 +92,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | email | VARCHAR(180) | Not null, unique | min: 3<br> max: 180<br> EmailType<br> Notblank<br> Unique |
-| message | VARCHAR(255) | Null | max: 255<br> Notblank |
+| message | VARCHAR(255) | Null | max: 255 |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 
@@ -125,11 +125,11 @@
 |--|--|--|--|
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
-| name | VARCHAR(255) | Index, not null | min: 1<br> max: 255<br> Notblank |
+| name | VARCHAR(190) | Index, not null | min: 1<br> max: 190<br> Notblank |
 | type | VARCHAR(20) | Index, not null | Notblank<br> Choices |
-| native_country | VARCHAR(255) | Index, not null | Notblank<br> Choices |
-| original_name | VARCHAR(255) | Index, not null | Notblank |
-| alternative_name | json | Index, null | max: 255 |
+| native_country | VARCHAR(190) | Index, not null | Notblank<br> Choices |
+| original_name | VARCHAR(190) | Index, null | max: 190 |
+| alternative_name | json | Null | max: 255 |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
@@ -155,7 +155,7 @@
 | description | text | Null | max: 1000 |
 | duration | int | Index, not null | min: 1<br> max: 1440<br> Notblank |
 | animation_studio | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
-| release_year | int | Index, not null | min: 1900<br> max: année actuelle<br> Notblank<br> DateType |
+| release_year | datetime | Index, not null | min: 1900<br> max: année actuelle + 10<br> Notblank<br> DateType |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
@@ -171,7 +171,7 @@
 | description | text | Null | max: 1000 |
 | author | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
 | editor | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
-| release_year | int | Index, not null | min: 1900<br> max: année actuelle<br> Notblank<br> DateType |
+| release_year | datetime | Index, not null | min: 1900<br> max: année actuelle + 10<br> Notblank<br> DateType |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
@@ -215,7 +215,7 @@
 | author | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
 | designer | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
 | editor | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
-| release_year | int | Index, not null | min: 1900<br> max: année actuelle<br> Notblank<br> DateType |
+| release_year | datetime | Index, not null | min: 1900<br> max: année actuelle + 10<br> Notblank<br> DateType |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
@@ -227,9 +227,9 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | manga_id | ENTITY | Foreign key | |
-| number | VARCHAR(50) | Not null | min: 1<br> max: 50 |
+| number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
-| picture_path | VARCHAR(255) | Not null | |
+| picture_path | VARCHAR(255) | Null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 
@@ -240,7 +240,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | volume_id | ENTITY, null | Foreign key | |
-| number | VARCHAR(50) | Not null | min: 1<br> max: 50 |
+| number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
@@ -257,7 +257,7 @@
 | state | VARCHAR(20) | Index, not null | Notblank<br> Choices |
 | author | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
 | animation_studio | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
-| release_year | int | Index, not null | min: 1900<br> max: année actuelle<br> Notblank<br> DateType |
+| release_year | datetime | Index, not null | min: 1900<br> max: année actuelle + 10<br> Notblank<br> DateType |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
@@ -269,9 +269,9 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | anime_id | ENTITY | Foreign key | |
-| number | VARCHAR(50) | Not null | min: 1<br> max: 50 |
+| number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
-| picture_path | VARCHAR(255) | Not null | |
+| picture_path | VARCHAR(255) | Null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 
@@ -282,7 +282,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | season_id | ENTITY, null | Foreign key | |
-| number | VARCHAR(50) | Not null | min: 1<br> max: 50 |
+| number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
