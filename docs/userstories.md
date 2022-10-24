@@ -85,8 +85,6 @@ Hiérarchie des roles : admin > modérateur > membre > visiteur
 | membre | suivre une oeuvre | d'être notifié des nouveautés liées à l'oeuvre |
 | membre | arrêter de suivre une oeuvre |  |
 | membre | marquer une oeuvre comme en cours/à voir/terminée/en pause/abandonnée | - |
-<!-- | membre | noter a quel chapitre je me suis arreté | - | -->
-<!-- | membre | noter a quel episode je me suis arreté | - | -->
 | membre | noter un anime | - |
 | membre | noter un manga | - |
 | membre | noter un film | - |
