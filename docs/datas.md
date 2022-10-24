@@ -128,7 +128,7 @@
 | name | VARCHAR(255) | Index, not null | min: 1<br> max: 255<br> Notblank |
 | type | VARCHAR(20) | Index, not null | Notblank<br> Choices |
 | native_country | VARCHAR(255) | Index, not null | Notblank<br> Choices |
-| original_name | VARCHAR(255) | Index, not null | Notblank |
+| original_name | VARCHAR(255) | Index, not null | max: 255<br> Notblank |
 | alternative_name | json | Index, null | max: 255 |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
