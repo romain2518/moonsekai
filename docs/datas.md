@@ -227,7 +227,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | manga_id | ENTITY | Foreign key | |
-| number | VARCHAR(50) | Not null | min: 1<br> max: 50 |
+| number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
@@ -240,7 +240,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | volume_id | ENTITY, null | Foreign key | |
-| number | VARCHAR(50) | Not null | min: 1<br> max: 50 |
+| number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
@@ -269,7 +269,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | anime_id | ENTITY | Foreign key | |
-| number | VARCHAR(50) | Not null | min: 1<br> max: 50 |
+| number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
@@ -282,7 +282,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | season_id | ENTITY, null | Foreign key | |
-| number | VARCHAR(50) | Not null | min: 1<br> max: 50 |
+| number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
