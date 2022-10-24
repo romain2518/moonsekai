@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\NotificationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 class Notification
@@ -15,13 +16,23 @@ class Notification
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Length(
+        min: 2,
+        max: 20,
+    )]
+    #[Assert\NotBlank]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+    )]
+    #[Assert\NotBlank]
     private ?string $message = null;
 
     #[ORM\Column]
-    private ?bool $isRead = null;
+    private ?bool $isRead = false;
 
     #[ORM\Column(length: 255)]
     private ?string $targetTable = null;

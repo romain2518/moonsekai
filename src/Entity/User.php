@@ -9,8 +9,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -19,6 +22,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Length(
+        min: 3,
+        max: 180,
+    )]
+    #[Assert\Email]
+    #[Assert\NotBlank]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -31,31 +40,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\Length(
+        min: 3,
+        max: 30,
+    )]
+    #[Assert\NotBlank]
     private ?string $pseudo = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $picturePath = null;
+    private ?string $picturePath = '0.png';
 
     #[ORM\Column(length: 255)]
-    private ?string $bannerPath = null;
+    private ?string $bannerPath = '0.png';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(
+        max: 1000,
+    )]
     private ?string $biography = null;
 
     #[ORM\Column]
     private array $notificationSetting = [];
 
     #[ORM\Column]
-    private ?bool $isNotificationRedirectionEnabled = null;
+    private ?bool $isNotificationRedirectionEnabled = false;
 
     #[ORM\Column]
-    private ?bool $isMuted = null;
+    private ?bool $isMuted = false;
 
     #[ORM\Column]
-    private ?bool $isAccountConfirmed = null;
+    private ?bool $isAccountConfirmed = false;
 
     #[ORM\Column]
-    private ?bool $isSubscribedNewsletter = null;
+    private ?bool $isSubscribedNewsletter = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;

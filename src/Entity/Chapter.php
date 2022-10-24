@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ChapterRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ChapterRepository::class)]
 class Chapter
@@ -15,9 +16,17 @@ class Chapter
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Length(
+        min: 1,
+        max: 50,
+    )]
+    #[Assert\NotBlank]
     private ?string $number = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(
+        max: 50,
+    )]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

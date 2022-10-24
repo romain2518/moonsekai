@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ContactRequestRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactRequestRepository::class)]
 class ContactRequest
@@ -15,16 +16,27 @@ class ContactRequest
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\Length(
+        min: 3,
+        max: 180,
+    )]
+    #[Assert\Email()]
+    #[Assert\NotBlank]
     private ?string $applicantEmail = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+    )]
+    #[Assert\NotBlank]
     private ?string $message = null;
 
     #[ORM\Column]
-    private ?bool $isImportant = null;
+    private ?bool $isImportant = false;
 
     #[ORM\Column]
-    private ?bool $isProcessed = null;
+    private ?bool $isProcessed = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;

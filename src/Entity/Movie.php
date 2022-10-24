@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MovieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 class Movie
@@ -15,19 +16,43 @@ class Movie
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(
+        min: 1,
+        max: 100,
+    )]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(
+        max: 1000,
+    )]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Assert\Range(
+        min: 1,
+        max: 1440,
+    )]
+    #[Assert\NotBlank]
     private ?int $duration = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(
+        min: 1,
+        max: 100,
+    )]
+    #[Assert\NotBlank]
     private ?string $animationStudio = null;
 
-    #[ORM\Column]
-    private ?int $releaseYear = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\Range(
+        min: '1900',
+        max: '+10 years',
+    )]
+    #[Assert\NotBlank]
+    #[Assert\Date]
+    private ?\DateTimeInterface $releaseYear = null;
 
     #[ORM\Column(length: 255)]
     private ?string $picturePath = null;
@@ -100,10 +125,10 @@ class Movie
 
     public function getReleaseYear(): ?int
     {
-        return $this->releaseYear;
+        return $this->releaseYear->format('Y');
     }
 
-    public function setReleaseYear(int $releaseYear): self
+    public function setReleaseYear(\DateTimeInterface $releaseYear): self
     {
         $this->releaseYear = $releaseYear;
 

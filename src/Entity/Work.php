@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WorkRepository::class)]
 class Work
@@ -17,18 +18,41 @@ class Work
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 1,
+        max: 255,
+    )]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Choice(
+        'shōnen',
+        'seinen',
+        'shōjo',
+        'josei',
+    )]
+    #[Assert\NotBlank]
     private ?string $type = null;
-
+    
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $nativeCountry = null;
-
-    #[ORM\Column(length: 255)]
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        max: 255,
+    )]
     private ?string $originalName = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Unique]
+    #[Assert\All([
+        new Assert\Length(
+            max: 255,
+        ),
+        new Assert\NotBlank,
+    ])]
     private array $alternativeName = [];
 
     #[ORM\Column(length: 255)]
