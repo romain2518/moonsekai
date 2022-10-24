@@ -155,7 +155,7 @@
 | description | text | Null | max: 1000 |
 | duration | int | Index, not null | min: 1<br> max: 1440<br> Notblank |
 | animation_studio | VARCHAR(100) | Index, not null | min: 1<br> max: 100<br> Notblank |
-| release_year | int | Index, not null | min: 1900<br> max: année actuelle<br> Notblank<br> DateType |
+| release_year | datetime | Index, not null | min: 1900<br> max: année actuelle + 10<br> Notblank<br> DateType |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
