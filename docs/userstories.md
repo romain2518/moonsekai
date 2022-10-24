@@ -172,7 +172,7 @@ membre / anime / manga
 |--|--|--|
 | visiteur | contacter les administrateurs du site | - |
 | membre | avertir les administrateurs du mauvais comportement d'un utilisateur | - |
-| membre | avertir les administrateurs d'une erreur minime relatif à une page (syntaxe, orthographe, contexte etc.) | - |
+| membre | avertir les administrateurs d'une erreur mineure relatif à une page (syntaxe, orthographe, contexte etc.) | - |
 | membre | avertir les administrateurs d'un bug | - |
 | admin | lire les message de prise de contact | - |
 | admin | marquer comme traité une demande de prise de contact | - |
