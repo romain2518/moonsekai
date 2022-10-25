@@ -271,7 +271,7 @@
 | anime_id | ENTITY | Foreign key | |
 | number | VARCHAR(50) | Not null | min: 1<br> max: 50<br> NotBlank |
 | name | VARCHAR(50) | Null | max: 50 |
-| picture_path | VARCHAR(255) | Not null | |
+| picture_path | VARCHAR(255) | Null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 
