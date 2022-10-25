@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactRequestRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ContactRequest
 {
     #[ORM\Id]
@@ -119,5 +120,18 @@ class ContactRequest
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 }

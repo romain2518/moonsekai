@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
+#[ORM\Index(name: 'idx_search', fields: ['name'])]
+#[ORM\HasLifecycleCallbacks]
 class Tag
 {
     #[ORM\Id]
@@ -81,6 +83,19 @@ class Tag
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User

@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RateRepository::class)]
+#[ORM\Index(name: 'idx_search', fields: ['targetTable', 'targetId'])]
+#[ORM\HasLifecycleCallbacks]
 class Rate
 {
     #[ORM\Id]
@@ -15,10 +17,12 @@ class Rate
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 190)]
     private ?string $targetTable = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: [
+        'unsigned' => true
+    ])]
     private ?int $targetId = null;
 
     #[ORM\Column]
@@ -102,6 +106,19 @@ class Rate
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User

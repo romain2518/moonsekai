@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CalendarEventRepository::class)]
+#[ORM\Index(name: 'idx_search', fields: ['targetTable', 'targetId'])]
+#[ORM\HasLifecycleCallbacks]
 class CalendarEvent
 {
     #[ORM\Id]
@@ -31,10 +33,12 @@ class CalendarEvent
     #[Assert\GreaterThan('now')]
     private ?\DateTimeInterface $end = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 190)]
     private ?string $targetTable = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: [
+        'unsigned' => true
+    ])]
     private ?int $targetId = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -133,6 +137,19 @@ class CalendarEvent
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User

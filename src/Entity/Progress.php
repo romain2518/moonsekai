@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProgressRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Progress
 {
     #[ORM\Id]
@@ -16,13 +17,13 @@ class Progress
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice(
+    #[Assert\Choice([
         'in progress',
         'to see',
         'finished',
         'paused',
         'abandoned',
-    )]
+    ])]
     #[Assert\NotBlank]
     private ?string $progress = null;
 
@@ -79,6 +80,19 @@ class Progress
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User

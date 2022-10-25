@@ -8,6 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LightNovelRepository::class)]
+#[ORM\Index(name: 'idx_search', fields: ['name'])]
+#[ORM\Index(name: 'idx_advanced_search', fields: ['name', 'author', 'editor', 'releaseYear'])]
+#[ORM\HasLifecycleCallbacks]
 class LightNovel
 {
     #[ORM\Id]
@@ -169,6 +172,19 @@ class LightNovel
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User

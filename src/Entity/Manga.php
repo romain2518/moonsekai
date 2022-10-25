@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MangaRepository::class)]
+#[ORM\Index(name: 'idx_search', fields: ['name'])]
+#[ORM\Index(name: 'idx_advanced_search', fields: ['name', 'state', 'releaseRegularity', 'author', 'designer', 'editor', 'releaseYear'])]
+#[ORM\HasLifecycleCallbacks]
 class Manga
 {
     #[ORM\Id]
@@ -32,21 +35,21 @@ class Manga
     private ?string $description = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice(
+    #[Assert\Choice([
         'ongoing',
         'finished',
         'paused',
-    )]
+    ])]
     #[Assert\NotBlank]
     private ?string $state = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice(
+    #[Assert\Choice([
         'daily',
         'weekly',
         'bi-weekly',
         'monthly',
-    )]
+    ])]
     #[Assert\NotBlank]
     private ?string $releaseRegularity = null;
 
@@ -242,6 +245,19 @@ class Manga
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User

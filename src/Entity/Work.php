@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WorkRepository::class)]
+#[ORM\Index(name: 'idx_search', fields: ['name', 'originalName'])]
+#[ORM\Index(name: 'idx_advanced_search', fields: ['name', 'type', 'nativeCountry', 'originalName'])]
+#[ORM\HasLifecycleCallbacks]
 class Work
 {
     #[ORM\Id]
@@ -17,31 +20,31 @@ class Work
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 190)]
     #[Assert\Length(
         min: 1,
-        max: 255,
+        max: 190,
     )]
     #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice(
+    #[Assert\Choice([
         'shōnen',
         'seinen',
         'shōjo',
         'josei',
-    )]
+    ])]
     #[Assert\NotBlank]
     private ?string $type = null;
     
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 190)]
     #[Assert\NotBlank]
     private ?string $nativeCountry = null;
     
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 190, nullable: true)]
     #[Assert\Length(
-        max: 255,
+        max: 190,
     )]
     private ?string $originalName = null;
 
@@ -53,7 +56,7 @@ class Work
         ),
         new Assert\NotBlank,
     ])]
-    private array $alternativeName = [];
+    private ?array $alternativeName = [];
 
     #[ORM\Column(length: 255)]
     private ?string $picturePath = null;
@@ -153,7 +156,7 @@ class Work
         return $this->originalName;
     }
 
-    public function setOriginalName(string $originalName): self
+    public function setOriginalName(?string $originalName): self
     {
         $this->originalName = $originalName;
 
@@ -206,6 +209,19 @@ class Work
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     /**
