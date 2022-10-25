@@ -1,6 +1,6 @@
 # User stories
 
-Hiérarchie des roles : admin > modérateur > membre > visiteur
+Hiérarchie des roles : superadmin > admin > modérateur > membre > visiteur
 
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
