@@ -29,8 +29,8 @@
 | title | VARCHAR(20) | Not null | min: 2<br> max: 20<br> Notblank |
 | message | VARCHAR(255) | Not null | min: 5<br> max: 255<br> Notblank |
 | is_read | boolean | Not null | Default False |
-| target_table | VARCHAR(255) | Not null, index | |
-| target_id | int | Unsigned, not null, index | |
+| target_table | VARCHAR(255) | Null, index | |
+| target_id | int | Unsigned, Null, index | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 
