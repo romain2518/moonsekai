@@ -125,11 +125,11 @@
 |--|--|--|--|
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
-| name | VARCHAR(255) | Index, not null | min: 1<br> max: 255<br> Notblank |
+| name | VARCHAR(190) | Index, not null | min: 1<br> max: 190<br> Notblank |
 | type | VARCHAR(20) | Index, not null | Notblank<br> Choices |
-| native_country | VARCHAR(255) | Index, not null | Notblank<br> Choices |
-| original_name | VARCHAR(255) | Index, null | max: 255 |
-| alternative_name | json | Index, null | max: 255 |
+| native_country | VARCHAR(190) | Index, not null | Notblank<br> Choices |
+| original_name | VARCHAR(190) | Index, null | max: 190 |
+| alternative_name | json | Null | max: 255 |
 | picture_path | VARCHAR(255) | Not null | |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
