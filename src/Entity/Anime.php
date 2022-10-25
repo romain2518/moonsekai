@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnimeRepository::class)]
+#[ORM\Index(name: 'idx_search', fields: ['name'])]
+#[ORM\Index(name: 'idx_advanced_search', fields: ['name', 'state', 'author', 'animationStudio', 'releaseYear'])]
+#[ORM\HasLifecycleCallbacks]
 class Anime
 {
     #[ORM\Id]
@@ -32,11 +35,11 @@ class Anime
     private ?string $description = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice(
+    #[Assert\Choice([
         'ongoing',
         'finished',
         'paused',
-    )]
+    ])]
     #[Assert\NotBlank]
     private ?string $state = null;
 
@@ -200,6 +203,19 @@ class Anime
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User

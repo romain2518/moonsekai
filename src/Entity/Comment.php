@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ORM\Index(name: 'idx_search', fields: ['targetTable', 'targetId'])]
+#[ORM\HasLifecycleCallbacks]
 class Comment
 {
     #[ORM\Id]
@@ -25,10 +27,12 @@ class Comment
     #[Assert\NotBlank]
     private ?string $message = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 190)]
     private ?string $targetTable = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: [
+        'unsigned' => true
+    ])]
     private ?int $targetId = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -44,7 +48,7 @@ class Comment
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'answers')]
     private ?self $parent = null;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true)]
     private Collection $answers;
 
     public function __construct()
@@ -115,6 +119,19 @@ class Comment
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User

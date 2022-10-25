@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VolumeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Volume
 {
     #[ORM\Id]
@@ -31,7 +32,7 @@ class Volume
     )]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $picturePath = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -89,7 +90,7 @@ class Volume
         return $this->picturePath;
     }
 
-    public function setPicturePath(string $picturePath): self
+    public function setPicturePath(?string $picturePath): self
     {
         $this->picturePath = $picturePath;
 
@@ -118,6 +119,19 @@ class Volume
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateDatetimes(): void
+    {
+        if ($this->getCreatedAt() === null) { // => PrePersist
+            
+            $this->setCreatedAt(new \DateTime('now'));
+        } else { // => PreUpdate
+
+            $this->setUpdatedAt(new \DateTime('now'));
+        } 
     }
 
     public function getUser(): ?User
