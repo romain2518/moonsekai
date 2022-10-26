@@ -114,7 +114,7 @@
 | /back-office/user/{id}/reset-biography | GET | User | resetBiography | |
 | /back-office/user/{id}/mute | GET | User | mute | |
 | /back-office/user/{id}/unmute | GET | User | unmute | |
-| /back-office/user/{id}/editRank | POST | User | editRank | |
+| /back-office/user/{id}/edit-rank | POST | User | editRank | |
 | /back-office/ban/{limit}/{offset} | GET | Ban | index | |
 | /back-office/ban/{user_id} | GET | Ban | new | |
 | /back-office/ban/{id}/delete | POST | Ban | delete | |
