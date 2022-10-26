@@ -85,8 +85,8 @@
 | /contact | GET/POST | Contact | new | |
 | /about | GET | Main | about | |
 | /legal-mentions | GET | Main | legalMentions | |
-| /patch-notes | GET/POST | Main | patchNotes | |
-| /back-office | GET | BackMain | index | |
+| /patch-notes | GET | Main | patchNotes | |
+| /back-office | GET | Main | backOffice | |
 | /back-office/contact-list/{limit}/{offset} | GET | Contact | index | |
 | /back-office/contact-list/{id}/mark-as-processed | GET | Contact | markAsProcessed | |
 | /back-office/contact-list/{id}/mark-as-unprocessed | GET | Contact | markAsUnprocessed | |
