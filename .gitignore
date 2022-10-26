@@ -18,3 +18,30 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> Prevent fixture images from being pushed ###
+/public/images/animePictures/*
+!/public/images/animePictures/.gitkeep
+/public/images/lightNovelPictures/*
+!/public/images/lightNovelPictures/.gitkeep
+/public/images/mangaPictures/*
+!/public/images/mangaPictures/.gitkeep
+/public/images/moviePictures/*
+!/public/images/moviePictures/.gitkeep
+/public/images/newsPictures/*
+!/public/images/newsPictures/.gitkeep
+/public/images/plateformPictures/*
+!/public/images/plateformPictures/.gitkeep
+/public/images/seasonPictures/*
+!/public/images/seasonPictures/.gitkeep
+/public/images/userBanners/*
+!/public/images/userBanners/.gitkeep
+/public/images/userPictures/*
+!/public/images/userPictures/.gitkeep
+/public/images/volumePictures/*
+!/public/images/volumePictures/.gitkeep
+/public/images/workNewsPictures/*
+!/public/images/workNewsPictures/.gitkeep
+/public/images/workPictures/*
+!/public/images/workPictures/.gitkeep
+###< Prevent fixture images from being pushed ###
