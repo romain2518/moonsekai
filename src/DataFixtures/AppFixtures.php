@@ -56,8 +56,8 @@ class AppFixtures extends Fixture
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_SUPERADMIN'])
             ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
-            // ->setPicturePath() Default 0.png
-            // ->setBannerPath() Default 0.png
+            ->setPicturePath('1.jfif')
+            ->setBannerPath('1.jpg')
             ->setBiography($faker->realText(1000))
             ->setNotificationSetting(['*' => true])
             ->setIsNotificationRedirectionEnabled(random_int(0, 1))
@@ -75,8 +75,8 @@ class AppFixtures extends Fixture
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_ADMIN'])
             ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
-            // ->setPicturePath() Default 0.png
-            // ->setBannerPath() Default 0.png
+            ->setPicturePath('2.jfif')
+            ->setBannerPath('2.jpg')
             ->setBiography($faker->realText(1000))
             ->setNotificationSetting(['*' => true])
             ->setIsNotificationRedirectionEnabled(random_int(0, 1))
@@ -94,8 +94,8 @@ class AppFixtures extends Fixture
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_MODERATOR'])
             ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
-            // ->setPicturePath() Default 0.png
-            // ->setBannerPath() Default 0.png
+            ->setPicturePath('3.jfif')
+            ->setBannerPath('3.jpg')
             ->setBiography($faker->realText(1000))
             ->setNotificationSetting(['*' => true])
             ->setIsNotificationRedirectionEnabled(random_int(0, 1))
@@ -114,8 +114,8 @@ class AppFixtures extends Fixture
                 ->setEmail($faker->freeEmail())
                 ->setRoles(['ROLE_USER'])
                 ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
-                // ->setPicturePath() Default 0.png
-                // ->setBannerPath() Default 0.png
+                ->setPicturePath("$i.jfif")
+                ->setBannerPath("$i.jpg")
                 ->setBiography($faker->realText(1000))
                 ->setNotificationSetting(['*' => true])
                 ->setIsNotificationRedirectionEnabled(random_int(0, 1))
@@ -232,7 +232,7 @@ class AppFixtures extends Fixture
         }
 
         //! Work
-        for ($i=0; $i < 15; $i++) { 
+        for ($i=1; $i < 16; $i++) { 
             $work = new Work();
             $work
                 ->setUser($users[random_int(0,2)])
@@ -241,7 +241,7 @@ class AppFixtures extends Fixture
                 ->setNativeCountry($faker->country())
                 ->setOriginalName(random_int(0, 1) ? $faker->realText(190) : null) // Randomly set a message or nothing
                 ->setAlternativeName(random_int(0, 1) ? array_map(fn() => $faker->realText(255), range(1, random_int(1, 10))) : null) // Randomly set from 1 to 10 alt names or null
-                ->setPicturePath('0.png')
+                ->setPicturePath("$i.jpg")
                 ;
 
             for ($j=1; $j < random_int(1, count($tags)); $j++) { 
@@ -261,6 +261,7 @@ class AppFixtures extends Fixture
         }
 
         //! Movie
+        $counter = 1;
         foreach ($works as $work) {
             for ($i=0; $i < random_int(1,4); $i++) { 
                 $movie = new Movie();
@@ -272,14 +273,16 @@ class AppFixtures extends Fixture
                     ->setDuration(random_int(1, 300))
                     ->setAnimationStudio($faker->company())
                     ->setReleaseYear($faker->dateTimeBetween('1900', '+10 years'))
-                    ->setPicturePath('0.png')
+                    ->setPicturePath("$counter.jpg")
                     ;
                 $movies[] = $movie;
+                $counter++;
                 $manager->persist($movie);
             }
         }
 
         //! Light novel
+        $counter = 1;
         foreach ($works as $work) {
             for ($i=0; $i < random_int(1,4); $i++) { 
                 $lightNovel = new LightNovel();
@@ -291,9 +294,10 @@ class AppFixtures extends Fixture
                     ->setAuthor($faker->realTextBetween(1, 100))
                     ->setEditor($faker->realTextBetween(1, 100))
                     ->setReleaseYear($faker->dateTimeBetween('1900', '+10 years'))
-                    ->setPicturePath('0.png')
+                    ->setPicturePath("$counter.jpg")
                     ;
                 $lightNovels[] = $lightNovel;
+                $counter++;
                 $manager->persist($lightNovel);
             }
         }
@@ -315,6 +319,7 @@ class AppFixtures extends Fixture
         }
 
         //! Manga
+        $counter = 1;
         foreach ($works as $work) {
             for ($i=0; $i < random_int(1,4); $i++) { 
                 $manga = new Manga();
@@ -329,9 +334,10 @@ class AppFixtures extends Fixture
                     ->setDesigner($faker->realTextBetween(1, 100))
                     ->setEditor($faker->realTextBetween(1, 100))
                     ->setReleaseYear($faker->dateTimeBetween('1900', '+10 years'))
-                    ->setPicturePath('0.png')
+                    ->setPicturePath("$counter.jpg")
                     ;
                 $mangas[] = $manga;
+                $counter++;
                 $manager->persist($manga);
             }
         }
@@ -368,6 +374,7 @@ class AppFixtures extends Fixture
         }
 
         //! Anime
+        $counter = 1;
         foreach ($works as $work) {
             for ($i=0; $i < random_int(1,4); $i++) { 
                 $anime = new Anime();
@@ -380,9 +387,10 @@ class AppFixtures extends Fixture
                     ->setAuthor($faker->realTextBetween(1, 100))
                     ->setAnimationStudio($faker->company())
                     ->setReleaseYear($faker->dateTimeBetween('1900', '+10 years'))
-                    ->setPicturePath('0.png')
+                    ->setPicturePath("$counter.jpg")
                     ;
                 $animes[] = $anime;
+                $counter++;
                 $manager->persist($anime);
             }
         }
