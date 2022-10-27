@@ -45,7 +45,7 @@ class DownloadFakePicturesCommand extends Command
         ];
 
         foreach ($folders as $folder) {
-            $files = $finder->files()->in("public/images/$folder");
+            $files = $finder->files()->in("public/assets/images/$folder");
             $fileSystem->remove($files);
         }
 
@@ -60,7 +60,7 @@ class DownloadFakePicturesCommand extends Command
             $content = file_get_contents("https://i.pravatar.cc/200?img=" . $i);
     
             //Store in the filesystem.
-            $fp = fopen("public/images/userPictures/" . $i . ".jfif", "w");
+            $fp = fopen("public/assets/images/userPictures/" . $i . ".jfif", "w");
             fwrite($fp, $content);
             fclose($fp);
 
@@ -84,7 +84,7 @@ class DownloadFakePicturesCommand extends Command
             $content = file_get_contents("https://picsum.photos/500/350", false, $context);
     
             //Store in the filesystem.
-            $fp = fopen("public/images/userBanners/" . $i . ".jpg", "w");
+            $fp = fopen("public/assets/images/userBanners/" . $i . ".jpg", "w");
             fwrite($fp, $content);
             fclose($fp);
 
@@ -116,7 +116,7 @@ class DownloadFakePicturesCommand extends Command
             $content = file_get_contents($imageUrl);
 
             //Store in the filesystem.
-            $fp = fopen("public/images/workPictures/" . $i . '.jpg', "w");
+            $fp = fopen("public/assets/images/workPictures/" . $i . '.jpg', "w");
             fwrite($fp, $content);
             fclose($fp);
 
@@ -148,7 +148,7 @@ class DownloadFakePicturesCommand extends Command
             $content = file_get_contents($imageUrl);
 
             //Store in the filesystem.
-            $fp = fopen("public/images/moviePictures/" . $i . '.jpg', "w");
+            $fp = fopen("public/assets/images/moviePictures/" . $i . '.jpg', "w");
             fwrite($fp, $content);
             fclose($fp);
 
@@ -180,7 +180,7 @@ class DownloadFakePicturesCommand extends Command
             $content = file_get_contents($imageUrl);
 
             //Store in the filesystem.
-            $fp = fopen("public/images/lightNovelPictures/" . $i . '.jpg', "w");
+            $fp = fopen("public/assets/images/lightNovelPictures/" . $i . '.jpg', "w");
             fwrite($fp, $content);
             fclose($fp);
 
@@ -212,7 +212,7 @@ class DownloadFakePicturesCommand extends Command
             $content = file_get_contents($imageUrl);
 
             //Store in the filesystem.
-            $fp = fopen("public/images/mangaPictures/" . $i . '.jpg', "w");
+            $fp = fopen("public/assets/images/mangaPictures/" . $i . '.jpg', "w");
             fwrite($fp, $content);
             fclose($fp);
 
@@ -244,7 +244,7 @@ class DownloadFakePicturesCommand extends Command
             $content = file_get_contents($imageUrl);
 
             //Store in the filesystem.
-            $fp = fopen("public/images/animePictures/" . $i . '.jpg', "w");
+            $fp = fopen("public/assets/images/animePictures/" . $i . '.jpg', "w");
             fwrite($fp, $content);
             fclose($fp);
 
