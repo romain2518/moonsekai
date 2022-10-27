@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
-Welcome to home page !
+<a href="{{ path('app_main_home') }}">Home</a><br>
+<a href="{{ path('app_main_about') }}">About</a><br>
+<a href="{{ path('app_main_legal-mentions') }}">Legal-mentions</a><br>
+<a href="{{ path('app_main_patch-notes') }}">Patch-notes</a><br>
+<a href="{{ path('app_main_back-office') }}">Back-office</a><br>
 {% endblock %}
