@@ -20,28 +20,28 @@
 ###< symfony/phpunit-bridge ###
 
 ###> Prevent fixture images from being pushed ###
-/public/images/animePictures/*
-!/public/images/animePictures/.gitkeep
-/public/images/lightNovelPictures/*
-!/public/images/lightNovelPictures/.gitkeep
-/public/images/mangaPictures/*
-!/public/images/mangaPictures/.gitkeep
-/public/images/moviePictures/*
-!/public/images/moviePictures/.gitkeep
-/public/images/newsPictures/*
-!/public/images/newsPictures/.gitkeep
-/public/images/plateformPictures/*
-!/public/images/plateformPictures/.gitkeep
-/public/images/seasonPictures/*
-!/public/images/seasonPictures/.gitkeep
-/public/images/userBanners/*
-!/public/images/userBanners/.gitkeep
-/public/images/userPictures/*
-!/public/images/userPictures/.gitkeep
-/public/images/volumePictures/*
-!/public/images/volumePictures/.gitkeep
-/public/images/workNewsPictures/*
-!/public/images/workNewsPictures/.gitkeep
-/public/images/workPictures/*
-!/public/images/workPictures/.gitkeep
+/public/assets/images/animePictures/*
+!/public/assets/images/animePictures/.gitkeep
+/public/assets/images/lightNovelPictures/*
+!/public/assets/images/lightNovelPictures/.gitkeep
+/public/assets/images/mangaPictures/*
+!/public/assets/images/mangaPictures/.gitkeep
+/public/assets/images/moviePictures/*
+!/public/assets/images/moviePictures/.gitkeep
+/public/assets/images/newsPictures/*
+!/public/assets/images/newsPictures/.gitkeep
+/public/assets/images/plateformPictures/*
+!/public/assets/images/plateformPictures/.gitkeep
+/public/assets/images/seasonPictures/*
+!/public/assets/images/seasonPictures/.gitkeep
+/public/assets/images/userBanners/*
+!/public/assets/images/userBanners/.gitkeep
+/public/assets/images/userPictures/*
+!/public/assets/images/userPictures/.gitkeep
+/public/assets/images/volumePictures/*
+!/public/assets/images/volumePictures/.gitkeep
+/public/assets/images/workNewsPictures/*
+!/public/assets/images/workNewsPictures/.gitkeep
+/public/assets/images/workPictures/*
+!/public/assets/images/workPictures/.gitkeep
 ###< Prevent fixture images from being pushed ###
