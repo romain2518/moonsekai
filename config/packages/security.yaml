@@ -4,14 +4,18 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,8 +26,68 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        #? User
+        
+        - { path: ^/profile/[0-9]+$, roles: PUBLIC_ACCESS }
+        - { path: ^/profile, roles: ROLE_USER }
+
+        - { path: ^/register/confirm, roles: ROLE_USER }
+        - { path: ^/edit-logins, roles: ROLE_USER }
+        - { path: ^/reset-password, roles: ROLE_USER }
+        
+        - { path: ^/subscribe-newsletter, roles: ROLE_USER }
+        - { path: ^/unsubscribe-newsletter, roles: ROLE_USER }
+        
+        - { path: ^/notification, roles: ROLE_USER }
+
+        - { path: ^/report, roles: ROLE_USER }
+
+        #? Plateform
+
+        - { path: ^/plateform/[0-9]+$, roles: PUBLIC_ACCESS }
+        - { path: ^/plateform, roles: ROLE_MODERATOR }
+
+        #? Work
+
+        - { path: ^/follow, roles: ROLE_USER }
+
+        - { path: ^/work/[0-9]+$, roles: PUBLIC_ACCESS }
+
+        - { path: ^/work/[0-9]+/follow$, roles: ROLE_USER }
+        - { path: ^/work/[0-9]+/unfollow$, roles: ROLE_USER }
+        - { path: ^/work/[0-9]+/mark-progress$, roles: ROLE_USER }
+
+        - { path: ^/work/[0-9]+/anime/[0-9]+/rate$, roles: ROLE_USER }
+        - { path: ^/work/[0-9]+/manga/[0-9]+/rate$, roles: ROLE_USER }
+        - { path: ^/work/[0-9]+/movie/[0-9]+/rate$, roles: ROLE_USER }
+        - { path: ^/work/[0-9]+/light-novel/[0-9]+/rate$, roles: ROLE_USER }
+
+        - { path: ^/work, roles: ROLE_MODERATOR }
+
+        #? Calendar
+
+        - { path: ^/calendar$, roles: PUBLIC_ACCESS }
+        - { path: ^/personal-calendar, roles: ROLE_USER }
+        - { path: ^/calendar, roles: ROLE_MODERATOR }
+
+        #? Private message
+
+        - { path: ^/private-message, roles: ROLE_USER }
+
+        #? Comment
+
+        - { path: ^/comment, roles: ROLE_USER }
+
+        #? Back office
+        
+        - { path: ^/back-office/user/[0-9]+/edit-rank$, roles: ROLE_ADMIN }
+        - { path: ^/back-office/ban, roles: ROLE_ADMIN }
+        - { path: ^/back-office, roles: ROLE_MODERATOR }
+
+    role_hierarchy:
+        ROLE_SUPERADMIN: ROLE_ADMIN
+        ROLE_ADMIN: ROLE_MODERATOR
+        ROLE_MODERATOR: ROLE_USER
 
 when@test:
     security:
