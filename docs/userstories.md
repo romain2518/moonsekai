@@ -1,6 +1,6 @@
 # User stories
 
-Hiérarchie des roles : admin > modérateur > membre > visiteur
+Hiérarchie des roles : superadmin > admin > modérateur > membre > visiteur
 
 | En tant que | Je veux | Afin de (si besoin/nécessaire) |
 |--|--|--|
@@ -85,8 +85,6 @@ Hiérarchie des roles : admin > modérateur > membre > visiteur
 | membre | suivre une oeuvre | d'être notifié des nouveautés liées à l'oeuvre |
 | membre | arrêter de suivre une oeuvre |  |
 | membre | marquer une oeuvre comme en cours/à voir/terminée/en pause/abandonnée | - |
-<!-- | membre | noter a quel chapitre je me suis arreté | - | -->
-<!-- | membre | noter a quel episode je me suis arreté | - | -->
 | membre | noter un anime | - |
 | membre | noter un manga | - |
 | membre | noter un film | - |
@@ -172,7 +170,7 @@ membre / anime / manga
 |--|--|--|
 | visiteur | contacter les administrateurs du site | - |
 | membre | avertir les administrateurs du mauvais comportement d'un utilisateur | - |
-| membre | avertir les administrateurs d'une erreur minime relatif à une page (syntaxe, orthographe, contexte etc.) | - |
+| membre | avertir les administrateurs d'une erreur mineure relatif à une page (syntaxe, orthographe, contexte etc.) | - |
 | membre | avertir les administrateurs d'un bug | - |
 | admin | lire les message de prise de contact | - |
 | admin | marquer comme traité une demande de prise de contact | - |

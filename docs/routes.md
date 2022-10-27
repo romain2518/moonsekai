@@ -85,8 +85,8 @@
 | /contact | GET/POST | Contact | new | |
 | /about | GET | Main | about | |
 | /legal-mentions | GET | Main | legalMentions | |
-| /patch-notes | GET/POST | Main | patchNotes | |
-| /back-office | GET | BackMain | index | |
+| /patch-notes | GET | Main | patchNotes | |
+| /back-office | GET | Main | backOffice | |
 | /back-office/contact-list/{limit}/{offset} | GET | Contact | index | |
 | /back-office/contact-list/{id}/mark-as-processed | GET | Contact | markAsProcessed | |
 | /back-office/contact-list/{id}/mark-as-unprocessed | GET | Contact | markAsUnprocessed | |
@@ -114,7 +114,7 @@
 | /back-office/user/{id}/reset-biography | GET | User | resetBiography | |
 | /back-office/user/{id}/mute | GET | User | mute | |
 | /back-office/user/{id}/unmute | GET | User | unmute | |
-| /back-office/user/{id}/editRank | POST | User | editRank | |
+| /back-office/user/{id}/edit-rank | POST | User | editRank | |
 | /back-office/ban/{limit}/{offset} | GET | Ban | index | |
 | /back-office/ban/{user_id} | GET | Ban | new | |
 | /back-office/ban/{id}/delete | POST | Ban | delete | |
