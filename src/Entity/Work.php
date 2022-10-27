@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\WorkRepository;
+use App\Validator as CustomAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -40,6 +41,7 @@ class Work
     
     #[ORM\Column(length: 190)]
     #[Assert\NotBlank]
+    #[CustomAssert\Country]
     private ?string $nativeCountry = null;
     
     #[ORM\Column(length: 190, nullable: true)]
