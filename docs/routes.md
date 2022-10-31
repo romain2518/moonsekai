@@ -29,10 +29,10 @@
 | /platform/add | GET/POST | Plateform | new | |
 | /platform/{id}/edit | GET/POST | Plateform | edit | |
 | /platform/{id}/delete | POST | Plateform | delete | |
-| /follow/{limit}/{offset} | GET | User | listFollowedWork | |
+| /followed-work/{limit}/{offset} | GET | User | listFollowedWork | |
+| /follow | GET | User | follow | |
+| /unfollow | GET | User | unfollow | |
 | /work/{id} | GET | Work | show | |
-| /work/{id}/follow | GET | User | follow | |
-| /work/{id}/unfollow | GET | User | unfollow | |
 | /work/{id}/mark-progress | POST | User | markProgress | |
 | /work/add | GET/POST | Work | new | |
 | /work/{id}/edit | GET/POST | Work | edit | |
