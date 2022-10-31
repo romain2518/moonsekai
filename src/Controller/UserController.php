@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Work;
 use App\Form\EditLoginsType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -11,6 +12,7 @@ use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -34,7 +36,7 @@ class UserController extends AbstractController
     //     ]);
     // }
 
-    #[Route('/profile/{id}', name: 'app_user_show', requirements: ['id' => '\d+'])]
+    #[Route('/profile/{id}', name: 'app_user_profile', requirements: ['id' => '\d+'])]
     public function profile(UserRepository $userRepository, int $id = null): Response
     {
         /** @var User $user */
@@ -119,14 +121,64 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/followed-work/{limit}/{offset}', name: 'app_user_show', requirements: ['limit' => '\d+', 'offset' => '\d+'])]
-    public function listFollowedWork(WorkRepository $workRepository, UserRepository $ur, UserInterface $user, int $limit = 20, int $offset = 0): Response
+    #[Route('/followed-work/{limit}/{offset}', name: 'app_user_followed-work', requirements: ['limit' => '\d+', 'offset' => '\d+'])]
+    public function listFollowedWork(WorkRepository $workRepository, UserInterface $user, int $limit = 20, int $offset = 0): Response
     {
         /** @var User $user */
 
         return $this->render('user/followed_work.html.twig', [
-            'works' => $workRepository->findByFollower($user, 20, 0)
+            'works' => $workRepository->findByFollower($user, $limit, $offset)
         ]);
+    }
+
+    #[Route('/follow/{id}', name: 'app_user_follow', requirements: ['id' => '\d+'])]
+    public function follow(Work $work = null, UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User $user */
+
+        if ($work === null) {
+            throw $this->createNotFoundException('Work not found');
+        }
+
+        $user->addFollowedWork($work);
+
+        $entityManager->flush();
+
+        return $this->json(
+            $user,
+            Response::HTTP_PARTIAL_CONTENT,
+            [],
+            [
+                'groups' => [
+                    'api_user_show'
+                ]
+            ],
+        );
+    }
+
+    #[Route('/unfollow/{id}', name: 'app_user_unfollow', requirements: ['id' => '\d+'])]
+    public function unfollow(Work $work = null, UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User $user */
+
+        if ($work === null) {
+            throw $this->createNotFoundException('Work not found');
+        }
+
+        $user->removeFollowedWork($work);
+
+        $entityManager->flush();
+
+        return $this->json(
+            $user,
+            Response::HTTP_PARTIAL_CONTENT,
+            [],
+            [
+                'groups' => [
+                    'api_user_show'
+                ]
+            ],
+        );
     }
 
     // #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
