@@ -15,7 +15,7 @@
 | notification_setting | json | Not null | |
 | is_notification_redirection_enabled | boolean | Not null | Default False |
 | is_muted | boolean | Not null | Default False |
-| is_account_confirmed | boolean | Not null | Default False |
+| is_verified | boolean | Not null | Default False |
 | is_subscribed_newsletter | boolean | Index, not null | Default False |
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |

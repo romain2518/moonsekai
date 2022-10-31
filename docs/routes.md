@@ -4,19 +4,21 @@
 |--|--|--|--|--|
 | / | GET | Main | home | |
 | /search | GET/POST | Main | search | |
-| /register | GET/POST | | | |
-| /login | GET/POST | | | |
+| /register | GET/POST | Registration | register | |
+| /login | GET/POST | Security | login | |
+| /logout | GET/POST | Security | logout | |
 | /profile | GET | User | profile | |
 | /profile/{id} | GET | User | profile | |
 | /profile/edit | GET/POST | User | editProfile | |
 | /profile/delete | GET/POST | User | delete | |
-| /register/confirm | GET/POT | User | registerConfirm | GET route will show a page to enter the code manually<br> Clicking on the link in the email will be enough as it uses POST route. |
+| /verify/email | GET | Registration | verifyUserEmail | |
+| /verify/resend/{id} | GET | Registration | resendVerifyEmail | |
 | /edit-logins | GET/POST | User | editLogins | |
-| /reset-password | GET/POST | User | resetPassword | Sends a mail to the given mail |
-| /reset-password/confirm | GET/POST | User | resetPasswordConfirm | Checks the secret code sent by email |
-| /reset-password/new-password | GET/POST | User | resetPasswordNewPassword | Replaces old password with le new one |
-| /subscribe-newsletter | GET/POST | Newsletter | subscribe | |
-| /unsubscribe-newsletter | GET/POST | Newsletter | unsubscribe | |
+| /reset-password | GET/POST | ResetPassword | request | Sends a mail to the given mail |
+| /reset-password/check-email | GET/POST | ResetPassword | checkEmail | |
+| /reset-password/reset | GET/POST | ResetPassword | reset | |
+| /subscribe-newsletter | POST | User | subscribeNewsletter | |
+| /unsubscribe-newsletter | POST | User | unsubscribeNewsletter | |
 | /notification/personalize | GET/POST | User | personalizeNotification | |
 | /notification/enable-redirection | GET | User | enableRedirection | |
 | /notification/disable-redirection | GET | User | disableRedirection | |
@@ -27,10 +29,10 @@
 | /platform/add | GET/POST | Plateform | new | |
 | /platform/{id}/edit | GET/POST | Plateform | edit | |
 | /platform/{id}/delete | POST | Plateform | delete | |
-| /follow/{limit}/{offset} | GET | User | listFollowedWork | |
+| /followed-work/{limit}/{offset} | GET | User | listFollowedWork | |
+| /follow | POST | User | follow | |
+| /unfollow | POST | User | unfollow | |
 | /work/{id} | GET | Work | show | |
-| /work/{id}/follow | GET | User | follow | |
-| /work/{id}/unfollow | GET | User | unfollow | |
 | /work/{id}/mark-progress | POST | User | markProgress | |
 | /work/add | GET/POST | Work | new | |
 | /work/{id}/edit | GET/POST | Work | edit | |
@@ -108,13 +110,13 @@
 | /back-office/tag/{id}/delete | POST | Tag | delete | |
 | /back-office/comment/{limit}/{offset} | GET | Comment | adminList | |
 | /back-office/user/{limit}/{offset} | GET | User | adminList | |
-| /back-office/user/{id}/reset-picture | GET | User | resetPicture | |
-| /back-office/user/{id}/reset-banner | GET | User | resetBanner | |
-| /back-office/user/{id}/reset-pseudo | GET | User | resetPseudo | |
-| /back-office/user/{id}/reset-biography | GET | User | resetBiography | |
-| /back-office/user/{id}/mute | GET | User | mute | |
-| /back-office/user/{id}/unmute | GET | User | unmute | |
-| /back-office/user/{id}/edit-rank | POST | User | editRank | |
+| /back-office/user/{id}/reset-picture | POST | User | manage | |
+| /back-office/user/{id}/reset-banner | POST | User | manage | |
+| /back-office/user/{id}/reset-pseudo | POST | User | manage | |
+| /back-office/user/{id}/reset-biography | POST | User | manage | |
+| /back-office/user/{id}/mute | POST | User | manage | |
+| /back-office/user/{id}/unmute | POST | User | manage | |
+| /back-office/user/{id}/edit-rank | POST | User | manage | |
+| /back-office/user/{id}/ban | POST | User | manage | |
 | /back-office/ban/{limit}/{offset} | GET | Ban | index | |
-| /back-office/ban/{user_id} | GET | Ban | new | |
 | /back-office/ban/{id}/delete | POST | Ban | delete | |
