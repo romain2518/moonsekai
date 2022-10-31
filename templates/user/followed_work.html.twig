@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Oeuvres suivies{% endblock %}
+
+{% block body %}
+    <h1>Oeuvres suivies</h1>
+
+    {% for work in works %}
+        <p>{{ work.name }}</p>
+    {% else %}
+        No work found.
+    {% endfor %}
+
+{% endblock %}
