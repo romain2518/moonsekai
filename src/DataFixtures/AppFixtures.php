@@ -62,7 +62,7 @@ class AppFixtures extends Fixture
             ->setNotificationSetting(['*' => true])
             ->setIsNotificationRedirectionEnabled(random_int(0, 1))
             ->setIsMuted(random_int(0, 1))
-            ->setIsAccountConfirmed(random_int(0, 1))
+            ->setIsVerified(random_int(0, 1))
             ->setIsSubscribedNewsletter(random_int(0, 1))
             ;
         $users[] = $user;
@@ -81,7 +81,7 @@ class AppFixtures extends Fixture
             ->setNotificationSetting(['*' => true])
             ->setIsNotificationRedirectionEnabled(random_int(0, 1))
             ->setIsMuted(random_int(0, 1))
-            ->setIsAccountConfirmed(random_int(0, 1))
+            ->setIsVerified(random_int(0, 1))
             ->setIsSubscribedNewsletter(random_int(0, 1))
             ;
         $users[] = $user;
@@ -100,7 +100,7 @@ class AppFixtures extends Fixture
             ->setNotificationSetting(['*' => true])
             ->setIsNotificationRedirectionEnabled(random_int(0, 1))
             ->setIsMuted(random_int(0, 1))
-            ->setIsAccountConfirmed(random_int(0, 1))
+            ->setIsVerified(random_int(0, 1))
             ->setIsSubscribedNewsletter(random_int(0, 1))
             ;
         $users[] = $user;
@@ -120,7 +120,7 @@ class AppFixtures extends Fixture
                 ->setNotificationSetting(['*' => true])
                 ->setIsNotificationRedirectionEnabled(random_int(0, 1))
                 ->setIsMuted(random_int(0, 1))
-                ->setIsAccountConfirmed(random_int(0, 1))
+                ->setIsVerified(random_int(0, 1))
                 ->setIsSubscribedNewsletter(random_int(0, 1))
                 ;
             $users[] = $user;

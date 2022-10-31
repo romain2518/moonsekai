@@ -13,11 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity('email')]
 #[ORM\Index(name: 'idx_pseudo', fields: ['pseudo'])]
 #[ORM\Index(name: 'idx_email', fields: ['email'])]
 #[ORM\Index(name: 'idx_newsletter', fields: ['isSubscribedNewsletter'])]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -62,21 +62,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         max: 1000,
     )]
     private ?string $biography = null;
-
+    
     #[ORM\Column]
     private array $notificationSetting = [];
-
+    
     #[ORM\Column]
     private ?bool $isNotificationRedirectionEnabled = false;
-
+    
     #[ORM\Column]
     private ?bool $isMuted = false;
-
-    #[ORM\Column]
-    private ?bool $isAccountConfirmed = false;
-
+    
     #[ORM\Column]
     private ?bool $isSubscribedNewsletter = false;
+    
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -310,7 +310,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsNotificationRedirectionEnabled(): ?bool
+    public function isNotificationRedirectionEnabled(): ?bool
     {
         return $this->isNotificationRedirectionEnabled;
     }
@@ -322,7 +322,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsMuted(): ?bool
+    public function isMuted(): ?bool
     {
         return $this->isMuted;
     }
@@ -334,19 +334,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsAccountConfirmed(): ?bool
-    {
-        return $this->isAccountConfirmed;
-    }
-
-    public function setIsAccountConfirmed(bool $isAccountConfirmed): self
-    {
-        $this->isAccountConfirmed = $isAccountConfirmed;
-
-        return $this;
-    }
-
-    public function isIsSubscribedNewsletter(): ?bool
+    public function isSubscribedNewsletter(): ?bool
     {
         return $this->isSubscribedNewsletter;
     }
@@ -1078,6 +1066,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->followedWorks->removeElement($followedWork)) {
             $followedWork->removeFollower($this);
         }
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
