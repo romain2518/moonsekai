@@ -4,17 +4,19 @@
 |--|--|--|--|--|
 | / | GET | Main | home | |
 | /search | GET/POST | Main | search | |
-| /register | GET/POST | | | |
-| /login | GET/POST | | | |
+| /register | GET/POST | Registration | register | |
+| /login | GET/POST | Security | login | |
+| /logout | GET/POST | Security | logout | |
 | /profile | GET | User | profile | |
 | /profile/{id} | GET | User | profile | |
 | /profile/edit | GET/POST | User | editProfile | |
 | /profile/delete | GET/POST | User | delete | |
-| /register/confirm | GET/POT | User | registerConfirm | GET route will show a page to enter the code manually<br> Clicking on the link in the email will be enough as it uses POST route. |
+| /verify/email | GET | Registration | verifyUserEmail | |
+| /verify/resend/{id} | GET | Registration | resendVerifyEmail | |
 | /edit-logins | GET/POST | User | editLogins | |
-| /reset-password | GET/POST | User | resetPassword | Sends a mail to the given mail |
-| /reset-password/confirm | GET/POST | User | resetPasswordConfirm | Checks the secret code sent by email |
-| /reset-password/new-password | GET/POST | User | resetPasswordNewPassword | Replaces old password with le new one |
+| /reset-password | GET/POST | ResetPassword | request | Sends a mail to the given mail |
+| /reset-password/check-email | GET/POST | ResetPassword | checkEmail | |
+| /reset-password/reset | GET/POST | ResetPassword | reset | |
 | /subscribe-newsletter | GET/POST | Newsletter | subscribe | |
 | /unsubscribe-newsletter | GET/POST | Newsletter | unsubscribe | |
 | /notification/personalize | GET/POST | User | personalizeNotification | |
