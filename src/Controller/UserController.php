@@ -33,13 +33,25 @@ class UserController extends AbstractController
     //     ]);
     // }
 
-    // #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    // public function show(User $user): Response
-    // {
-    //     return $this->render('user/show.html.twig', [
-    //         'user' => $user,
-    //     ]);
-    // }
+    #[Route('/profile/{id}', name: 'app_user_show', requirements: ['id' => '\d+'])]
+    public function show(UserRepository $userRepository, int $id = null): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        
+        if ($user === null || // User is not connected
+            $user !== null && ($id !== null && $id !== $user->getId())) { // User is connected but not the target
+            $user = $userRepository->find($id);
+        }
+        
+        if ($user === null) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+        ]);
+    }
 
     #[Route('/edit-logins', name: 'app_user_edit-logins', methods: ['GET', 'POST'])]
     public function editLogins(

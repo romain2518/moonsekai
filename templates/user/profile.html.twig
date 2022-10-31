@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.pseudo }}{% endblock %}
+
+{% block body %}
+    <h1>Profil</h1>
+
+    <p>Roles : {{ user.roles ? user.roles|json_encode : '' }}</p>
+    <p>Pseudo : {{ user.pseudo }}</p>
+    <p>PicturePath : {{ user.picturePath }}</p>
+    <p>BannerPath : {{ user.bannerPath }}</p>
+    <p>Biography : {{ user.biography }}</p>
+    <p>CreatedAt : {{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</p>
+
+{% endblock %}
