@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WorkRepository::class)]
@@ -19,6 +20,7 @@ class Work
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api_user_show')]
     private ?int $id = null;
 
     #[ORM\Column(length: 190)]
@@ -27,6 +29,7 @@ class Work
         max: 190,
     )]
     #[Assert\NotBlank]
+    #[Groups('api_user_show')]
     private ?string $name = null;
 
     #[ORM\Column(length: 20)]
@@ -61,6 +64,7 @@ class Work
     private ?array $alternativeName = [];
 
     #[ORM\Column(length: 255)]
+    #[Groups('api_user_show')]
     private ?string $picturePath = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

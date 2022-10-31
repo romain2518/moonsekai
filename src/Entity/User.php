@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Index(name: 'idx_pseudo', fields: ['pseudo'])]
@@ -23,6 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api_user_show')]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -35,6 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups('api_user_show')]
     private array $roles = [];
 
     /**
@@ -49,18 +52,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         max: 30,
     )]
     #[Assert\NotBlank]
+    #[Groups('api_user_show')]
     private ?string $pseudo = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('api_user_show')]
     private ?string $picturePath = '0.png';
 
     #[ORM\Column(length: 255)]
+    #[Groups('api_user_show')]
     private ?string $bannerPath = '0.png';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(
         max: 1000,
     )]
+    #[Groups('api_user_show')]
     private ?string $biography = null;
     
     #[ORM\Column]
@@ -70,18 +77,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isNotificationRedirectionEnabled = false;
     
     #[ORM\Column]
+    #[Groups('api_user_show')]
     private ?bool $isMuted = false;
     
     #[ORM\Column]
+    #[Groups('api_user_show')]
     private ?bool $isSubscribedNewsletter = false;
     
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups('api_user_show')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups('api_user_show')]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class, orphanRemoval: true)]
@@ -151,6 +162,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $calendarEvents;
 
     #[ORM\ManyToMany(targetEntity: Work::class, mappedBy: 'followers')]
+    #[Groups('api_user_show')]
     private Collection $followedWorks;
 
     public function __construct()
