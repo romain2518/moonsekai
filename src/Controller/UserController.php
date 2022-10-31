@@ -34,7 +34,7 @@ class UserController extends AbstractController
     // }
 
     #[Route('/profile/{id}', name: 'app_user_show', requirements: ['id' => '\d+'])]
-    public function show(UserRepository $userRepository, int $id = null): Response
+    public function profile(UserRepository $userRepository, int $id = null): Response
     {
         /** @var User $user */
         $user = $this->getUser();
