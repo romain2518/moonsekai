@@ -6,17 +6,25 @@ use App\Entity\User;
 use App\Form\EditLoginsType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends AbstractController
 {
+    public function __construct(private EmailVerifier $emailVerifier)
+    {
+    }
+    
     // #[Route('/', name: 'app_user_index', methods: ['GET'])]
     // public function index(UserRepository $userRepository): Response
     // {
@@ -34,17 +42,25 @@ class UserController extends AbstractController
     // }
 
     #[Route('/edit-logins', name: 'app_user_edit-logins', methods: ['GET', 'POST'])]
-    public function editLogins(Request $request, UserInterface $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function editLogins(
+        Request $request, UserInterface $user, 
+        EntityManagerInterface $entityManager, 
+        UserPasswordHasherInterface $userPasswordHasher,
+        TokenStorageInterface $tokenStorage
+        ): Response
     {
         /** @var User $user */
-
+        $lastEmail = $user->getEmail();
+        
         $form = $this->createForm(EditLoginsType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $currentPassword = $form->get('password')->getData();
-            if ($userPasswordHasher->isPasswordValid($user, $currentPassword)) {
+            $supposedPassword = $form->get('password')->getData();
+            if ($userPasswordHasher->isPasswordValid($user, $supposedPassword)) {
+                //? If password changes, it needs to be hashed
                 $newPassword = $form->get('newPassword')->getData();
+
                 if (null !== $newPassword) {
                     $user->setPassword(
                         $userPasswordHasher->hashPassword(
@@ -54,7 +70,28 @@ class UserController extends AbstractController
                     );
                 }
 
+                //? If email changes, it needs to be confirmed
+                if ($user->getEmail() !== $lastEmail) {
+                    $user->setIsVerified(false);
+                    
+                    // Send email confirmation
+                    $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                        (new TemplatedEmail())
+                            ->from(new Address('no-reply@moonsekai.com', 'Account confirmationMmail Bot'))
+                            ->to($user->getEmail())
+                            ->subject('Please Confirm your Email')
+                            ->htmlTemplate('registration/confirmation_email.html.twig')
+                    );                     
+                }
+
                 $entityManager->flush();
+
+                if ($user->getEmail() !== $lastEmail) {
+                    // Disconnecting user
+                    $tokenStorage->setToken();
+                    
+                    return $this->redirectToRoute('app_verify_resend_email', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+                }
 
                 //TODO
                 // return $this->redirectToRoute('app_user_profile', [], Response::HTTP_SEE_OTHER);
