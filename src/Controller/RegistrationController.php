@@ -29,7 +29,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, MoonsekaiAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -55,13 +55,8 @@ class RegistrationController extends AbstractController
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
-            // do anything else you need here, like send an email
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+            return $this->redirectToRoute('app_verify_resend_email', ['id' => $user->getId()]);
         }
 
         return $this->render('registration/register.html.twig', [
@@ -70,7 +65,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserAuthenticatorInterface $userAuthenticator, MoonsekaiAuthenticator $authenticator, UserRepository $userRepository): Response
     {
         $id = $request->get('id');
 
@@ -93,9 +88,32 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
+        
+        return $userAuthenticator->authenticateUser(
+            $user,
+            $authenticator,
+            $request
+        );
+    }
 
-        return $this->redirectToRoute('app_main_home');
+    #[Route('/verify/resend/{id}', name: 'app_verify_resend_email')]
+    public function resendVerifyEmail(Request $request, User $user = null)
+    {
+        if (null === $user || $user->isVerified()) {
+            return $this->redirectToRoute('app_register');
+        }
+
+        if ($request->isMethod('POST')) {
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                (new TemplatedEmail())
+                    ->from(new Address('no-reply@moonsekai.com', 'Account confirmationMmail Bot'))
+                    ->to($user->getEmail())
+                    ->subject('Please Confirm your Email')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            );
+        }
+
+        return $this->render('registration/resend_verify_email.html.twig');
     }
 }
