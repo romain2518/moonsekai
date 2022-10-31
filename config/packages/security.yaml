@@ -40,7 +40,6 @@ security:
         - { path: ^/profile, roles: ROLE_USER }
 
         - { path: ^/edit-logins, roles: ROLE_USER }
-        - { path: ^/reset-password, roles: ROLE_USER }
         
         - { path: ^/subscribe-newsletter, roles: ROLE_USER }
         - { path: ^/unsubscribe-newsletter, roles: ROLE_USER }
