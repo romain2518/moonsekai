@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\EditLoginsType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Repository\WorkRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -115,6 +116,16 @@ class UserController extends AbstractController
 
         return $this->renderForm('user/edit_logins.html.twig', [
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/followed-work/{limit}/{offset}', name: 'app_user_show', requirements: ['limit' => '\d+', 'offset' => '\d+'])]
+    public function listFollowedWork(WorkRepository $workRepository, UserRepository $ur, UserInterface $user, int $limit = 20, int $offset = 0): Response
+    {
+        /** @var User $user */
+
+        return $this->render('user/followed_work.html.twig', [
+            'works' => $workRepository->findByFollower($user, 20, 0)
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Work;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,6 +38,22 @@ class WorkRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return Work[] Returns an array of Work objects
+     */
+    public function findByFollower(User $user, int $limit, int $offset): array
+    {
+        return $this->createQueryBuilder('w')
+            ->andWhere(':follower MEMBER OF w.followers')
+            ->setParameter('follower', $user)
+            ->orderBy('w.id', 'ASC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**
