@@ -192,9 +192,9 @@ class UserController extends AbstractController
     //     return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     // }
 
-    #[Route('/back-office/user/{id}/reset-{field}', name: 'app_user_reset-picture', 
-        requirements: ['id' => '\d+', 'field' => '^(picture)|(banner)|(pseudo)|(biography)$'])]
-    public function resetField(User $user = null, string $field, EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/back-office/user/{id}/{action}', name: 'app_user_edit-as-moderator', 
+        requirements: ['id' => '\d+', 'action' => '^(reset-picture)|(reset-banner)|(reset-pseudo)|(reset-biography)|(mute)|(unmute)$'])]
+    public function editAsModerator(User $user = null, string $action, EntityManagerInterface $entityManager): JsonResponse
     {
         if ($user === null) {
             return $this->json('User not found', Response::HTTP_NOT_FOUND);
@@ -203,18 +203,24 @@ class UserController extends AbstractController
         //? Checking if the user is not granted the ROLE_MODERATOR
         $this->denyAccessUnlessGranted('USER_EDIT', $user);
 
-        switch ($field) {
-            case 'picture':
+        switch ($action) {
+            case 'reset-picture':
                 $user->setPicturePath('0.png');
                 break;
-            case 'banner':
+            case 'reset-banner':
                 $user->setBannerPath('0.png');
                 break;
-            case 'pseudo':
+            case 'reset-pseudo':
                 $user->setPseudo('Membre #' . $user->getId());
                 break;
-            case 'biography':
+            case 'reset-biography':
                 $user->setBiography(null);
+                break;
+            case 'mute':
+                $user->setIsMuted(true);
+                break;
+            case 'unmute':
+                $user->setIsMuted(false);
                 break;
         }
 
