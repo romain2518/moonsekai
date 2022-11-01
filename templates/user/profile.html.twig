@@ -12,4 +12,9 @@
     <p>Biography : {{ user.biography }}</p>
     <p>CreatedAt : {{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</p>
 
+    <form method="post" action="{{ path('app_user_delete') }}" onsubmit="return confirm('Are you sure you want to delete your account ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+        <button class="btn">Delete account</button>
+    </form>
+
 {% endblock %}
