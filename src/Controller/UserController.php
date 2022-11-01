@@ -239,16 +239,21 @@ class UserController extends AbstractController
         );
     }
 
-    // #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
-    // public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
-    // {
-    //     if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-    //         $entityManager->remove($user);
-    //         $entityManager->flush();
-    //     }
+    #[Route('/profile/delete', name: 'app_user_delete', methods: ['POST'])]
+    public function delete(Request $request, UserInterface $user, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage): Response
+    {
+        /** @var User $user */
 
-    //     return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-    // }
+        if (!$this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid token');
+        }
+        
+        $entityManager->remove($user);
+        $entityManager->flush();
+        $tokenStorage->setToken();
+
+        return $this->redirectToRoute('app_main_home', [], Response::HTTP_SEE_OTHER);
+    }
 
     #[Route('/back-office/user/{limit}/{offset}', name: 'app_user_admin-list', requirements: ['limit' => '\d+', 'offset' => '\d+'])]
     public function adminList(UserRepository $userRepository, int $limit = 10, int $offset = 0): Response

@@ -44,7 +44,7 @@ class UserVoter extends Voter
         switch ($attribute) {
             case self::EDIT_SELF:
                 /** @var User $subject */
-                // return $user === $subject; // Return true if the requested user is the one logged in
+                return $user === $subject; // Return true if the requested user is the one logged in
                 
                 break;
             case self::EDIT_USER_MODERATOR:
