@@ -17,8 +17,8 @@
 | /reset-password | GET/POST | ResetPassword | request | Sends a mail to the given mail |
 | /reset-password/check-email | GET/POST | ResetPassword | checkEmail | |
 | /reset-password/reset | GET/POST | ResetPassword | reset | |
-| /subscribe-newsletter | GET/POST | Newsletter | subscribe | |
-| /unsubscribe-newsletter | GET/POST | Newsletter | unsubscribe | |
+| /subscribe-newsletter | POST | User | subscribeNewsletter | |
+| /unsubscribe-newsletter | POST | User | unsubscribeNewsletter | |
 | /notification/personalize | GET/POST | User | personalizeNotification | |
 | /notification/enable-redirection | GET | User | enableRedirection | |
 | /notification/disable-redirection | GET | User | disableRedirection | |
@@ -30,8 +30,8 @@
 | /platform/{id}/edit | GET/POST | Plateform | edit | |
 | /platform/{id}/delete | POST | Plateform | delete | |
 | /followed-work/{limit}/{offset} | GET | User | listFollowedWork | |
-| /follow | GET | User | follow | |
-| /unfollow | GET | User | unfollow | |
+| /follow | POST | User | follow | |
+| /unfollow | POST | User | unfollow | |
 | /work/{id} | GET | Work | show | |
 | /work/{id}/mark-progress | POST | User | markProgress | |
 | /work/add | GET/POST | Work | new | |
