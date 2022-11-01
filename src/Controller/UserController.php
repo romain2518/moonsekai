@@ -137,7 +137,7 @@ class UserController extends AbstractController
         /** @var User $user */
 
         if ($work === null) {
-            throw $this->createNotFoundException('Work not found');
+            return $this->json('Work not found', Response::HTTP_NOT_FOUND);
         }
 
         $user->addFollowedWork($work);
@@ -162,7 +162,7 @@ class UserController extends AbstractController
         /** @var User $user */
 
         if ($work === null) {
-            throw $this->createNotFoundException('Work not found');
+            return $this->json('Work not found', Response::HTTP_NOT_FOUND);
         }
 
         $user->removeFollowedWork($work);
@@ -191,4 +191,30 @@ class UserController extends AbstractController
 
     //     return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     // }
+
+    #[Route('/back-office/user/{id}/reset-picture', name: 'app_user_reset-picture', requirements: ['id' => '\d+'])]
+    public function resetPicture(User $user = null, EntityManagerInterface $entityManager): JsonResponse
+    {
+        if ($user === null) {
+            return $this->json('User not found', Response::HTTP_NOT_FOUND);
+        }
+
+        //? Checking if the user is not granted the ROLE_MODERATOR
+        $this->denyAccessUnlessGranted('USER_EDIT', $user);
+
+        $user->setPicturePath('0.png');
+
+        $entityManager->flush();
+
+        return $this->json(
+            $user,
+            Response::HTTP_PARTIAL_CONTENT,
+            [],
+            [
+                'groups' => [
+                    'api_user_show'
+                ]
+            ],
+        );
+    }
 }
