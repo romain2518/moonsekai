@@ -171,6 +171,62 @@ class UserController extends AbstractController
         );
     }
 
+    #[Route('/subscribe-newsletter', name: 'app_user_subscribe-newsletter', methods: ['POST'], defaults: ['_format' => 'json'])]
+    public function subscribeNewsletter(Request $request, UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User $user */
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid($user->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
+        }
+
+        $user->setIsSubscribedNewsletter(true);
+
+        $entityManager->flush();
+
+        return $this->json(
+            $user,
+            Response::HTTP_PARTIAL_CONTENT,
+            [],
+            [
+                'groups' => [
+                    'api_user_show'
+                ]
+            ],
+        );
+    }
+
+    #[Route('/unsubscribe-newsletter', name: 'app_user_unsubscribe-newsletter', methods: ['POST'], defaults: ['_format' => 'json'])]
+    public function unsubscribeNewsletter(Request $request, UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User $user */
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid($user->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
+        }
+
+        $user->setIsSubscribedNewsletter(false);
+
+        $entityManager->flush();
+
+        return $this->json(
+            $user,
+            Response::HTTP_PARTIAL_CONTENT,
+            [],
+            [
+                'groups' => [
+                    'api_user_show'
+                ]
+            ],
+        );
+    }
+
     // #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     // public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     // {
