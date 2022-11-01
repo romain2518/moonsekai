@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Work;
 use App\Form\EditLoginsType;
-use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Repository\WorkRepository;
 use App\Security\EmailVerifier;
@@ -17,11 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends AbstractController
@@ -198,7 +194,7 @@ class UserController extends AbstractController
         requirements: ['id' => '\d+', 'action' => '^(reset-picture)|(reset-banner)|(reset-pseudo)|(reset-biography)|(mute)|(unmute)|(edit-rank)$'],
         methods: ['POST'], defaults: ['_format' => 'json'])]
     public function edit(Request $request, User $user = null, string $action, EntityManagerInterface $entityManager): JsonResponse
-    {        
+    {
         if ($user === null) {
             return $this->json('User not found', Response::HTTP_NOT_FOUND);
         }
@@ -209,10 +205,25 @@ class UserController extends AbstractController
         if (!$isValidToken) {
             return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
-
-        //? Checking if the user is not granted the ROLE_MODERATOR
+        
+        //? Checking if the user has a lower role than the logged in user
         $this->denyAccessUnlessGranted('USER_EDIT', $user);
+        
+        //? Checking role if action is edit-rank
+        if ($action === 'edit-rank') {
+            $role = $request->request->get('role');
+            $availableRoles = ['ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER'];
 
+            //? Checking if the role exists
+            if (!in_array($role, $availableRoles)) {
+                return $this->json('This role does not exist.', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            //? Checking if the role is lower than the logged in user user has
+            $this->denyAccessUnlessGranted('USER_EDIT_RANK', $role);
+        }
+
+        //? Edit the user
         switch ($action) {
             case 'reset-picture':
                 $user->setPicturePath('0.png');
@@ -233,10 +244,11 @@ class UserController extends AbstractController
                 $user->setIsMuted(false);
                 break;
             case 'edit-rank':
-                # code...
+                $user->setRoles([$role]);
                 break;
         }
 
+        //? Save
         $entityManager->flush();
 
         return $this->json(

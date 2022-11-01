@@ -39,7 +39,12 @@
                     <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="reset-banner">reset banner</a>
                     <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="mute">mute</a>
                     <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="unmute">unmute</a>
-                    <a href="">edit rank</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="edit-rank">edit rank</a>
+                    <select>
+                        <option value="ROLE_ADMIN">Admin</option>
+                        <option value="ROLE_MODERATOR">Moderator</option>
+                        <option value="ROLE_USER">User</option>
+                    </select>
                 </td>
             </tr>
         {% else %}
@@ -59,12 +64,21 @@
             handleClick: function (event) {
                 event.preventDefault();
 
+                const   userId  = event.currentTarget.dataset.id,
+                        action  = event.currentTarget.dataset.action
+                        token   = event.currentTarget.dataset.token;
+
                 const bodyFormData = new FormData();
-                bodyFormData.append('token', event.currentTarget.dataset.token)
+                bodyFormData.append('token', token);
+
+                if (action === 'edit-rank') {
+                    const role = event.currentTarget.nextElementSibling.value;
+                    bodyFormData.append('role', role);
+                }
 
                 actions.fetchAction(
-                    event.currentTarget.dataset.id,
-                    event.currentTarget.dataset.action,
+                    userId,
+                    action,
                     bodyFormData
                 );
             },
