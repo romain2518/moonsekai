@@ -121,13 +121,20 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/follow/{id}', name: 'app_user_follow', requirements: ['id' => '\d+'])]
-    public function follow(Work $work = null, UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/follow/{id}', name: 'app_user_follow', requirements: ['id' => '\d+'], methods: ['POST'], defaults: ['_format' => 'json'])]
+    public function follow(Request $request, Work $work = null, UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
     {
         /** @var User $user */
 
         if ($work === null) {
             return $this->json('Work not found', Response::HTTP_NOT_FOUND);
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid($work->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
 
         $user->addFollowedWork($work);
@@ -146,13 +153,20 @@ class UserController extends AbstractController
         );
     }
 
-    #[Route('/unfollow/{id}', name: 'app_user_unfollow', requirements: ['id' => '\d+'])]
-    public function unfollow(Work $work = null, UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/unfollow/{id}', name: 'app_user_unfollow', requirements: ['id' => '\d+'], methods: ['POST'], defaults: ['_format' => 'json'])]
+    public function unfollow(Request $request, Work $work = null, UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
     {
         /** @var User $user */
 
         if ($work === null) {
             return $this->json('Work not found', Response::HTTP_NOT_FOUND);
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid($work->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
 
         $user->removeFollowedWork($work);
