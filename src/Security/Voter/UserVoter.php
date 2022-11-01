@@ -13,8 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserVoter extends Voter
 {
-    public const EDIT_PROFILE = 'USER_EDIT_PROFILE';
-    public const EDIT_USER = 'USER_EDIT';
+    public const EDIT_SELF = 'USER_EDIT_SELF';
+    public const EDIT_USER_MODERATOR = 'USER_EDIT_MODERATOR';
     public const EDIT_USER_RANK = 'USER_EDIT_RANK';
 
     public function __construct(
@@ -27,7 +27,7 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return (in_array($attribute, [self::EDIT_PROFILE, self::EDIT_USER])
+        return (in_array($attribute, [self::EDIT_SELF, self::EDIT_USER_MODERATOR])
             && $subject instanceof \App\Entity\User)
             || ($attribute === self::EDIT_USER_RANK && is_string($subject));
     }
@@ -42,12 +42,12 @@ class UserVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case self::EDIT_PROFILE:
+            case self::EDIT_SELF:
                 /** @var User $subject */
                 // return $user === $subject; // Return true if the requested user is the one logged in
                 
                 break;
-            case self::EDIT_USER:
+            case self::EDIT_USER_MODERATOR:
                 /** @var User $subject */
                 //? Using access decision manager because isGranted() can not be used on another user
 

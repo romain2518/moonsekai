@@ -275,7 +275,7 @@ class UserController extends AbstractController
         }
         
         //? Checking if the user has a lower role than the logged in user
-        $this->denyAccessUnlessGranted('USER_EDIT', $user);
+        $this->denyAccessUnlessGranted('USER_EDIT_MODERATOR', $user);
         
         //? Checking role if action is edit-rank
         if ($action === 'edit-rank') {
