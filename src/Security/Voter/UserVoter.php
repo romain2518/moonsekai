@@ -23,7 +23,7 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT_PROFILE, self::EDIT_USER, self::EDIT_RANK , self::VIEW])
+        return in_array($attribute, [self::EDIT_PROFILE, self::EDIT_USER, self::EDIT_RANK])
             && $subject instanceof \App\Entity\User;
     }
 
