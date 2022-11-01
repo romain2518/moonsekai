@@ -110,10 +110,10 @@
 | /back-office/tag/{id}/delete | POST | Tag | delete | |
 | /back-office/comment/{limit}/{offset} | GET | Comment | adminList | |
 | /back-office/user/{limit}/{offset} | GET | User | adminList | |
-| /back-office/user/{id}/reset-picture | GET | User | resetPicture | |
-| /back-office/user/{id}/reset-banner | GET | User | resetBanner | |
-| /back-office/user/{id}/reset-pseudo | GET | User | resetPseudo | |
-| /back-office/user/{id}/reset-biography | GET | User | resetBiography | |
+| /back-office/user/{id}/reset-picture | GET | User | resetField | |
+| /back-office/user/{id}/reset-banner | GET | User | resetField | |
+| /back-office/user/{id}/reset-pseudo | GET | User | resetField | |
+| /back-office/user/{id}/reset-biography | GET | User | resetField | |
 | /back-office/user/{id}/mute | GET | User | mute | |
 | /back-office/user/{id}/unmute | GET | User | unmute | |
 | /back-office/user/{id}/edit-rank | POST | User | editRank | |
