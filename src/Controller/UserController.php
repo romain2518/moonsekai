@@ -20,6 +20,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends AbstractController
@@ -27,14 +29,6 @@ class UserController extends AbstractController
     public function __construct(private EmailVerifier $emailVerifier)
     {
     }
-    
-    // #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    // public function index(UserRepository $userRepository): Response
-    // {
-    //     return $this->render('user/index.html.twig', [
-    //         'users' => $userRepository->findAll(),
-    //     ]);
-    // }
 
     #[Route('/profile/{id}', name: 'app_user_profile', requirements: ['id' => '\d+'])]
     public function profile(UserRepository $userRepository, int $id = null): Response
@@ -192,12 +186,28 @@ class UserController extends AbstractController
     //     return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     // }
 
-    #[Route('/back-office/user/{id}/{action}', name: 'app_user_edit-as-moderator', 
-        requirements: ['id' => '\d+', 'action' => '^(reset-picture)|(reset-banner)|(reset-pseudo)|(reset-biography)|(mute)|(unmute)$'])]
-    public function editAsModerator(User $user = null, string $action, EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/back-office/user/{limit}/{offset}', name: 'app_user_admin-list', requirements: ['limit' => '\d+', 'offset' => '\d+'])]
+    public function adminList(UserRepository $userRepository, int $limit = 10, int $offset = 0): Response
     {
+        return $this->render('user/admin_list.html.twig', [
+            'users' => $userRepository->findBy([], null, $limit, $offset),
+        ]);
+    }
+
+    #[Route('/back-office/user/{id}/{action}', name: 'app_user_edit-as-moderator', 
+        requirements: ['id' => '\d+', 'action' => '^(reset-picture)|(reset-banner)|(reset-pseudo)|(reset-biography)|(mute)|(unmute)|(edit-rank)$'],
+        methods: ['POST'], defaults: ['_format' => 'json'])]
+    public function edit(Request $request, User $user = null, string $action, EntityManagerInterface $entityManager): JsonResponse
+    {        
         if ($user === null) {
             return $this->json('User not found', Response::HTTP_NOT_FOUND);
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid($user->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
 
         //? Checking if the user is not granted the ROLE_MODERATOR
@@ -221,6 +231,9 @@ class UserController extends AbstractController
                 break;
             case 'unmute':
                 $user->setIsMuted(false);
+                break;
+            case 'edit-rank':
+                # code...
                 break;
         }
 
