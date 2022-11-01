@@ -3,6 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -16,7 +17,10 @@ class UserVoter extends Voter
     public const EDIT_USER = 'USER_EDIT';
     public const EDIT_RANK = 'USER_EDIT_RANK';
 
-    public function __construct(private AccessDecisionManagerInterface $accessDecisionManager) {
+    public function __construct(
+        private AccessDecisionManagerInterface $accessDecisionManager,
+        private Security $security
+        ) {
     }
 
     protected function supports(string $attribute, $subject): bool
@@ -46,10 +50,14 @@ class UserVoter extends Voter
                 /** @var User $subject */
                 //? Using access decision manager because isGranted() can not be used on another user
 
+                $maxRole = 'ROLE_MODERATOR';
+                if ($this->security->isGranted('ROLE_ADMIN')) $maxRole = 'ROLE_ADMIN';
+                if ($this->security->isGranted('ROLE_SUPERADMIN')) $maxRole = 'ROLE_SUPERADMIN';
+
                 $token = new UsernamePasswordToken($subject, 'none', $subject->getRoles());
-                return !$this->accessDecisionManager->decide($token, ['ROLE_MODERATOR'], $subject); // Return true if the requested user is not granted the ROLE_MODERATOR
+                return !$this->accessDecisionManager->decide($token, [$maxRole], $subject); // Return true if the requested user is not granted the ROLE_MODERATOR
                 
-                break;
+                break; 
             case self::EDIT_RANK:
                 # code...
                 break;
