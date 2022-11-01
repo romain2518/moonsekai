@@ -98,9 +98,7 @@ class UserController extends AbstractController
                     return $this->redirectToRoute('app_verify_resend_email', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
                 }
 
-                //TODO
-                // return $this->redirectToRoute('app_user_profile', [], Response::HTTP_SEE_OTHER);
-                return $this->redirectToRoute('app_main_home', [], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_user_profile', [], Response::HTTP_SEE_OTHER);
             }
 
             $this->addFlash('edit_logins_error', 'Incorrect password');
