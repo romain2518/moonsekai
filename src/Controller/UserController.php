@@ -247,9 +247,10 @@ class UserController extends AbstractController
         if (!$this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Invalid token');
         }
-        
+
         $entityManager->remove($user);
         $entityManager->flush();
+        // Disconnecting user
         $tokenStorage->setToken();
 
         return $this->redirectToRoute('app_main_home', [], Response::HTTP_SEE_OTHER);
