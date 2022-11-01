@@ -192,8 +192,9 @@ class UserController extends AbstractController
     //     return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     // }
 
-    #[Route('/back-office/user/{id}/reset-picture', name: 'app_user_reset-picture', requirements: ['id' => '\d+'])]
-    public function resetPicture(User $user = null, EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/back-office/user/{id}/reset-{field}', name: 'app_user_reset-picture', 
+        requirements: ['id' => '\d+', 'field' => '^(picture)|(banner)|(pseudo)|(biography)$'])]
+    public function resetField(User $user = null, string $field, EntityManagerInterface $entityManager): JsonResponse
     {
         if ($user === null) {
             return $this->json('User not found', Response::HTTP_NOT_FOUND);
@@ -202,7 +203,20 @@ class UserController extends AbstractController
         //? Checking if the user is not granted the ROLE_MODERATOR
         $this->denyAccessUnlessGranted('USER_EDIT', $user);
 
-        $user->setPicturePath('0.png');
+        switch ($field) {
+            case 'picture':
+                $user->setPicturePath('0.png');
+                break;
+            case 'banner':
+                $user->setBannerPath('0.png');
+                break;
+            case 'pseudo':
+                $user->setPseudo('Membre #' . $user->getId());
+                break;
+            case 'biography':
+                $user->setBiography(null);
+                break;
+        }
 
         $entityManager->flush();
 
