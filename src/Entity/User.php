@@ -11,9 +11,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[Vich\Uploadable]
 #[ORM\Index(name: 'idx_pseudo', fields: ['pseudo'])]
 #[ORM\Index(name: 'idx_email', fields: ['email'])]
 #[ORM\Index(name: 'idx_newsletter', fields: ['isSubscribedNewsletter'])]
@@ -55,9 +58,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups('api_user_show')]
     private ?string $pseudo = null;
 
+    #[Vich\UploadableField(mapping: 'user_pictures', fileNameProperty: 'picturePath')]
+    #[Assert\File(
+        maxSize: "5M",
+        mimeTypes: ["image/jpeg", "image/png"],
+        maxSizeMessage: "The maximum allowed file size is 5MB.",
+        mimeTypesMessage: "Only png, jpg and jpeg images are allowed."
+    )]
+    private ?File $pictureFile = null;
+
     #[ORM\Column(length: 255)]
     #[Groups('api_user_show')]
     private ?string $picturePath = '0.png';
+
+    #[Vich\UploadableField(mapping: 'user_banners', fileNameProperty: 'bannerPath')]
+    #[Assert\File(
+        maxSize: "5M",
+        mimeTypes: ["image/jpeg", "image/png"],
+        maxSizeMessage: "The maximum allowed file size is 5MB.",
+        mimeTypesMessage: "Only png, jpg and jpeg images are allowed."
+    )]
+    private ?File $bannerFile = null;
 
     #[ORM\Column(length: 255)]
     #[Groups('api_user_show')]
@@ -267,9 +288,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->pseudo;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setPseudo(?string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public function getPictureFile(): ?File
+    {
+        return $this->pictureFile;
+    }
+
+    public function setPictureFile(?File $pictureFile = null): self
+    {
+        $this->pictureFile = $pictureFile;
+
+        if (null !== $pictureFile) {
+            // Needed to trigger event listener
+            $this->updatedAt = new \DateTime();
+        }
 
         return $this;
     }
@@ -279,9 +317,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->picturePath;
     }
 
-    public function setPicturePath(string $picturePath): self
+    public function setPicturePath(?string $picturePath): self
     {
         $this->picturePath = $picturePath;
+        
+        if (null === $picturePath) {
+            $this->picturePath = '0.png';
+        }
+
+        return $this;
+    }
+
+    public function getBannerFile(): ?File
+    {
+        return $this->bannerFile;
+    }
+
+    public function setBannerFile(?File $bannerFile = null): self
+    {
+        $this->bannerFile = $bannerFile;
+
+        if (null !== $bannerFile) {
+            // Needed to trigger event listener
+            $this->updatedAt = new \DateTime();
+        }
 
         return $this;
     }
@@ -291,9 +350,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->bannerPath;
     }
 
-    public function setBannerPath(string $bannerPath): self
+    public function setBannerPath(?string $bannerPath): self
     {
         $this->bannerPath = $bannerPath;
+
+        if (null === $bannerPath) {
+            $this->bannerPath = '0.png';
+        }
 
         return $this;
     }

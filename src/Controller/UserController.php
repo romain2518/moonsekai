@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Work;
 use App\Form\EditLoginsType;
+use App\Form\EditProfileFormType;
 use App\Repository\UserRepository;
 use App\Repository\WorkRepository;
 use App\Security\EmailVerifier;
@@ -43,6 +44,34 @@ class UserController extends AbstractController
 
         return $this->render('user/profile.html.twig', [
             'user' => $user,
+        ]);
+    }
+
+    #[Route('/profile/edit', name: 'app_user_edit-profile')]
+    public function editProfile(Request $request, UserInterface $user, EntityManagerInterface $entityManager)
+    {
+        /** @var User $user */
+
+        $form = $this->createForm(EditProfileFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            // Setting file properties to null as user object is serialized and saved in the session (a File is not serializable)
+            $user->setPictureFile(null);
+            $user->setBannerFile(null);
+
+            return $this->redirectToRoute('app_user_profile', [], Response::HTTP_SEE_OTHER);
+        }
+
+        // Setting file properties to null as user object is serialized and saved in the session (a File is not serializable)
+        $user->setPictureFile(null);
+        $user->setBannerFile(null);
+
+
+        return $this->renderForm('user/edit_profile.html.twig', [
+            'form' => $form,
         ]);
     }
 
