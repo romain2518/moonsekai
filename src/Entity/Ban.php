@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: BanRepository::class)]
-#[UniqueEntity('email')]
+#[UniqueEntity('email', message: 'This email is already banned.')]
 #[ORM\HasLifecycleCallbacks]
 class Ban
 {
