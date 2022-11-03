@@ -19,13 +19,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class BanController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_ban_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET', 'POST'])]
-    public function index(Request $request, BanRepository $banRepository, EntityManagerInterface $entityManager, UserInterface $user, int $limit = 20, int $offset = 0): Response
+    public function index(Request $request, BanRepository $banRepository, UserRepository $userRepository, EntityManagerInterface $entityManager, UserInterface $user, int $limit = 20, int $offset = 0): Response
     {
         $ban = new Ban();
         $form = $this->createForm(BanType::class, $ban);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //? Checking if a user linked to this email does exist
+            $targetedUser = $userRepository->findOneBy(['email' => $form->get('email')->getData()]);
+            if (null !== $targetedUser) {
+                $entityManager->remove($targetedUser);
+            }
+
             $ban->setUser($user);
 
             $entityManager->persist($ban);
