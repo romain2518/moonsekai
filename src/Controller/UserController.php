@@ -159,7 +159,7 @@ class UserController extends AbstractController
 
         //? Checking CSRF Token
         $token = $request->request->get('token');
-        $isValidToken = $this->isCsrfTokenValid($work->getId(), $token);
+        $isValidToken = $this->isCsrfTokenValid('follow'.$work->getId(), $token);
         if (!$isValidToken) {
             return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
@@ -191,7 +191,7 @@ class UserController extends AbstractController
 
         //? Checking CSRF Token
         $token = $request->request->get('token');
-        $isValidToken = $this->isCsrfTokenValid($work->getId(), $token);
+        $isValidToken = $this->isCsrfTokenValid('unfollow'.$work->getId(), $token);
         if (!$isValidToken) {
             return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
@@ -219,7 +219,7 @@ class UserController extends AbstractController
 
         //? Checking CSRF Token
         $token = $request->request->get('token');
-        $isValidToken = $this->isCsrfTokenValid($user->getId(), $token);
+        $isValidToken = $this->isCsrfTokenValid('subscribe-newsletter'.$user->getId(), $token);
         if (!$isValidToken) {
             return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
@@ -247,7 +247,7 @@ class UserController extends AbstractController
 
         //? Checking CSRF Token
         $token = $request->request->get('token');
-        $isValidToken = $this->isCsrfTokenValid($user->getId(), $token);
+        $isValidToken = $this->isCsrfTokenValid('unsubscribe-newsletter'.$user->getId(), $token);
         if (!$isValidToken) {
             return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
@@ -304,7 +304,7 @@ class UserController extends AbstractController
 
         //? Checking CSRF Token
         $token = $request->request->get('token');
-        $isValidToken = $this->isCsrfTokenValid($user->getId(), $token);
+        $isValidToken = $this->isCsrfTokenValid('edit'.$user->getId(), $token);
         if (!$isValidToken) {
             return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }

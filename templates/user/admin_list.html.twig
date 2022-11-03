@@ -33,13 +33,13 @@
                 <td>{{ user.isMuted ? 'Yes' : 'No' }}</td>
                 <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="reset-pseudo">reset pseudo</a>
-                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="reset-biography">reset biography</a>
-                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="reset-picture">reset picture</a>
-                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="reset-banner">reset banner</a>
-                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="mute">mute</a>
-                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="unmute">unmute</a>
-                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token(user.id) }}" data-action="edit-rank">edit rank</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('edit' ~user.id) }}" data-action="reset-pseudo">reset pseudo</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('edit' ~user.id) }}" data-action="reset-biography">reset biography</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('edit' ~user.id) }}" data-action="reset-picture">reset picture</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('edit' ~user.id) }}" data-action="reset-banner">reset banner</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('edit' ~user.id) }}" data-action="mute">mute</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('edit' ~user.id) }}" data-action="unmute">unmute</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('edit' ~user.id) }}" data-action="edit-rank">edit rank</a>
                     <select>
                         <option value="ROLE_ADMIN">Admin</option>
                         <option value="ROLE_MODERATOR">Moderator</option>
