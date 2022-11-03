@@ -87,6 +87,7 @@ security:
         #? Back office
         
         - { path: ^/back-office/user/[0-9]+/edit-rank$, roles: ROLE_ADMIN }
+        - { path: ^/back-office/user/[0-9]+/ban$, roles: ROLE_ADMIN }
         - { path: ^/back-office/ban, roles: ROLE_ADMIN }
         - { path: ^/back-office, roles: ROLE_MODERATOR }
 
