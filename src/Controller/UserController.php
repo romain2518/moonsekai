@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Work;
+use App\Form\DeleteAccountFormType;
 use App\Form\EditLoginsType;
 use App\Form\EditProfileFormType;
 use App\Repository\UserRepository;
@@ -268,21 +269,36 @@ class UserController extends AbstractController
         );
     }
 
-    #[Route('/profile/delete', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, UserInterface $user, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage): Response
+    #[Route('/profile/delete', name: 'app_user_delete', methods: ['GET', 'POST'])]
+    public function delete(
+        Request $request, UserInterface $user, 
+        EntityManagerInterface $entityManager, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        TokenStorageInterface $tokenStorage
+        ): Response
     {
         /** @var User $user */
 
-        if (!$this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Invalid token');
+        $form = $this->createForm(DeleteAccountFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $supposedPassword = $form->get('password')->getData();
+            if ($userPasswordHasher->isPasswordValid($user, $supposedPassword)) {
+                $entityManager->remove($user);
+                $entityManager->flush();
+                // Disconnecting user
+                $tokenStorage->setToken();
+
+                return $this->redirectToRoute('app_main_home', [], Response::HTTP_SEE_OTHER);
+            }
+
+            $this->addFlash('delete_account_error', 'Incorrect password');
         }
 
-        $entityManager->remove($user);
-        $entityManager->flush();
-        // Disconnecting user
-        $tokenStorage->setToken();
-
-        return $this->redirectToRoute('app_main_home', [], Response::HTTP_SEE_OTHER);
+        return $this->renderForm('user/delete.html.twig', [
+            'form' => $form,
+        ]);
     }
 
     #[Route('/back-office/user/{limit}/{offset}', name: 'app_user_admin-list', requirements: ['limit' => '\d+', 'offset' => '\d+'])]
