@@ -77,6 +77,7 @@ class Work
     private Collection $progress;
 
     #[ORM\ManyToOne(inversedBy: 'works')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'work', targetEntity: Movie::class, orphanRemoval: true)]
