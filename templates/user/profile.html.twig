@@ -12,11 +12,13 @@
     <p>Biography : {{ user.biography }}</p>
     <p>CreatedAt : {{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</p>
 
-    <form method="post" action="{{ path('app_user_delete') }}" onsubmit="return confirm('Are you sure you want to delete your account ?');">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-        <button class="btn">Delete account</button>
-    </form>
-
-    <a href="{{ path('app_user_edit-profile') }}">Modifier le profil</a>
+    {% if user.id is same as(app.user.id) %}
+        <a href="{{ path('app_user_edit-profile') }}">Modifier le profil</a>
+        <a 
+            href="{{ path('app_user_delete') }}" 
+            onclick="return confirm('Are you sure you want to delete your account ? (You will be redirected to confirm your identity)')">
+                Supprimer le compte
+        </a>    
+    {% endif %}
 
 {% endblock %}
