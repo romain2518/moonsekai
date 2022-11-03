@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Ban;
 use App\Entity\User;
 use App\Entity\Work;
 use App\Form\DeleteAccountFormType;
@@ -309,24 +310,26 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/back-office/user/{id}/{action}', name: 'app_user_edit-as-moderator', 
-        requirements: ['id' => '\d+', 'action' => '^(reset-picture)|(reset-banner)|(reset-pseudo)|(reset-biography)|(mute)|(unmute)|(edit-rank)$'],
+    #[Route('/back-office/user/{id}/{action}', name: 'app_user_manage', 
+        requirements: ['id' => '\d+', 'action' => '^(reset-picture)|(reset-banner)|(reset-pseudo)|(reset-biography)|(mute)|(unmute)|(edit-rank)|(ban)$'],
         methods: ['POST'], defaults: ['_format' => 'json'])]
-    public function edit(Request $request, User $user = null, string $action, EntityManagerInterface $entityManager): JsonResponse
+    public function manage(Request $request, User $user = null, UserInterface $loggedUser, string $action, EntityManagerInterface $entityManager): JsonResponse
     {
+        /** @var User $loggedUser */
+
         if ($user === null) {
             return $this->json('User not found', Response::HTTP_NOT_FOUND);
         }
 
         //? Checking CSRF Token
         $token = $request->request->get('token');
-        $isValidToken = $this->isCsrfTokenValid('edit'.$user->getId(), $token);
+        $isValidToken = $this->isCsrfTokenValid('manage'.$user->getId(), $token);
         if (!$isValidToken) {
             return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
         }
         
         //? Checking if the user has a lower role than the logged in user
-        $this->denyAccessUnlessGranted('USER_EDIT_MODERATOR', $user);
+        $this->denyAccessUnlessGranted('USER_MANAGE', $user);
         
         //? Checking role if action is edit-rank
         if ($action === 'edit-rank') {
@@ -365,11 +368,26 @@ class UserController extends AbstractController
             case 'edit-rank':
                 $user->setRoles([$role]);
                 break;
+            case 'ban':
+                $ban = new Ban();
+                $ban
+                    ->setEmail($user->getEmail())
+                    ->setMessage('User (' . $user->getPseudo() . ') banned by ' . $loggedUser->getPseudo() . '.')
+                    ->setUser($loggedUser)
+                    ;
+
+                $entityManager->persist($ban);
+                $entityManager->remove($user);
+                break;
         }
 
         //? Save
         $entityManager->flush();
 
+        if ($action === 'ban') {
+            return $this->json(null, Response::HTTP_NO_CONTENT);
+        }
+        
         return $this->json(
             $user,
             Response::HTTP_PARTIAL_CONTENT,

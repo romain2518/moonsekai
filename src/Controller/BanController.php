@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Ban;
+use App\Entity\User;
 use App\Form\BanType;
 use App\Repository\BanRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,26 +39,6 @@ class BanController extends AbstractController
             'bans' => $banRepository->findBy([], ['email' => 'ASC'], $limit, $offset),
         ]);
     }
-
-    // #[Route('/new', name: 'app_ban_new', methods: ['GET', 'POST'])]
-    // public function new(Request $request, EntityManagerInterface $entityManager): Response
-    // {
-    //     $ban = new Ban();
-    //     $form = $this->createForm(BanType::class, $ban);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager->persist($ban);
-    //         $entityManager->flush();
-
-    //         return $this->redirectToRoute('app_ban_index', [], Response::HTTP_SEE_OTHER);
-    //     }
-
-    //     return $this->renderForm('ban/new.html.twig', [
-    //         'ban' => $ban,
-    //         'form' => $form,
-    //     ]);
-    // }
 
     #[Route('/{id}/delete', name: 'app_ban_delete', methods: ['POST'])]
     public function delete(Request $request, Ban $ban, EntityManagerInterface $entityManager): Response
