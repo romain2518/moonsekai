@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[Route('/back-office/ban')]
 class BanController extends AbstractController
 {
-    #[Route('/{limit}/{offset}', name: 'app_ban_list', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route('/{limit}/{offset}', name: 'app_ban_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET', 'POST'])]
     public function index(Request $request, BanRepository $banRepository, EntityManagerInterface $entityManager, UserInterface $user, int $limit = 20, int $offset = 0): Response
     {
         $ban = new Ban();
@@ -28,7 +28,7 @@ class BanController extends AbstractController
             $entityManager->persist($ban);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_ban_list', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_ban_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('ban/index.html.twig', [
@@ -57,14 +57,14 @@ class BanController extends AbstractController
     //     ]);
     // }
 
-    // #[Route('/{id}', name: 'app_ban_delete', methods: ['POST'])]
-    // public function delete(Request $request, Ban $ban, EntityManagerInterface $entityManager): Response
-    // {
-    //     if ($this->isCsrfTokenValid('delete'.$ban->getId(), $request->request->get('_token'))) {
-    //         $entityManager->remove($ban);
-    //         $entityManager->flush();
-    //     }
+    #[Route('/{id}/delete', name: 'app_ban_delete', methods: ['POST'])]
+    public function delete(Request $request, Ban $ban, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$ban->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($ban);
+            $entityManager->flush();
+        }
 
-    //     return $this->redirectToRoute('app_ban_index', [], Response::HTTP_SEE_OTHER);
-    // }
+        return $this->redirectToRoute('app_ban_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
