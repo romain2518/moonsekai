@@ -31,7 +31,10 @@
                 <td><a href="{{ path('app_user_profile', {'id': ban.user.id}) }}">{{ ban.user.pseudo }}</a></td>
                 <td>{{ ban.createdAt ? ban.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="#">Delete</a>
+                    <form method="post" action="{{ path('app_ban_delete', {'id': ban.id}) }}" onsubmit="return confirm('Are you sure you want to unban this email?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ban.id) }}">
+                        <button class="btn">Delete</button>
+                    </form>
                 </td>
             </tr>
         {% else %}
