@@ -49,7 +49,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/profile/edit', name: 'app_user_edit-profile')]
-    public function editProfile(Request $request, UserInterface $user, EntityManagerInterface $entityManager)
+    public function editProfile(Request $request, UserInterface $user, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
 
