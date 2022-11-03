@@ -10,14 +10,29 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/back-office/ban')]
 class BanController extends AbstractController
 {
-    #[Route('/{limit}/{offset}', name: 'app_ban_list', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(BanRepository $banRepository, int $limit = 20, int $offset = 0): Response
+    #[Route('/{limit}/{offset}', name: 'app_ban_list', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET', 'POST'])]
+    public function index(Request $request, BanRepository $banRepository, EntityManagerInterface $entityManager, UserInterface $user, int $limit = 20, int $offset = 0): Response
     {
+        $ban = new Ban();
+        $form = $this->createForm(BanType::class, $ban);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ban->setUser($user);
+
+            $entityManager->persist($ban);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_ban_list', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('ban/index.html.twig', [
+            'form' => $form->createView(),
             'bans' => $banRepository->findBy([], ['email' => 'ASC'], $limit, $offset),
         ]);
     }
