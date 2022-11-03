@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserVoter extends Voter
 {
     public const EDIT_SELF = 'USER_EDIT_SELF';
-    public const EDIT_USER_MODERATOR = 'USER_EDIT_MODERATOR';
+    public const EDIT_USER_MANAGE = 'USER_MANAGE';
     public const EDIT_USER_RANK = 'USER_EDIT_RANK';
 
     public function __construct(
@@ -27,7 +27,7 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return (in_array($attribute, [self::EDIT_SELF, self::EDIT_USER_MODERATOR])
+        return (in_array($attribute, [self::EDIT_SELF, self::EDIT_USER_MANAGE])
             && $subject instanceof \App\Entity\User)
             || ($attribute === self::EDIT_USER_RANK && is_string($subject));
     }
@@ -47,7 +47,7 @@ class UserVoter extends Voter
                 return $user === $subject; // Return true if the requested user is the one logged in
                 
                 break;
-            case self::EDIT_USER_MODERATOR:
+            case self::EDIT_USER_MANAGE:
                 /** @var User $subject */
                 //? Using access decision manager because isGranted() can not be used on another user
 
@@ -62,8 +62,9 @@ class UserVoter extends Voter
                 
                 break; 
             case self::EDIT_USER_RANK:
-                /** @var string $subject role that must be lower than the one logged in user has */
+                /** @var string $subject Role */
                 
+                // Return true if the role is lower than the one logged in user has
                 if ($subject === 'ROLE_USER') {
                     return $this->security->isGranted('ROLE_MODERATOR');
                 } elseif ($subject === 'ROLE_MODERATOR') {
