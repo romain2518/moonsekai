@@ -3,6 +3,9 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+{% for flash in app.flashes('success') %}
+    <div class="success" role="alert">{{ flash }}</div>
+{% endfor %}
 <a href="{{ path('app_main_about') }}">About</a><br>
 <a href="{{ path('app_main_legal-mentions') }}">Legal-mentions</a><br>
 <a href="{{ path('app_main_patch-notes') }}">Patch-notes</a><br>
