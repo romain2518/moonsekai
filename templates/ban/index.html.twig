@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ban office{% endblock %}
+
+{% block body %}
+    <h1>Ban office</h1>
+
+    <h2>Ban list</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Message</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ban in bans %}
+            <tr>
+                <td>{{ ban.email }}</td>
+                <td>{{ ban.message }}</td>
+                <td>{{ ban.createdAt ? ban.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="#">Delete</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
