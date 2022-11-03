@@ -46,6 +46,7 @@ class Plateform
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'plateforms')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 
     #[ORM\ManyToMany(targetEntity: Work::class, mappedBy: 'plateforms')]

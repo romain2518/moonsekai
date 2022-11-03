@@ -34,6 +34,7 @@ class Tag
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'tags')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 
     #[ORM\ManyToMany(targetEntity: Work::class, mappedBy: 'tags')]
