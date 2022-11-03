@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ban office{% endblock %}
+
+{% block body %}
+    <h1>Ban office</h1>
+
+    <h2>Ban email</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+
+    <h2>Ban list</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Executioner</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ban in bans %}
+            <tr>
+                <td>{{ ban.email }}</td>
+                <td>{{ ban.message }}</td>
+                {% if ban.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': ban.user.id}) }}">{{ ban.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
+                <td>{{ ban.createdAt ? ban.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <form method="post" action="{{ path('app_ban_delete', {'id': ban.id}) }}" onsubmit="return confirm('Are you sure you want to unban this email?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ban.id) }}">
+                        <button class="btn">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

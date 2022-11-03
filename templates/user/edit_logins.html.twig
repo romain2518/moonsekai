@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit logins{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('edit_logins_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    <h1>Edit logins</h1>
+    <p>Note that if you change your mail adress, you will be disconnected and you will have to confirm the new one.</p>
+    <p>Do not fill new password and repeat password if you want to keep your current password.</p>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+    <a href="{{ path('app_user_profile') }}">Cancel</a>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+    <h1>User index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Pseudo</th>
+                <th>PicturePath</th>
+                <th>BannerPath</th>
+                <th>Biography</th>
+                <th>IsMuted</th>
+                <th>IsVerified</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>{{ user.pseudo }}</td>
+                <td>{{ user.picturePath }}</td>
+                <td>{{ user.bannerPath }}</td>
+                <td>{{ user.biography }}</td>
+                <td>{{ user.isMuted ? 'Yes' : 'No' }}</td>
+                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="reset-pseudo">reset pseudo</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="reset-biography">reset biography</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="reset-picture">reset picture</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="reset-banner">reset banner</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="mute">mute</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="unmute">unmute</a>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="edit-rank">edit rank</a>
+                    <select>
+                        <option value="ROLE_ADMIN">Admin</option>
+                        <option value="ROLE_MODERATOR">Moderator</option>
+                        <option value="ROLE_USER">User</option>
+                    </select>
+                    <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="ban">ban</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="16">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        const actions = {
+            init: function () {
+                document.querySelectorAll('.CTA').forEach(btn => {
+                    btn.addEventListener('click', actions.handleClick);
+                });
+            },
+            handleClick: function (event) {
+                event.preventDefault();
+
+                const   userId  = event.currentTarget.dataset.id,
+                        action  = event.currentTarget.dataset.action
+                        token   = event.currentTarget.dataset.token;
+
+                if (action === 'ban') {
+                    if (!confirm('Are you sure you want to ban this user ?')) return;
+                }
+
+                const bodyFormData = new FormData();
+                bodyFormData.append('token', token);
+
+                if (action === 'edit-rank') {
+                    const role = event.currentTarget.nextElementSibling.value;
+                    bodyFormData.append('role', role);
+                }
+
+                actions.fetchAction(
+                    userId,
+                    action,
+                    bodyFormData
+                );
+            },
+            fetchAction: async function (userId, action, body) {
+                const httpHeaders = new Headers();
+
+                let init = {
+                        method: 'POST',
+                        headers: httpHeaders,
+                        mode: 'cors',
+                        body: body,
+                        cache: 'default' 
+                    };
+
+                await fetch(`/back-office/user/${userId}/${action}`, init)
+                    .then(function (response) {
+                        // Reading the response body prevents a "Fetch failed loading" error
+                        // This happens when body is empty (e.g. With status code : 204 HTTP_NO_CONTENT)
+                        response.text();
+                        console.log(response.status);
+                    })
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', actions.init);
+
+    </script>
+{% endblock %}

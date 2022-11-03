@@ -55,12 +55,12 @@ security:
 
         #? Work
 
+        - { path: ^/followed-work, roles: ROLE_USER }
         - { path: ^/follow, roles: ROLE_USER }
+        - { path: ^/unfollow, roles: ROLE_USER }
 
         - { path: ^/work/[0-9]+$, roles: PUBLIC_ACCESS }
 
-        - { path: ^/work/[0-9]+/follow$, roles: ROLE_USER }
-        - { path: ^/work/[0-9]+/unfollow$, roles: ROLE_USER }
         - { path: ^/work/[0-9]+/mark-progress$, roles: ROLE_USER }
 
         - { path: ^/work/[0-9]+/anime/[0-9]+/rate$, roles: ROLE_USER }
@@ -87,13 +87,14 @@ security:
         #? Back office
         
         - { path: ^/back-office/user/[0-9]+/edit-rank$, roles: ROLE_ADMIN }
+        - { path: ^/back-office/user/[0-9]+/ban$, roles: ROLE_ADMIN }
         - { path: ^/back-office/ban, roles: ROLE_ADMIN }
         - { path: ^/back-office, roles: ROLE_MODERATOR }
 
     role_hierarchy:
-        ROLE_SUPERADMIN: ROLE_ADMIN
-        ROLE_ADMIN: ROLE_MODERATOR
         ROLE_MODERATOR: ROLE_USER
+        ROLE_ADMIN: ROLE_MODERATOR
+        ROLE_SUPERADMIN: ROLE_ADMIN
 
 when@test:
     security:

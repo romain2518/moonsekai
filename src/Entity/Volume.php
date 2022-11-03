@@ -42,6 +42,7 @@ class Volume
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'volumes')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'volumes')]

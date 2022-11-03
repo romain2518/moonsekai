@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.pseudo }}{% endblock %}
+
+{% block body %}
+    <h1>Profil</h1>
+
+    <p>Roles : {{ user.roles ? user.roles|json_encode : '' }}</p>
+    <p>Pseudo : {{ user.pseudo }}</p>
+    <p>PicturePath : {{ user.picturePath }}</p>
+    <p>BannerPath : {{ user.bannerPath }}</p>
+    <p>Biography : {{ user.biography }}</p>
+    <p>CreatedAt : {{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</p>
+
+    {% if user.id is same as(app.user.id) %}
+        <a href="{{ path('app_user_edit-profile') }}">Edit profile</a><br>
+        <a href="{{ path('app_user_edit-logins') }}">Edit logins</a><br>
+        <a 
+            href="{{ path('app_user_delete') }}" 
+            onclick="return confirm('Are you sure you want to delete your account ? (You will be redirected to confirm your identity)')">
+                Delete account
+        </a>    
+    {% endif %}
+
+{% endblock %}

@@ -48,6 +48,7 @@ class CalendarEvent
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'calendarEvents')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 
     public function getId(): ?int
