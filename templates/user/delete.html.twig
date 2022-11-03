@@ -3,7 +3,7 @@
 {% block title %}Delete account{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('edit_logins_error') %}
+    {% for flash_error in app.flashes('delete_account_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
     <h1>Delete account</h1>
