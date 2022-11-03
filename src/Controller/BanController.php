@@ -3,13 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Ban;
-use App\Entity\User;
 use App\Form\BanType;
 use App\Repository\BanRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +17,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class BanController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_ban_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET', 'POST'])]
-    public function index(Request $request, BanRepository $banRepository, UserRepository $userRepository, EntityManagerInterface $entityManager, UserInterface $user, int $limit = 20, int $offset = 0): Response
+    public function index(
+        Request $request, BanRepository $banRepository, 
+        UserRepository $userRepository, EntityManagerInterface $entityManager, 
+        UserInterface $user, int $limit = 20, int $offset = 0
+        ): Response
     {
         $ban = new Ban();
         $form = $this->createForm(BanType::class, $ban);
