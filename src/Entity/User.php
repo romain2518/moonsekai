@@ -186,6 +186,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups('api_user_show')]
     private Collection $followedWorks;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordRequest::class, orphanRemoval: true)]
+    private Collection $resetPasswordRequests;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
@@ -211,6 +214,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->episodes = new ArrayCollection();
         $this->calendarEvents = new ArrayCollection();
         $this->followedWorks = new ArrayCollection();
+        $this->resetPasswordRequests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1155,5 +1159,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, ResetPasswordRequest>
+     */
+    public function getResetPasswordRequests(): Collection
+    {
+        return $this->resetPasswordRequests;
     }
 }
