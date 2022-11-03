@@ -28,7 +28,11 @@
             <tr>
                 <td>{{ ban.email }}</td>
                 <td>{{ ban.message }}</td>
-                <td><a href="{{ path('app_user_profile', {'id': ban.user.id}) }}">{{ ban.user.pseudo }}</a></td>
+                {% if ban.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': ban.user.id}) }}">{{ ban.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
                 <td>{{ ban.createdAt ? ban.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <form method="post" action="{{ path('app_ban_delete', {'id': ban.id}) }}" onsubmit="return confirm('Are you sure you want to unban this email?');">
