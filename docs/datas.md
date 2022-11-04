@@ -176,7 +176,7 @@
 | created_at | datetime | Not null | |
 | updated_at | datetime | Null | |
 
-## Plateform
+## Platform
 
 | Field | Type | Specificities | Constraints |
 |--|--|--|--|
@@ -320,12 +320,12 @@
 | work_id | ENTITY | Primary key, index, unsigned, not null |
 | tag_id | ENTITY | Primary key, index, unsigned, not null |
 
-## Work_plateform
+## Work_platform
 
 | Field | Type | Specificities | Constraints |
 |--|--|--|--|
 | work_id | ENTITY | Primary key, index, unsigned, not null |
-| plateform_id | ENTITY | Primary key, index, unsigned, not null |
+| platform_id | ENTITY | Primary key, index, unsigned, not null |
 
 ## User_work
 
