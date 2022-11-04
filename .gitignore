@@ -30,8 +30,8 @@
 !/public/assets/images/moviePictures/.gitkeep
 /public/assets/images/newsPictures/*
 !/public/assets/images/newsPictures/.gitkeep
-/public/assets/images/plateformPictures/*
-!/public/assets/images/plateformPictures/.gitkeep
+/public/assets/images/platformPictures/*
+!/public/assets/images/platformPictures/.gitkeep
 /public/assets/images/seasonPictures/*
 !/public/assets/images/seasonPictures/.gitkeep
 /public/assets/images/userBanners/*

@@ -2,17 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\PlateformRepository;
+use App\Repository\PlatformRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: PlateformRepository::class)]
+#[ORM\Entity(repositoryClass: PlatformRepository::class)]
 #[ORM\Index(name: 'idx_search', fields: ['name'])]
 #[ORM\HasLifecycleCallbacks]
-class Plateform
+class Platform
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -45,11 +45,11 @@ class Plateform
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'plateforms')]
+    #[ORM\ManyToOne(inversedBy: 'platforms')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 
-    #[ORM\ManyToMany(targetEntity: Work::class, mappedBy: 'plateforms')]
+    #[ORM\ManyToMany(targetEntity: Work::class, mappedBy: 'platforms')]
     private Collection $works;
 
     public function __construct()
@@ -159,7 +159,7 @@ class Plateform
     {
         if (!$this->works->contains($work)) {
             $this->works->add($work);
-            $work->addPlateform($this);
+            $work->addPlatform($this);
         }
 
         return $this;
@@ -168,7 +168,7 @@ class Plateform
     public function removeWork(Work $work): self
     {
         if ($this->works->removeElement($work)) {
-            $work->removePlateform($this);
+            $work->removePlatform($this);
         }
 
         return $this;

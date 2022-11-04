@@ -157,8 +157,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: LightNovel::class)]
     private Collection $lightNovels;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Plateform::class)]
-    private Collection $plateforms;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Platform::class)]
+    private Collection $platforms;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: WorkNews::class)]
     private Collection $workNews;
@@ -206,7 +206,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->tags = new ArrayCollection();
         $this->movies = new ArrayCollection();
         $this->lightNovels = new ArrayCollection();
-        $this->plateforms = new ArrayCollection();
+        $this->platforms = new ArrayCollection();
         $this->workNews = new ArrayCollection();
         $this->mangas = new ArrayCollection();
         $this->volumes = new ArrayCollection();
@@ -855,29 +855,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Plateform>
+     * @return Collection<int, Platform>
      */
-    public function getPlateforms(): Collection
+    public function getPlatforms(): Collection
     {
-        return $this->plateforms;
+        return $this->platforms;
     }
 
-    public function addPlateform(Plateform $plateform): self
+    public function addPlatform(Platform $platform): self
     {
-        if (!$this->plateforms->contains($plateform)) {
-            $this->plateforms->add($plateform);
-            $plateform->setUser($this);
+        if (!$this->platforms->contains($platform)) {
+            $this->platforms->add($platform);
+            $platform->setUser($this);
         }
 
         return $this;
     }
 
-    public function removePlateform(Plateform $plateform): self
+    public function removePlatform(Platform $platform): self
     {
-        if ($this->plateforms->removeElement($plateform)) {
+        if ($this->platforms->removeElement($platform)) {
             // set the owning side to null (unless already changed)
-            if ($plateform->getUser() === $this) {
-                $plateform->setUser(null);
+            if ($platform->getUser() === $this) {
+                $platform->setUser(null);
             }
         }
 

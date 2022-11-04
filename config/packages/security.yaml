@@ -48,10 +48,10 @@ security:
 
         - { path: ^/report, roles: ROLE_USER }
 
-        #? Plateform
+        #? Platform
 
-        - { path: ^/plateform/[0-9]+$, roles: PUBLIC_ACCESS }
-        - { path: ^/plateform, roles: ROLE_MODERATOR }
+        - { path: ^/platform/[0-9]+$, roles: PUBLIC_ACCESS }
+        - { path: ^/platform, roles: ROLE_MODERATOR }
 
         #? Work
 
