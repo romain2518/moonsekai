@@ -13,13 +13,58 @@
     <p>CreatedAt : {{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</p>
 
     {% if user.id is same as(app.user.id) %}
+        <a href="#" class="CTA" data-token="{{ csrf_token('subscribe-newsletter' ~ user.id) }}" data-action="subscribe-newsletter">subscribe newsletter</a><br>
+        <a href="#" class="CTA" data-token="{{ csrf_token('unsubscribe-newsletter' ~ user.id) }}" data-action="unsubscribe-newsletter">unsubscribe newsletter</a><br>
         <a href="{{ path('app_user_edit-profile') }}">Edit profile</a><br>
         <a href="{{ path('app_user_edit-logins') }}">Edit logins</a><br>
         <a 
             href="{{ path('app_user_delete') }}" 
             onclick="return confirm('Are you sure you want to delete your account ? (You will be redirected to confirm your identity)')">
                 Delete account
-        </a>    
+        </a>
     {% endif %}
 
+    <script>
+        const actions = {
+            init: function () {
+                document.querySelectorAll('.CTA').forEach(btn => {
+                    btn.addEventListener('click', actions.handleClick);
+                });
+            },
+            handleClick: function (event) {
+                event.preventDefault();
+
+                const   action  = event.currentTarget.dataset.action
+                        token   = event.currentTarget.dataset.token;
+
+                const bodyFormData = new FormData();
+                bodyFormData.append('token', token);
+
+                actions.fetchAction(
+                    action,
+                    bodyFormData
+                );
+            },
+            fetchAction: async function (action, body) {
+                const httpHeaders = new Headers();
+
+                let init = {
+                        method: 'POST',
+                        headers: httpHeaders,
+                        mode: 'cors',
+                        body: body,
+                        cache: 'default' 
+                    };
+
+                await fetch(`/${action}`, init)
+                    .then(function (response) {
+                        console.log(response.json());
+                        console.log(response.status);
+                    })
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', actions.init);
+
+    </script>
 {% endblock %}
