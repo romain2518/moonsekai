@@ -31,9 +31,6 @@
 | /unfollow | POST | User | unfollow | |
 | /work/{id} | GET | Work | show | |
 | /work/{id}/mark-progress | POST | User | markProgress | |
-| /work/add | GET/POST | Work | new | |
-| /work/{id}/edit | GET/POST | Work | edit | |
-| /work/{id}/delete | POST | Work | delete | |
 | /work/{id}/anime/{id}/rate | POST | User | rateAnime | |
 | /work/{id}/anime/add | GET/POST | Anime | new | |
 | /work/{id}/anime/{id}/edit | GET/POST | Anime | edit | |
@@ -86,6 +83,10 @@
 | /legal-mentions | GET | Main | legalMentions | |
 | /patch-notes | GET | Main | patchNotes | |
 | /back-office | GET | Main | backOffice | |
+| /back-office/work/{limit}/{offset} | GET | Work | index | |
+| /back-office/work/add | GET/POST | Work | new | |
+| /back-office/work/{id}/edit | GET/POST | Work | edit | |
+| /back-office/work/{id}/delete | POST | Work | delete | |
 | /back-office/contact-list/{limit}/{offset} | GET | Contact | index | |
 | /back-office/contact-list/{id}/mark-as-processed | GET | Contact | markAsProcessed | |
 | /back-office/contact-list/{id}/mark-as-unprocessed | GET | Contact | markAsUnprocessed | |
