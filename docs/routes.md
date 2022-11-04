@@ -25,7 +25,7 @@
 | /notification/{id}/mark-as-read | GET | Notification | markAsRead | |
 | /notification/{id}/mark-as-unread | GET | Notification | markAsUnread | |
 | /notification/{id}/delete | POST | Notification | delete | |
-| /plateform/{id} | GET | Plateform | show | |
+| /platform/{id} | GET | Platform | show | |
 | /followed-work/{limit}/{offset} | GET | User | listFollowedWork | |
 | /follow | POST | User | follow | |
 | /unfollow | POST | User | unfollow | |
@@ -101,10 +101,10 @@
 | /back-office/news/add | GET/POST | News | new | |
 | /back-office/news/{id}/edit | GET/POST | News | edit | |
 | /back-office/news/{id}/delete | POST | News | delete | |
-| /back-office/plateform/{limit}/{offset} | GET | Plateform | adminList | |
-| /back-office/plateform/add | GET/POST | Plateform | new | |
-| /back-office/plateform/{id}/edit | GET/POST | Plateform | edit | |
-| /back-office/plateform/{id}/delete | POST | Plateform | delete | |
+| /back-office/platform/{limit}/{offset} | GET | Platform | adminList | |
+| /back-office/platform/add | GET/POST | Platform | new | |
+| /back-office/platform/{id}/edit | GET/POST | Platform | edit | |
+| /back-office/platform/{id}/delete | POST | Platform | delete | |
 | /back-office/tag/{limit}/{offset} | GET | Tag | adminList | |
 | /back-office/tag/add | GET/POST | Tag | new | |
 | /back-office/tag/{id}/edit | GET/POST | Tag | edit | |
