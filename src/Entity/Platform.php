@@ -39,7 +39,7 @@ class Platform
     #[Assert\Url]
     private ?string $url = null;
 
-    #[Vich\UploadableField(mapping: 'user_pictures', fileNameProperty: 'picturePath')]
+    #[Vich\UploadableField(mapping: 'platform_pictures', fileNameProperty: 'picturePath')]
     #[Assert\File(
         maxSize: "5M",
         mimeTypes: ["image/jpeg", "image/png"],
