@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Progress;
 use App\Entity\Work;
 use App\Form\WorkType;
 use App\Repository\WorkRepository;
@@ -53,6 +54,7 @@ class WorkController extends AbstractController
 
         return $this->render('work/show.html.twig', [
             'work' => $work,
+            'progressList' => Progress::getProgressList(),
         ]);
     }
 

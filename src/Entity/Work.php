@@ -23,7 +23,7 @@ class Work
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('api_user_show')]
+    #[Groups(['api_user_show', 'api_progress_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 190)]
@@ -32,7 +32,7 @@ class Work
         max: 190,
     )]
     #[Assert\NotBlank]
-    #[Groups('api_user_show')]
+    #[Groups(['api_user_show', 'api_progress_show'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 20)]
