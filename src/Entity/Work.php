@@ -98,8 +98,8 @@ class Work
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'works')]
     private Collection $tags;
 
-    #[ORM\ManyToMany(targetEntity: Plateform::class, inversedBy: 'works')]
-    private Collection $plateforms;
+    #[ORM\ManyToMany(targetEntity: Platform::class, inversedBy: 'works')]
+    private Collection $platforms;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'followedWorks')]
     private Collection $followers;
@@ -113,7 +113,7 @@ class Work
         $this->mangas = new ArrayCollection();
         $this->animes = new ArrayCollection();
         $this->tags = new ArrayCollection();
-        $this->plateforms = new ArrayCollection();
+        $this->platforms = new ArrayCollection();
         $this->followers = new ArrayCollection();
     }
 
@@ -448,25 +448,25 @@ class Work
     }
 
     /**
-     * @return Collection<int, Plateform>
+     * @return Collection<int, Platform>
      */
-    public function getPlateforms(): Collection
+    public function getPlatforms(): Collection
     {
-        return $this->plateforms;
+        return $this->platforms;
     }
 
-    public function addPlateform(Plateform $plateform): self
+    public function addPlatform(Platform $platform): self
     {
-        if (!$this->plateforms->contains($plateform)) {
-            $this->plateforms->add($plateform);
+        if (!$this->platforms->contains($platform)) {
+            $this->platforms->add($platform);
         }
 
         return $this;
     }
 
-    public function removePlateform(Plateform $plateform): self
+    public function removePlatform(Platform $platform): self
     {
-        $this->plateforms->removeElement($plateform);
+        $this->platforms->removeElement($platform);
 
         return $this;
     }
