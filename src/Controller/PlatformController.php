@@ -57,8 +57,12 @@ class PlatformController extends AbstractController
     }
 
     #[Route('/back-office/platform/{id}/edit', name: 'app_platform_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Platform $platform, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function edit(Request $request, Platform $platform = null, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
+        if (null === $platform) {
+            throw $this->createNotFoundException('Platform not found.');
+        }
+
         $form = $this->createForm(PlatformType::class, $platform);
         $form->handleRequest($request);
 
@@ -77,8 +81,12 @@ class PlatformController extends AbstractController
     }
 
     #[Route('/back-office/platform/{id}/delete', name: 'app_platform_delete', methods: ['POST'])]
-    public function delete(Request $request, Platform $platform, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Platform $platform = null, EntityManagerInterface $entityManager): Response
     {
+        if (null === $platform) {
+            throw $this->createNotFoundException('Platform not found.');
+        }
+        
         if ($this->isCsrfTokenValid('delete'.$platform->getId(), $request->request->get('_token'))) {
             $entityManager->remove($platform);
             $entityManager->flush();

@@ -46,8 +46,12 @@ class TagController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_tag_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Tag $tag, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function edit(Request $request, Tag $tag = null, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
+        if (null === $tag) {
+            throw $this->createNotFoundException('Tag not found.');
+        }
+
         $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
@@ -66,8 +70,12 @@ class TagController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_tag_delete', methods: ['POST'])]
-    public function delete(Request $request, Tag $tag, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Tag $tag = null, EntityManagerInterface $entityManager): Response
     {
+        if (null === $tag) {
+            throw $this->createNotFoundException('Tag not found.');
+        }
+        
         if ($this->isCsrfTokenValid('delete'.$tag->getId(), $request->request->get('_token'))) {
             $entityManager->remove($tag);
             $entityManager->flush();
