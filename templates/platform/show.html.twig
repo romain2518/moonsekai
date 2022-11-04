@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Platform{% endblock %}
+
+{% block body %}
+    <h1>Platform</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ platform.name }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ platform.url }}</td>
+            </tr>
+            <tr>
+                <th>PicturePath</th>
+                <td>{{ platform.picturePath is null ? 'No image found' : platform.picturePath }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_platform_edit', {'id': platform.id}) }}">edit</a>
+{% endblock %}
