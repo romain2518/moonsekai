@@ -1,0 +1,55 @@
+{{ form_start(form) }}
+    {% set prototype = form_widget(form.alternativeName.vars.prototype)|raw %}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+<script>
+    const collectionModule = {
+        init: function () {
+            // Add delete link to each existing fields
+            collectionModule.collectionHolderElm.querySelectorAll('div').forEach((alternativeName) => {
+                collectionModule.addDeleteLink(alternativeName)
+            });
+
+            // Creating add item button
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.innerText = 'Add an alternative name';
+
+            button.addEventListener("click", collectionModule.addItemToCollection);
+
+            collectionModule.collectionHolderElm.after(button);
+        },
+        index: {{ form.alternativeName|length > 0 ? form.alternativeName|last.vars.name + 1 : 0 }},
+        collectionHolderElm: document.querySelector('#work_alternativeName'),
+        addDeleteLink: (item) => {
+            const removeFormButton = document.createElement('button');
+            removeFormButton.innerText = 'Delete this alternative name';
+
+            item.append(removeFormButton);
+
+            removeFormButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                // remove the div for the alternativeName form
+                item.remove();
+                collectionModule.index--;
+            });
+        },
+        addItemToCollection: (e) => {
+            const item = document.createElement('div');
+            const prototype = '{{ prototype|raw }}';
+
+            item.innerHTML = prototype.replace(/__name__/g, collectionModule.index);
+
+            collectionModule.collectionHolderElm.appendChild(item);
+
+            collectionModule.index++;
+
+            collectionModule.addDeleteLink(item);
+        },
+    };
+    
+    document.addEventListener('DOMContentLoaded', collectionModule.init);
+
+</script>

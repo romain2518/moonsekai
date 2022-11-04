@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Work{% endblock %}
+
+{% block body %}
+    <h1>Work</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ work.name }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ work.type }}</td>
+            </tr>
+            <tr>
+                <th>Native country</th>
+                <td>{{ work.nativeCountry|country_name }}</td>
+            </tr>
+            <tr>
+                <th>Original name</th>
+                <td>{{ work.originalName }}</td>
+            </tr>
+            <tr>
+                <th>Alternative names</th>
+                <td>{{ work.alternativeName ? work.alternativeName|join('\n')|nl2br : '' }}</td>
+            </tr>
+            <tr>
+                <th>PicturePath</th>
+                <td>{{ work.picturePath }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ work.createdAt ? work.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ work.updatedAt ? work.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>News</th>
+                <td>
+                    {% for news in work.worknews %}
+                        {{ news.title }}<br>
+                    {% else %}
+                        No news found.
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>
+                    {% for tag in work.tags %}
+                        {{ tag.name }}<br>
+                    {% else %}
+                        No tag found.
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Platforms</th>
+                <td>
+                    {% for platform in work.platforms %}
+                        {{ platform.name }}<br>
+                    {% else %}
+                        No platform found.
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Animes</th>
+                <td>
+                    {% for anime in work.animes %}
+                        {{ anime.name }}<br>
+                    {% else %}
+                        No anime found.
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Mangas</th>
+                <td>
+                    {% for manga in work.mangas %}
+                        {{ manga.name }}<br>
+                    {% else %}
+                        No manga found.
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Movies</th>
+                <td>
+                    {% for movie in work.movies %}
+                        {{ movie.name }}<br>
+                    {% else %}
+                        No movie found.
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Light novels</th>
+                <td>
+                    {% for lightnovel in work.lightnovels %}
+                        {{ lightnovel.name }}<br>
+                    {% else %}
+                        No light novel found.
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_USER') %}
+        <a href="#" class="CTA" data-id="{{ work.id }}" data-token="{{ csrf_token('follow' ~ work.id) }}" data-action="follow">follow</a><br>
+        <a href="#" class="CTA" data-id="{{ work.id }}" data-token="{{ csrf_token('unfollow' ~ work.id) }}" data-action="unfollow">unfollow</a><br>
+        <a href="#" class="CTA" data-id="{{ work.id }}" data-token="{{ csrf_token('mark-progress' ~ work.id) }}" data-action="mark-progress">mark progress</a>
+        <select>
+            {% for progress in progressList %}
+                <option value="{{ progress }}">{{ progress }}</option>
+            {% endfor %}
+        </select>
+        <br>
+    {% endif %}
+
+    {% if is_granted('ROLE_MODERATOR') %}
+        <a href="{{ path('app_work_index') }}">back to list</a><br>
+        <a href="{{ path('app_work_edit', {'id': work.id}) }}">edit</a><br>
+        {{ include('work/_delete_form.html.twig') }}
+    {% endif %}
+
+    <script>
+        const actions = {
+            init: function () {
+                document.querySelectorAll('.CTA').forEach(btn => {
+                    btn.addEventListener('click', actions.handleClick);
+                });
+            },
+            handleClick: function (event) {
+                event.preventDefault();
+
+                const   workId  = event.currentTarget.dataset.id,
+                        action  = event.currentTarget.dataset.action
+                        token   = event.currentTarget.dataset.token;
+
+                const bodyFormData = new FormData();
+                bodyFormData.append('token', token);
+
+                if (action === 'mark-progress') {
+                    const progress = event.currentTarget.nextElementSibling.value;
+                    bodyFormData.append('progress', progress);
+                }
+
+                actions.fetchAction(
+                    workId,
+                    action,
+                    bodyFormData
+                );
+            },
+            fetchAction: async function (workId, action, body) {
+                const httpHeaders = new Headers();
+
+                let init = {
+                        method: 'POST',
+                        headers: httpHeaders,
+                        mode: 'cors',
+                        body: body,
+                        cache: 'default' 
+                    };
+
+                const endpoint = action !== 'mark-progress' ? `/${action}/${workId}` : `/work/${workId}/mark-progress`
+                console.log(endpoint);
+
+                await fetch(endpoint, init)
+                    .then(function (response) {
+                        console.log(response.json());
+                        console.log(response.status);
+                    })
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', actions.init);
+
+    </script>
+{% endblock %}

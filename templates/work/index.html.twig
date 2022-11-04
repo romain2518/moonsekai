@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Work index{% endblock %}
+
+{% block body %}
+    <h1>Work index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>PicturePath</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for work in works %}
+            <tr>
+                <td><a href="{{ path('app_work_show', {'id': work.id}) }}">{{ work.name }}</a></td>
+                <td>{{ work.type }}</td>
+                <td>{{ work.picturePath }}</td>
+                {% if work.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': work.user.id}) }}">{{ work.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
+                <td>{{ work.createdAt ? work.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_work_edit', {'id': work.id}) }}">edit</a>
+                    {{ include('work/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_work_new') }}">Create new</a>
+{% endblock %}

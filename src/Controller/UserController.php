@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Ban;
+use App\Entity\Progress;
 use App\Entity\User;
 use App\Entity\Work;
 use App\Form\DeleteAccountFormType;
 use App\Form\EditLoginsType;
 use App\Form\EditProfileFormType;
+use App\Repository\ProgressRepository;
 use App\Repository\UserRepository;
 use App\Repository\WorkRepository;
 use App\Security\EmailVerifier;
@@ -22,6 +24,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -209,6 +212,61 @@ class UserController extends AbstractController
             [
                 'groups' => [
                     'api_user_show'
+                ]
+            ],
+        );
+    }
+
+    #[Route('/work/{id}/mark-progress', name: 'app_user_mark-progress', requirements: ['id' => '\d+'], methods: ['POST'], defaults: ['_format' => 'json'])]
+    public function markProgress(
+        Request $request, Work $work = null, UserInterface $user, 
+        ProgressRepository $progressRepository, EntityManagerInterface $entityManager,
+        ValidatorInterface $validator
+        ): JsonResponse
+    {
+        /** @var User $user */
+
+        if ($work === null) {
+            return $this->json('Work not found', Response::HTTP_NOT_FOUND);
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid('mark-progress'.$work->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
+        }
+
+        //? Checking if user already mark progress on this work
+        $progress = $progressRepository->findOneBy(['user' => $user, 'work' => $work]);
+        $responseCode = Response::HTTP_PARTIAL_CONTENT;
+        if (null === $progress) {
+            $progress = new Progress();
+            $responseCode = Response::HTTP_CREATED;
+        }
+        
+        $progress
+            ->setUser($user)
+            ->setWork($work)
+            ->setProgress($request->request->get('progress'))
+            ;
+
+        //? Validating data
+        $errors = $validator->validate($progress);
+        if (count($errors) > 0) { 
+            return $this->json('Unprocessable content.', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $entityManager->persist($progress);
+        $entityManager->flush();
+
+        return $this->json(
+            $progress,
+            $responseCode,
+            [],
+            [
+                'groups' => [
+                    'api_progress_show'
                 ]
             ],
         );

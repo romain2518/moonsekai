@@ -237,9 +237,9 @@ class AppFixtures extends Fixture
                 ->setUser($users[random_int(0,2)])
                 ->setName($faker->realTextBetween(1, 190))
                 ->setType($moonsekaiProvider->getRandomWorkType())
-                ->setNativeCountry($faker->country())
+                ->setNativeCountry($faker->countryCode())
                 ->setOriginalName(random_int(0, 1) ? $faker->realText(190) : null) // Randomly set a message or nothing
-                ->setAlternativeName(random_int(0, 1) ? array_map(fn() => $faker->realText(255), range(1, random_int(1, 10))) : null) // Randomly set from 1 to 10 alt names or null
+                ->setAlternativeName(random_int(0, 1) ? array_map(fn() => $faker->realText(255), range(1, random_int(1, 10))) : []) // Randomly set from 1 to 10 alt names or empty array
                 ->setPicturePath("$i.jpg")
                 ;
 
