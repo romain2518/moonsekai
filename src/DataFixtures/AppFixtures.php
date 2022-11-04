@@ -31,7 +31,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Faker\Provider\ar_EG\Person;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -55,7 +54,7 @@ class AppFixtures extends Fixture
             ->setPseudo('Superadmin')
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_SUPERADMIN'])
-            ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
+            ->setPassword($this->hasher->hashPassword($user, "J'ai 19 ans."))
             ->setPicturePath('1.jfif')
             ->setBannerPath('1.jpg')
             ->setBiography($faker->realText(1000))
@@ -74,7 +73,7 @@ class AppFixtures extends Fixture
             ->setPseudo('Admin')
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
+            ->setPassword($this->hasher->hashPassword($user, "J'ai 19 ans."))
             ->setPicturePath('2.jfif')
             ->setBannerPath('2.jpg')
             ->setBiography($faker->realText(1000))
@@ -93,7 +92,7 @@ class AppFixtures extends Fixture
             ->setPseudo('Moderator')
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_MODERATOR'])
-            ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
+            ->setPassword($this->hasher->hashPassword($user, "J'ai 19 ans."))
             ->setPicturePath('3.jfif')
             ->setBannerPath('3.jpg')
             ->setBiography($faker->realText(1000))
@@ -113,7 +112,7 @@ class AppFixtures extends Fixture
                 ->setPseudo($faker->userName())
                 ->setEmail($faker->freeEmail())
                 ->setRoles(['ROLE_USER'])
-                ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
+                ->setPassword($this->hasher->hashPassword($user, "J'ai 19 ans."))
                 ->setPicturePath("$i.jfif")
                 ->setBannerPath("$i.jpg")
                 ->setBiography($faker->realText(1000))
