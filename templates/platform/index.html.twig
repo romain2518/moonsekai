@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Platform index{% endblock %}
+
+{% block body %}
+    <h1>Platform index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Url</th>
+                <th>PicturePath</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for platform in platforms %}
+            <tr>
+                <td><a href="{{ path('app_platform_show', {'id': platform.id}) }}">{{ platform.name }}</a></td>
+                <td>{{ platform.url }}</td>
+                <td>{{ platform.picturePath is null ? 'No image found' : platform.picturePath }}</td>
+                {% if platform.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': platform.user.id}) }}">{{ platform.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
+                <td>{{ platform.createdAt ? platform.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_platform_edit', {'id': platform.id}) }}">edit</a>
+                    {{ include('platform/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_platform_new') }}">Create new</a>
+{% endblock %}

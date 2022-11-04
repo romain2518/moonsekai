@@ -16,7 +16,7 @@ use App\Entity\Message;
 use App\Entity\Movie;
 use App\Entity\News;
 use App\Entity\Notification;
-use App\Entity\Plateform;
+use App\Entity\Platform;
 use App\Entity\Progress;
 use App\Entity\Rate;
 use App\Entity\Report;
@@ -31,7 +31,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Faker\Provider\ar_EG\Person;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -55,7 +54,7 @@ class AppFixtures extends Fixture
             ->setPseudo('Superadmin')
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_SUPERADMIN'])
-            ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
+            ->setPassword($this->hasher->hashPassword($user, "J'ai 19 ans."))
             ->setPicturePath('1.jfif')
             ->setBannerPath('1.jpg')
             ->setBiography($faker->realText(1000))
@@ -74,7 +73,7 @@ class AppFixtures extends Fixture
             ->setPseudo('Admin')
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
+            ->setPassword($this->hasher->hashPassword($user, "J'ai 19 ans."))
             ->setPicturePath('2.jfif')
             ->setBannerPath('2.jpg')
             ->setBiography($faker->realText(1000))
@@ -93,7 +92,7 @@ class AppFixtures extends Fixture
             ->setPseudo('Moderator')
             ->setEmail($faker->freeEmail())
             ->setRoles(['ROLE_MODERATOR'])
-            ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
+            ->setPassword($this->hasher->hashPassword($user, "J'ai 19 ans."))
             ->setPicturePath('3.jfif')
             ->setBannerPath('3.jpg')
             ->setBiography($faker->realText(1000))
@@ -113,7 +112,7 @@ class AppFixtures extends Fixture
                 ->setPseudo($faker->userName())
                 ->setEmail($faker->freeEmail())
                 ->setRoles(['ROLE_USER'])
-                ->setPassword($this->hasher->hashPassword($user, 'Pass_1234'))
+                ->setPassword($this->hasher->hashPassword($user, "J'ai 19 ans."))
                 ->setPicturePath("$i.jfif")
                 ->setBannerPath("$i.jpg")
                 ->setBiography($faker->realText(1000))
@@ -218,17 +217,17 @@ class AppFixtures extends Fixture
             $manager->persist($tag);
         }
 
-        //! Plateform
+        //! Platform
         for ($i=0; $i < 15; $i++) { 
-            $plateform = new Plateform();
-            $plateform
+            $platform = new Platform();
+            $platform
                 ->setUser($users[random_int(0,2)])
                 ->setName($faker->realTextBetween(1, 100))
                 ->setUrl($faker->url()) // Randomly set an url or nothing
                 // ->setPicturePath() Default null
                 ;
-            $plateforms[] = $plateform;
-            $manager->persist($plateform);
+            $platforms[] = $platform;
+            $manager->persist($platform);
         }
 
         //! Work
@@ -248,8 +247,8 @@ class AppFixtures extends Fixture
                 $work->addTag($tags[array_rand($tags)]);
             }
 
-            for ($j=1; $j < random_int(1, count($plateforms)); $j++) { 
-                $work->addPlateform($plateforms[array_rand($plateforms)]);
+            for ($j=1; $j < random_int(1, count($platforms)); $j++) { 
+                $work->addPlatform($platforms[array_rand($platforms)]);
             }
             
             for ($j=1; $j < random_int(1, count($users)); $j++) { 
