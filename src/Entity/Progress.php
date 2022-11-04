@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProgressRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProgressRepository::class)]
@@ -14,32 +15,43 @@ class Progress
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api_progress_show')]
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice([
-        'in progress',
-        'to see',
-        'finished',
-        'paused',
-        'abandoned',
-    ])]
+    #[Assert\Choice(callback: 'getProgressList')]
     #[Assert\NotBlank]
+    #[Groups('api_progress_show')]
     private ?string $progress = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups('api_progress_show')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups('api_progress_show')]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'progress')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('api_progress_show')]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'progress')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('api_progress_show')]
     private ?Work $work = null;
+
+    public static function getProgressList()
+    {
+        return [
+            'in progress',
+            'to see',
+            'finished',
+            'paused',
+            'abandoned',
+        ];
+    }
 
     public function getId(): ?int
     {
