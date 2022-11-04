@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tag index{% endblock %}
+
+{% block body %}
+    <h1>Tag index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag.name }}</td>
+                {% if tag.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': tag.user.id}) }}">{{ tag.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
+                <td>{{ tag.createdAt ? tag.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_tag_edit', {'id': tag.id}) }}">edit</a>
+                    {{ include('tag/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tag_new') }}">Create new</a>
+{% endblock %}
