@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Season index{% endblock %}
+
+{% block body %}
+    <h1>Season index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>PicturePath</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for season in seasons %}
+            <tr>
+                <td>{{ season.number }}</td>
+                <td>{{ season.name }}</td>
+                <td>{{ season.picturePath is null ? 'No image found' : season.picturePath }}</td>
+                {% if season.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': season.user.id}) }}">{{ season.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
+                <td>{{ season.createdAt ? season.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ season.updatedAt ? season.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_season_edit', {'work_id': work.id, 'anime_id': anime.id, 'id': season.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_season_new', {'work_id': work.id, 'anime_id': anime.id}) }}">Create new</a>
+{% endblock %}
