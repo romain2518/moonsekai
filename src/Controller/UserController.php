@@ -4,16 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Ban;
 use App\Entity\Progress;
+use App\Entity\Rate;
 use App\Entity\User;
 use App\Entity\Work;
 use App\Form\DeleteAccountFormType;
 use App\Form\EditLoginsType;
 use App\Form\EditProfileFormType;
 use App\Repository\ProgressRepository;
+use App\Repository\RateRepository;
 use App\Repository\UserRepository;
 use App\Repository\WorkRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -267,6 +270,73 @@ class UserController extends AbstractController
             [
                 'groups' => [
                     'api_progress_show'
+                ]
+            ],
+        );
+    }
+
+    #[Route(
+        '/work/{work_id}/{targetAction}/{id}/rate', name: 'app_user_rate', 
+        requirements: ['work_id' => '\d+', 'id' => '\d+', 'target_action' => '^(anime)|(manga)|(movie)|(light-novel)$'], 
+        methods: ['POST'], defaults: ['_format' => 'json']
+    )]
+    #[Entity('work', expr: 'repository.find(work_id)')]
+    public function rate(
+        Request $request, Work $work = null, string $targetAction, int $id,
+        UserInterface $user, RateRepository $rateRepository,
+        EntityManagerInterface $entityManager, ValidatorInterface $validator
+        ): JsonResponse
+    {
+        /** @var User $user */
+
+        if ($work === null) {
+            return $this->json('Work not found', Response::HTTP_NOT_FOUND);
+        }
+        
+        $targetObject = $entityManager->getRepository('App\Entity\\' . ucfirst($targetAction))->find($id);
+
+        if ($targetObject === null) {
+            return $this->json(ucfirst($targetAction) . ' not found', Response::HTTP_NOT_FOUND);
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid('rate'.$targetObject->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
+        }
+
+        //? Checking if user already rated this object
+        $rate = $rateRepository->findOneBy(['user' => $user, 'targetTable' => $targetObject::class, 'targetId' => $targetObject->getId()]);
+        $responseCode = Response::HTTP_PARTIAL_CONTENT;
+        if (null === $rate) {
+            $rate = new Rate();
+            $responseCode = Response::HTTP_CREATED;
+        }
+        
+        $rate
+            ->setUser($user)
+            ->setTargetTable($targetObject::class)
+            ->setTargetId($targetObject->getId())
+            ->setRate($request->request->get('rate'))
+            ;
+
+        //? Validating data
+        $errors = $validator->validate($rate);
+        if (count($errors) > 0) { 
+            return $this->json('Unprocessable content.', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $entityManager->persist($rate);
+        $entityManager->flush();
+
+        return $this->json(
+            $rate,
+            $responseCode,
+            [],
+            [
+                'groups' => [
+                    'api_rate_show'
                 ]
             ],
         );
