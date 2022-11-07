@@ -67,8 +67,6 @@ security:
         - { path: ^/work/[0-9]+/movie/[0-9]+/rate$, roles: ROLE_USER }
         - { path: ^/work/[0-9]+/light-novel/[0-9]+/rate$, roles: ROLE_USER }
 
-        - { path: ^/work, roles: ROLE_MODERATOR }
-
         #? Calendar
 
         - { path: ^/calendar$, roles: PUBLIC_ACCESS }
