@@ -44,7 +44,7 @@ class Platform
         maxSize: "5M",
         mimeTypes: ["image/jpeg", "image/png"],
         maxSizeMessage: "The maximum allowed file size is 5MB.",
-        mimeTypesMessage: "Only png, jpg and jpeg images are allowed."
+        mimeTypesMessage: "Only .png, .jpg, .jpeg, .jfif, .pjpeg and .pjp are allowed."
     )]
     private ?File $pictureFile = null;
 

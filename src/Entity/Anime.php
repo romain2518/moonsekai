@@ -75,7 +75,7 @@ class Anime
         maxSize: "5M",
         mimeTypes: ["image/jpeg", "image/png"],
         maxSizeMessage: "The maximum allowed file size is 5MB.",
-        mimeTypesMessage: "Only png, jpg and jpeg images are allowed."
+        mimeTypesMessage: "Only .png, .jpg, .jpeg, .jfif, .pjpeg and .pjp are allowed."
     )]
     #[CustomAssert\NotBlankVich(message: 'Please provide a picture to create a anime.', target: 'picturePath')]
     private ?File $pictureFile = null;
