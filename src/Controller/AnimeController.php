@@ -89,7 +89,7 @@ class AnimeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_anime_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_anime_delete', methods: ['POST'])]
     public function delete(Request $request, Work $work, Anime $anime = null, EntityManagerInterface $entityManager): Response
     {
         if (null === $work) {
