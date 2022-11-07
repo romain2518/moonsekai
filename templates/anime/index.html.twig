@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Anime index{% endblock %}
+
+{% block body %}
+    <h1>Anime index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>State</th>
+                <th>ReleaseYear</th>
+                <th>PicturePath</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for anime in animes %}
+            <tr>
+                <td>{{ anime.name }}</td>
+                <td>{{ anime.state }}</td>
+                <td>{{ anime.releaseYear }}</td>
+                <td>{{ anime.picturePath }}</td>
+                <td>{{ anime.createdAt ? anime.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ anime.updatedAt ? anime.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_anime_edit', {'work_id': work.id, 'id': anime.id}) }}">edit</a>
+                    <a href="#">manage seasons</a>
+                    {{ include('anime/_delete_form.html.twig') }}    
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_anime_new', {'work_id': work.id}) }}">Create new</a>
+{% endblock %}
