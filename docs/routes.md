@@ -31,8 +31,8 @@
 | /unfollow | POST | User | unfollow | |
 | /work/{id} | GET | Work | show | |
 | /work/{id}/mark-progress | POST | User | markProgress | |
-| /work/{id}/anime/{id}/rate | POST | User | rateAnime | |
-| /work/{id}/manga/{id}/rate | POST | User | rateManga | |
+| /work/{id}/anime/{id}/rate | POST | User | rate | |
+| /work/{id}/manga/{id}/rate | POST | User | rate | |
 | /work/{id}/manga/add | GET/POST | Manga | new | |
 | /work/{id}/manga/{id}/edit | GET/POST | Manga | edit | |
 | /work/{id}/manga/{id}/delete | POST | Manga | delete | |
@@ -42,11 +42,11 @@
 | /work/{id}/manga/{id}/volume/{id}/chapter/add | GET/POST | Chapter | new | |
 | /work/{id}/manga/{id}/volume/{id}/chapter/{id}/edit | GET/POST | Chapter | edit | |
 | /work/{id}/manga/{id}/volume/{id}/chapter/{id}/delete | POST | Chapter | delete | |
-| /work/{id}/movie/{id}/rate | POST | User | rateMovie | |
+| /work/{id}/movie/{id}/rate | POST | User | rate | |
 | /work/{id}/movie/add | GET/POST | Movie | new | |
 | /work/{id}/movie/{id}/edit | GET/POST | Movie | edit | |
 | /work/{id}/movie/{id}/delete | POST | Movie | delete | |
-| /work/{id}/light-novel/{id}/rate | POST | User | rateLightNovel | |
+| /work/{id}/light-novel/{id}/rate | POST | User | rate | |
 | /work/{id}/light-novel/add | GET/POST | LightNovel | new | |
 | /work/{id}/light-novel/{id}/edit | GET/POST | LightNovel | edit | |
 | /work/{id}/light-novel/{id}/delete | POST | LightNovel | delete | |
