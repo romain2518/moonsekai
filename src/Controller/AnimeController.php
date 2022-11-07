@@ -69,14 +69,11 @@ class AnimeController extends AbstractController
         if (null === $anime) {
             throw $this->createNotFoundException('Anime not found.');
         }
-        // dd($anime->getReleaseYear());
 
         $form = $this->createForm(AnimeType::class, $anime);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $anime->setReleaseYear($form->get('releaseYear')->getData());
-            
             $anime->setUser($user);
             $anime->setWork($work);
 
