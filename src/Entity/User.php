@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['api_user_show', 'api_progress_show'])]
+    #[Groups(['api_user_show', 'api_progress_show', 'api_rate_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -57,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         max: 30,
     )]
     #[Assert\NotBlank]
-    #[Groups(['api_user_show', 'api_progress_show'])]
+    #[Groups(['api_user_show', 'api_progress_show', 'api_rate_show'])]
     private ?string $pseudo = null;
 
     #[Vich\UploadableField(mapping: 'user_pictures', fileNameProperty: 'picturePath')]

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RateRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RateRepository::class)]
@@ -15,14 +16,17 @@ class Rate
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api_rate_show')]
     private ?int $id = null;
 
     #[ORM\Column(length: 190)]
+    #[Groups('api_rate_show')]
     private ?string $targetTable = null;
 
     #[ORM\Column(options: [
         'unsigned' => true
     ])]
+    #[Groups('api_rate_show')]
     private ?int $targetId = null;
 
     #[ORM\Column]
@@ -31,16 +35,20 @@ class Rate
         max: 5,
     )]
     #[Assert\NotBlank]
+    #[Groups('api_rate_show')]
     private ?int $rate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups('api_rate_show')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups('api_rate_show')]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'rates')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('api_rate_show')]
     private ?User $user = null;
 
     public function getId(): ?int
