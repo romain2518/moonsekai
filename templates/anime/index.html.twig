@@ -12,6 +12,7 @@
                 <th>State</th>
                 <th>ReleaseYear</th>
                 <th>PicturePath</th>
+                <th>Creator</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
                 <th>actions</th>
@@ -24,11 +25,16 @@
                 <td>{{ anime.state }}</td>
                 <td>{{ anime.releaseYear }}</td>
                 <td>{{ anime.picturePath }}</td>
+                {% if work.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': work.user.id}) }}">{{ work.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
                 <td>{{ anime.createdAt ? anime.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ anime.updatedAt ? anime.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_anime_edit', {'work_id': work.id, 'id': anime.id}) }}">edit</a>
-                    <a href="#">manage seasons</a>
+                    <a href="{{ path('app_season_index', {'work_id': work.id, 'anime_id': anime.id}) }}">manage seasons</a>
                     {{ include('anime/_delete_form.html.twig') }}    
                 </td>
             </tr>
