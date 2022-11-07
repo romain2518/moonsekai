@@ -30,6 +30,7 @@
                 <td>{{ work.createdAt ? work.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_work_edit', {'id': work.id}) }}">edit</a>
+                    <a href="{{ path('app_anime_index', {'work_id': work.id}) }}">manage animes</a>
                     {{ include('work/_delete_form.html.twig') }}
                 </td>
             </tr>
