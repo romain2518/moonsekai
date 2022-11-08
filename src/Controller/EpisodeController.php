@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class EpisodeController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_episode_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work, Anime $anime, Season $season, EpisodeRepository $episodeRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, Anime $anime = null, Season $season = null, EpisodeRepository $episodeRepository, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -46,7 +46,7 @@ class EpisodeController extends AbstractController
     }
 
     #[Route('/add', name: 'app_episode_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Work $work, Anime $anime, Season $season, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function new(Request $request, Work $work = null, Anime $anime = null, Season $season = null, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -84,7 +84,7 @@ class EpisodeController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_episode_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Work $work, Anime $anime, Season $season, Episode $episode, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function edit(Request $request, Work $work = null, Anime $anime = null, Season $season = null, Episode $episode = null, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -124,7 +124,7 @@ class EpisodeController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_episode_delete', methods: ['POST'])]
-    public function delete(Request $request, Work $work, Anime $anime, Season $season, Episode $episode, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Work $work = null, Anime $anime = null, Season $season = null, Episode $episode = null, EntityManagerInterface $entityManager): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');

@@ -49,8 +49,12 @@ class BanController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_ban_delete', methods: ['POST'])]
-    public function delete(Request $request, Ban $ban, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Ban $ban = null, EntityManagerInterface $entityManager): Response
     {
+        if (null === $ban) {
+            throw $this->createNotFoundException('Ban not found.');
+        }
+
         if ($this->isCsrfTokenValid('delete'.$ban->getId(), $request->request->get('_token'))) {
             $entityManager->remove($ban);
             $entityManager->flush();
