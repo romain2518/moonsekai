@@ -32,7 +32,7 @@ class AnimeController extends AbstractController
     }
 
     #[Route('/add', name: 'app_anime_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Work $work, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function new(Request $request, Work $work = null, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -60,7 +60,7 @@ class AnimeController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_anime_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Work $work, Anime $anime = null, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function edit(Request $request, Work $work = null, Anime $anime = null, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -90,7 +90,7 @@ class AnimeController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_anime_delete', methods: ['POST'])]
-    public function delete(Request $request, Work $work, Anime $anime = null, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Work $work = null, Anime $anime = null, EntityManagerInterface $entityManager): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
