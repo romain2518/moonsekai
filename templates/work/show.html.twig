@@ -99,7 +99,23 @@
                 <th>Mangas</th>
                 <td>
                     {% for manga in work.mangas %}
-                        {{ manga.name }}<br>
+                        {{ manga.name }} - 
+                        <a 
+                            href="#" class="CTA" data-id="{{ work.id }}" 
+                            data-object-id="{{ manga.id }}" data-object-type="manga" 
+                            data-token="{{ csrf_token('rate' ~ manga.id) }}" data-action="rate"
+                            >
+                            rate
+                        </a>
+                        <select>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <br>
                     {% else %}
                         No manga found.
                     {% endfor %}
