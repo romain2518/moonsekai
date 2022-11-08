@@ -61,7 +61,7 @@ class Season
     #[ORM\JoinColumn(nullable: false)]
     private ?Anime $anime = null;
 
-    #[ORM\OneToMany(mappedBy: 'season', targetEntity: Episode::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'season', targetEntity: Episode::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $episodes;
 
     public function __construct()
