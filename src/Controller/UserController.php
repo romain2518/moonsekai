@@ -293,7 +293,7 @@ class UserController extends AbstractController
             return $this->json('Work not found', Response::HTTP_NOT_FOUND);
         }
         
-        $targetObject = $entityManager->getRepository('App\Entity\\' . ucfirst($targetAction))->find($id);
+        $targetObject = $entityManager->getRepository('App\\Entity\\' . ucfirst($targetAction))->find($id);
 
         if ($targetObject === null) {
             return $this->json(ucfirst($targetAction) . ' not found', Response::HTTP_NOT_FOUND);
