@@ -25,8 +25,8 @@
                 <td>{{ anime.state }}</td>
                 <td>{{ anime.releaseYear }}</td>
                 <td>{{ anime.picturePath }}</td>
-                {% if work.user is not null %}
-                    <td><a href="{{ path('app_user_profile', {'id': work.user.id}) }}">{{ work.user.pseudo }}</a></td>
+                {% if anime.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': anime.user.id}) }}">{{ anime.user.pseudo }}</a></td>
                 {% else %}
                     <td>Banned user</td>
                 {% endif %}

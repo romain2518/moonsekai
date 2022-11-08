@@ -21,8 +21,8 @@
             <tr>
                 <td>{{ episode.number }}</td>
                 <td>{{ episode.name }}</td>
-                {% if season.user is not null %}
-                    <td><a href="{{ path('app_user_profile', {'id': season.user.id}) }}">{{ season.user.pseudo }}</a></td>
+                {% if episode.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': episode.user.id}) }}">{{ episode.user.pseudo }}</a></td>
                 {% else %}
                     <td>Banned user</td>
                 {% endif %}

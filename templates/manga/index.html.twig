@@ -25,8 +25,8 @@
                 <td>{{ manga.state }}</td>
                 <td>{{ manga.releaseYear }}</td>
                 <td>{{ manga.picturePath }}</td>
-                {% if work.user is not null %}
-                    <td><a href="{{ path('app_user_profile', {'id': work.user.id}) }}">{{ work.user.pseudo }}</a></td>
+                {% if manga.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': manga.user.id}) }}">{{ manga.user.pseudo }}</a></td>
                 {% else %}
                     <td>Banned user</td>
                 {% endif %}
