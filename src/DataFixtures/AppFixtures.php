@@ -332,7 +332,7 @@ class AppFixtures extends Fixture
                     ->setAuthor($faker->realTextBetween(1, 100))
                     ->setDesigner($faker->realTextBetween(1, 100))
                     ->setEditor($faker->realTextBetween(1, 100))
-                    ->setReleaseYear($faker->dateTimeBetween('1900', '+10 years'))
+                    ->setReleaseYear(random_int(1990, 2030))
                     ->setPicturePath("$counter.jpg")
                     ;
                 $mangas[] = $manga;
