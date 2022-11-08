@@ -35,21 +35,12 @@ class Manga
     private ?string $description = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice([
-        'ongoing',
-        'finished',
-        'paused',
-    ])]
+    #[Assert\Choice(callback: 'getStates')]
     #[Assert\NotBlank]
     private ?string $state = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice([
-        'daily',
-        'weekly',
-        'bi-weekly',
-        'monthly',
-    ])]
+    #[Assert\Choice(callback: 'getReleaseRegularities')]
     #[Assert\NotBlank]
     private ?string $releaseRegularity = null;
 
@@ -77,14 +68,16 @@ class Manga
     #[Assert\NotBlank]
     private ?string $editor = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\Range(
-        min: '1900',
-        max: '+10 years',
-    )]
+    //* Property used to set release year max range, see __construct()
+    private ?int $maxReleaseYear = null;
+
+    #[ORM\Column]
     #[Assert\NotBlank]
-    #[Assert\Date]
-    private ?\DateTimeInterface $releaseYear = null;
+    #[Assert\Range(
+        min: 1900,
+        maxPropertyPath: 'maxReleaseYear',
+    )]
+    private ?int $releaseYear = null;
 
     #[ORM\Column(length: 255)]
     private ?string $picturePath = null;
@@ -109,6 +102,26 @@ class Manga
     public function __construct()
     {
         $this->volumes = new ArrayCollection();
+        $this->maxReleaseYear = (new \DateTime())->format('Y') + 10;
+    }
+
+    public static function getStates()
+    {
+        return [
+            'ongoing',
+            'finished',
+            'paused',
+        ];
+    }
+
+    public static function getReleaseRegularities()
+    {
+        return [
+            'daily',
+            'weekly',
+            'bi-weekly',
+            'monthly',
+        ];
     }
 
     public function getId(): ?int
@@ -200,12 +213,17 @@ class Manga
         return $this;
     }
 
-    public function getReleaseYear(): ?int
+    public function getMaxReleaseYear(): ?int
     {
-        return $this->releaseYear->format('Y');
+        return $this->maxReleaseYear;
     }
 
-    public function setReleaseYear(\DateTimeInterface $releaseYear): self
+    public function getReleaseYear(): ?int
+    {
+        return $this->releaseYear;
+    }
+
+    public function setReleaseYear(int $releaseYear): self
     {
         $this->releaseYear = $releaseYear;
 
