@@ -32,7 +32,7 @@
                 <td>{{ volume.updatedAt ? volume.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_volume_edit', {'work_id': work.id, 'manga_id': manga.id, 'id': volume.id}) }}">edit</a>
-                    <a href="{# path('app_chapter_index', {'work_id': work.id, 'manga_id': manga.id, 'episode_id': episode.id}) #}">manage episodes</a>
+                    <a href="{{ path('app_chapter_index', {'work_id': work.id, 'manga_id': manga.id, 'volume_id': volume.id}) }}">manage chapters</a>
                     {{ include('volume/_delete_form.html.twig') }}
                 </td>
             </tr>

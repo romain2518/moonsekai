@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chapter index{% endblock %}
+
+{% block body %}
+    <h1>Chapter index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for chapter in chapters %}
+            <tr>
+                <td>{{ chapter.number }}</td>
+                <td>{{ chapter.name }}</td>
+                {% if chapter.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': chapter.user.id}) }}">{{ chapter.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
+                <td>{{ chapter.createdAt ? chapter.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ chapter.updatedAt ? chapter.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_chapter_edit', {'work_id': work.id, 'manga_id': manga.id, 'volume_id': volume.id, 'id': chapter.id}) }}">edit</a>
+                    {{ include('chapter/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_chapter_new', {'work_id': work.id, 'manga_id': manga.id, 'volume_id': volume.id}) }}">Create new</a>
+    <a href="{{ path('app_volume_index', {'work_id': work.id, 'manga_id': manga.id}) }}">Back to volume list</a>
+{% endblock %}
