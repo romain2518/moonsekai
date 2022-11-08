@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Volume index{% endblock %}
+
+{% block body %}
+    <h1>Volume index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>PicturePath</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for volume in volumes %}
+            <tr>
+                <td>{{ volume.number }}</td>
+                <td>{{ volume.name }}</td>
+                <td>{{ volume.picturePath is null ? 'No image found' : volume.picturePath }}</td>
+                {% if volume.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': volume.user.id}) }}">{{ volume.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
+                <td>{{ volume.createdAt ? volume.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ volume.updatedAt ? volume.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_volume_edit', {'work_id': work.id, 'manga_id': manga.id, 'id': volume.id}) }}">edit</a>
+                    <a href="{# path('app_chapter_index', {'work_id': work.id, 'manga_id': manga.id, 'episode_id': episode.id}) #}">manage episodes</a>
+                    {{ include('volume/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_volume_new', {'work_id': work.id, 'manga_id': manga.id}) }}">Create new</a>
+    <a href="{{ path('app_manga_index', {'work_id': work.id}) }}">Back to manga list</a>
+{% endblock %}

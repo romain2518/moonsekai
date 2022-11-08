@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Volume{% endblock %}
+
+{% block body %}
+    <h1>Edit Volume</h1>
+
+    {{ include('volume/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_volume_index', {'work_id': work.id, 'manga_id': manga.id}) }}">back to list</a>
+
+    {{ include('volume/_delete_form.html.twig') }}
+{% endblock %}

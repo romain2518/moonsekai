@@ -34,7 +34,7 @@
                 <td>{{ manga.updatedAt ? manga.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_manga_edit', {'work_id': work.id, 'id': manga.id}) }}">edit</a>
-                    <a href="{# path('app_volume_index', {'work_id': work.id, 'manga_id': manga.id}) #}">manage volumes</a>
+                    <a href="{{ path('app_volume_index', {'work_id': work.id, 'manga_id': manga.id}) }}">manage volumes</a>
                     {{ include('manga/_delete_form.html.twig') }}    
                 </td>
             </tr>
