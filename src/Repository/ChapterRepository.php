@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Chapter;
+use App\Entity\Volume;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,22 @@ class ChapterRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return Chapter[] Returns an array of Chapter objects ordered by casted name
+     */
+    public function findByVolumeOrderedByCastedName(Volume $volume, int $limit, int $offset): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.volume = :volume')
+            ->setParameter('volume', $volume)
+            ->orderBy('CAST(e.number as decimal)', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**
