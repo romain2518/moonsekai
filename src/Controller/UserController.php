@@ -431,7 +431,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/back-office/user/{limit}/{offset}', name: 'app_user_admin-list', requirements: ['limit' => '\d+', 'offset' => '\d+'])]
-    public function adminList(UserRepository $userRepository, int $limit = 10, int $offset = 0): Response
+    public function index(UserRepository $userRepository, int $limit = 10, int $offset = 0): Response
     {
         return $this->render('user/admin_list.html.twig', [
             'users' => $userRepository->findBy([], null, $limit, $offset),
