@@ -1,4 +1,55 @@
 {{ form_start(form) }}
+    {% set prototype = form_widget(form.chapters.vars.prototype)|raw %}
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
+<script>
+    const collectionModule = {
+        init: function () {
+            // Add delete link to each existing fields
+            collectionModule.collectionHolderElm.querySelectorAll(':scope > div').forEach((chapter) => {
+                collectionModule.addDeleteLink(chapter)
+            });
+
+            // Creating add item button
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.innerText = 'Add an chapter';
+
+            button.addEventListener("click", collectionModule.addItemToCollection);
+
+            collectionModule.collectionHolderElm.after(button);
+        },
+        index: {{ form.chapters|length > 0 ? form.chapters|last.vars.name + 1 : 0 }},
+        collectionHolderElm: document.querySelector('#volume_chapters'),
+        addDeleteLink: (item) => {
+            const removeFormButton = document.createElement('button');
+            removeFormButton.innerText = 'Delete this chapter';
+
+            item.append(removeFormButton);
+
+            removeFormButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                // remove the div from the form
+                item.remove();
+                collectionModule.index--;
+            });
+        },
+        addItemToCollection: (e) => {
+            const item = document.createElement('div');
+            const prototype = '{{ prototype|raw }}';
+
+            item.innerHTML = prototype.replace(/__name__/g, collectionModule.index);
+
+            collectionModule.collectionHolderElm.appendChild(item);
+
+            collectionModule.index++;
+
+            collectionModule.addDeleteLink(item);
+        },
+    };
+    
+    document.addEventListener('DOMContentLoaded', collectionModule.init);
+
+</script>
