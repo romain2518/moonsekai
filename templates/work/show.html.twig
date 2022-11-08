@@ -73,7 +73,23 @@
                 <th>Animes</th>
                 <td>
                     {% for anime in work.animes %}
-                        {{ anime.name }}<br>
+                        {{ anime.name }} - 
+                        <a 
+                            href="#" class="CTA" data-id="{{ work.id }}" 
+                            data-object-id="{{ anime.id }}" data-object-type="anime" 
+                            data-token="{{ csrf_token('rate' ~ anime.id) }}" data-action="rate"
+                            >
+                            rate
+                        </a>
+                        <select>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <br>
                     {% else %}
                         No anime found.
                     {% endfor %}
@@ -147,18 +163,30 @@
                 const bodyFormData = new FormData();
                 bodyFormData.append('token', token);
 
+                let endpoint = `/${action}/${workId}`;
+
                 if (action === 'mark-progress') {
                     const progress = event.currentTarget.nextElementSibling.value;
                     bodyFormData.append('progress', progress);
+
+                    endpoint = `/work/${workId}/mark-progress`;
+                }
+
+                if (action === 'rate') {
+                    const   rate = event.currentTarget.nextElementSibling.value,
+                            objectType = event.currentTarget.dataset.objectType,
+                            objectId = event.currentTarget.dataset.objectId;
+                    bodyFormData.append('rate', rate);
+
+                    endpoint = `/work/${workId}/${objectType}/${objectId}/rate`;
                 }
 
                 actions.fetchAction(
-                    workId,
-                    action,
+                    endpoint,
                     bodyFormData
                 );
             },
-            fetchAction: async function (workId, action, body) {
+            fetchAction: async function (endpoint, body) {
                 const httpHeaders = new Headers();
 
                 let init = {
@@ -169,7 +197,6 @@
                         cache: 'default' 
                     };
 
-                const endpoint = action !== 'mark-progress' ? `/${action}/${workId}` : `/work/${workId}/mark-progress`
                 console.log(endpoint);
 
                 await fetch(endpoint, init)

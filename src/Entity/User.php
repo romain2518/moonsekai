@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['api_user_show', 'api_progress_show'])]
+    #[Groups(['api_user_show', 'api_progress_show', 'api_rate_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -57,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         max: 30,
     )]
     #[Assert\NotBlank]
-    #[Groups(['api_user_show', 'api_progress_show'])]
+    #[Groups(['api_user_show', 'api_progress_show', 'api_rate_show'])]
     private ?string $pseudo = null;
 
     #[Vich\UploadableField(mapping: 'user_pictures', fileNameProperty: 'picturePath')]
@@ -65,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         maxSize: "5M",
         mimeTypes: ["image/jpeg", "image/png"],
         maxSizeMessage: "The maximum allowed file size is 5MB.",
-        mimeTypesMessage: "Only png, jpg and jpeg images are allowed."
+        mimeTypesMessage: "Only .png, .jpg, .jpeg, .jfif, .pjpeg and .pjp are allowed."
     )]
     private ?File $pictureFile = null;
 
@@ -78,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         maxSize: "5M",
         mimeTypes: ["image/jpeg", "image/png"],
         maxSizeMessage: "The maximum allowed file size is 5MB.",
-        mimeTypesMessage: "Only png, jpg and jpeg images are allowed."
+        mimeTypesMessage: "Only .png, .jpg, .jpeg, .jfif, .pjpeg and .pjp are allowed."
     )]
     private ?File $bannerFile = null;
 

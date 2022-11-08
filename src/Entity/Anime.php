@@ -3,13 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\AnimeRepository;
+use App\Validator as CustomAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: AnimeRepository::class)]
+#[Vich\Uploadable]
 #[ORM\Index(name: 'idx_search', fields: ['name'])]
 #[ORM\Index(name: 'idx_advanced_search', fields: ['name', 'state', 'author', 'animationStudio', 'releaseYear'])]
 #[ORM\HasLifecycleCallbacks]
@@ -35,11 +39,7 @@ class Anime
     private ?string $description = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice([
-        'ongoing',
-        'finished',
-        'paused',
-    ])]
+    #[Assert\Choice(callback: 'getStates')]
     #[Assert\NotBlank]
     private ?string $state = null;
 
@@ -59,15 +59,27 @@ class Anime
     #[Assert\NotBlank]
     private ?string $animationStudio = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\Range(
-        min: '1900',
-        max: '+10 years',
-    )]
-    #[Assert\NotBlank]
-    #[Assert\Date]
-    private ?\DateTimeInterface $releaseYear = null;
+    //* Property used to set release year max range, see __construct()
+    private ?int $maxReleaseYear = null;
 
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Range(
+        min: 1900,
+        maxPropertyPath: 'maxReleaseYear',
+    )]
+    private ?int $releaseYear = null;
+
+    #[Vich\UploadableField(mapping: 'anime_pictures', fileNameProperty: 'picturePath')]
+    #[Assert\File(
+        maxSize: "5M",
+        mimeTypes: ["image/jpeg", "image/png"],
+        maxSizeMessage: "The maximum allowed file size is 5MB.",
+        mimeTypesMessage: "Only .png, .jpg, .jpeg, .jfif, .pjpeg and .pjp are allowed."
+    )]
+    #[CustomAssert\NotBlankVich(message: 'Please provide a picture to create a anime.', target: 'picturePath')]
+    private ?File $pictureFile = null;
+    
     #[ORM\Column(length: 255)]
     private ?string $picturePath = null;
 
@@ -91,6 +103,16 @@ class Anime
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
+        $this->maxReleaseYear = (new \DateTime())->format('Y') + 10;
+    }
+
+    public static function getStates()
+    {
+        return [
+            'ongoing',
+            'finished',
+            'paused',
+        ];
     }
 
     public function getId(): ?int
@@ -158,14 +180,36 @@ class Anime
         return $this;
     }
 
-    public function getReleaseYear(): ?int
+    public function getMaxReleaseYear(): ?int
     {
-        return $this->releaseYear->format('Y');
+        return $this->maxReleaseYear;
     }
 
-    public function setReleaseYear(\DateTimeInterface $releaseYear): self
+    public function getReleaseYear(): ?int
+    {
+        return $this->releaseYear;
+    }
+
+    public function setReleaseYear(int $releaseYear): self
     {
         $this->releaseYear = $releaseYear;
+
+        return $this;
+    }
+
+    public function getPictureFile(): ?File
+    {
+        return $this->pictureFile;
+    }
+
+    public function setPictureFile(?File $pictureFile = null): self
+    {
+        $this->pictureFile = $pictureFile;
+
+        if (null !== $pictureFile) {
+            // Needed to trigger event listener
+            $this->updatedAt = new \DateTime();
+        }
 
         return $this;
     }
@@ -175,7 +219,7 @@ class Anime
         return $this->picturePath;
     }
 
-    public function setPicturePath(string $picturePath): self
+    public function setPicturePath(?string $picturePath): self
     {
         $this->picturePath = $picturePath;
 

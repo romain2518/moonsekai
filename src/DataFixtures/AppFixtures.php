@@ -385,7 +385,7 @@ class AppFixtures extends Fixture
                     ->setState($moonsekaiProvider->getRandomState())
                     ->setAuthor($faker->realTextBetween(1, 100))
                     ->setAnimationStudio($faker->company())
-                    ->setReleaseYear($faker->dateTimeBetween('1900', '+10 years'))
+                    ->setReleaseYear(random_int(1990, 2030))
                     ->setPicturePath("$counter.jpg")
                     ;
                 $animes[] = $anime;
