@@ -39,3 +39,8 @@ vich_uploader:
             uri_prefix: /assets/images/mangaPictures
             upload_destination: '%kernel.project_dir%/public/assets/images/mangaPictures'
             namer: Vich\UploaderBundle\Naming\UniqidNamer
+        
+        volume_pictures:
+            uri_prefix: /assets/images/volumePictures
+            upload_destination: '%kernel.project_dir%/public/assets/images/volumePictures'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Volume{% endblock %}
+
+{% block body %}
+    <h1>Create new Volume</h1>
+
+    {{ include('volume/_form.html.twig') }}
+
+    <a href="{{ path('app_volume_index', {'work_id': work.id, 'manga_id': manga.id}) }}">back to list</a>
+{% endblock %}
