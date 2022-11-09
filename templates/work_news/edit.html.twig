@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit WorkNews{% endblock %}
+
+{% block body %}
+    <h1>Edit WorkNews</h1>
+
+    {{ include('work_news/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_work-news_index', {'work_id': work.id}) }}">back to list</a>
+
+    {{ include('work_news/_delete_form.html.twig') }}
+{% endblock %}

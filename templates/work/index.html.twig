@@ -29,11 +29,12 @@
                 {% endif %}
                 <td>{{ work.createdAt ? work.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_work_edit', {'id': work.id}) }}">edit</a>
-                    <a href="{{ path('app_anime_index', {'work_id': work.id}) }}">manage animes</a>
-                    <a href="{{ path('app_manga_index', {'work_id': work.id}) }}">manage mangas</a>
-                    <a href="{{ path('app_movie_index', {'work_id': work.id}) }}">manage movies</a>
-                    <a href="{{ path('app_light-novel_index', {'work_id': work.id}) }}">manage light-novels</a>
+                    <a href="{{ path('app_work_edit', {'id': work.id}) }}">edit</a><br>
+                    <a href="{{ path('app_anime_index', {'work_id': work.id}) }}">manage animes</a><br>
+                    <a href="{{ path('app_manga_index', {'work_id': work.id}) }}">manage mangas</a><br>
+                    <a href="{{ path('app_movie_index', {'work_id': work.id}) }}">manage movies</a><br>
+                    <a href="{{ path('app_light-novel_index', {'work_id': work.id}) }}">manage light novels</a><br>
+                    <a href="{{ path('app_work-news_index', {'work_id': work.id}) }}">manage work news</a><br>
                     {{ include('work/_delete_form.html.twig') }}
                 </td>
             </tr>

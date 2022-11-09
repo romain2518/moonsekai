@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New WorkNews{% endblock %}
+
+{% block body %}
+    <h1>Create new WorkNews</h1>
+
+    {{ include('work_news/_form.html.twig') }}
+
+    <a href="{{ path('app_work-news_index', {'work_id': work.id}) }}">back to list</a>
+{% endblock %}

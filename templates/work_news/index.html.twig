@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Work news index{% endblock %}
+
+{% block body %}
+    <h1>Work news index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>PicturePath</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for work_news in work_news %}
+            <tr>
+                <td>{{ work_news.title }}</td>
+                <td>{{ work_news.picturePath is null ? 'No image found' : work_news.picturePath }}</td>
+                {% if work_news.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': work_news.user.id}) }}">{{ work_news.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Banned user</td>
+                {% endif %}
+                <td>{{ work_news.createdAt ? work_news.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ work_news.updatedAt ? work_news.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_work-news_edit', {'work_id': work.id, 'id': work_news.id}) }}">edit</a>
+                    {{ include('work_news/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_work-news_new', {'work_id': work.id}) }}">Create new</a>
+    <a href="{{ path('app_work_index') }}">Back to work list</a>
+{% endblock %}
