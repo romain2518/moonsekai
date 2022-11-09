@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\MovieRepository;
+use App\Validator as CustomAssert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
+#[Vich\Uploadable]
 #[ORM\Index(name: 'idx_search', fields: ['name'])]
 #[ORM\Index(name: 'idx_advanced_search', fields: ['name', 'duration', 'animationStudio', 'releaseYear'])]
 #[ORM\HasLifecycleCallbacks]
@@ -48,14 +52,26 @@ class Movie
     #[Assert\NotBlank]
     private ?string $animationStudio = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\Range(
-        min: '1900',
-        max: '+10 years',
-    )]
+    //* Property used to set release year max range, see __construct()
+    private ?int $maxReleaseYear = null;
+
+    #[ORM\Column]
     #[Assert\NotBlank]
-    #[Assert\Date]
-    private ?\DateTimeInterface $releaseYear = null;
+    #[Assert\Range(
+        min: 1900,
+        maxPropertyPath: 'maxReleaseYear',
+    )]
+    private ?int $releaseYear = null;
+
+    #[Vich\UploadableField(mapping: 'movie_pictures', fileNameProperty: 'picturePath')]
+    #[Assert\File(
+        maxSize: "5M",
+        mimeTypes: ["image/jpeg", "image/png"],
+        maxSizeMessage: "The maximum allowed file size is 5MB.",
+        mimeTypesMessage: "Only .png, .jpg, .jpeg, .jfif, .pjpeg and .pjp are allowed."
+    )]
+    #[CustomAssert\NotBlankVich(message: 'Please provide a picture to create a movie.', target: 'picturePath')]
+    private ?File $pictureFile = null;
 
     #[ORM\Column(length: 255)]
     private ?string $picturePath = null;
@@ -73,6 +89,10 @@ class Movie
     #[ORM\ManyToOne(inversedBy: 'movies')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Work $work = null;
+
+    public function __construct() {
+        $this->maxReleaseYear = (new \DateTime())->format('Y') + 10;
+    }
 
     public function getId(): ?int
     {
@@ -127,14 +147,36 @@ class Movie
         return $this;
     }
 
-    public function getReleaseYear(): ?int
+    public function getMaxReleaseYear(): ?int
     {
-        return $this->releaseYear->format('Y');
+        return $this->maxReleaseYear;
     }
 
-    public function setReleaseYear(\DateTimeInterface $releaseYear): self
+    public function getReleaseYear(): ?int
+    {
+        return $this->releaseYear;
+    }
+
+    public function setReleaseYear(int $releaseYear): self
     {
         $this->releaseYear = $releaseYear;
+
+        return $this;
+    }
+
+    public function getPictureFile(): ?File
+    {
+        return $this->pictureFile;
+    }
+
+    public function setPictureFile(?File $pictureFile = null): self
+    {
+        $this->pictureFile = $pictureFile;
+
+        if (null !== $pictureFile) {
+            // Needed to trigger event listener
+            $this->updatedAt = new \DateTime();
+        }
 
         return $this;
     }
@@ -144,7 +186,7 @@ class Movie
         return $this->picturePath;
     }
 
-    public function setPicturePath(string $picturePath): self
+    public function setPicturePath(?string $picturePath): self
     {
         $this->picturePath = $picturePath;
 
