@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[Entity('work', expr: 'repository.find(work_id)')]
 class MangaController extends AbstractController
 {
-    #[Route('/', name: 'app_manga_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
+    #[Route('/{limit}/{offset}', name: 'app_manga_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
     public function index(Work $work = null, MangaRepository $mangaRepository, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
