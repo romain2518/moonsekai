@@ -293,6 +293,9 @@ class UserController extends AbstractController
             return $this->json('Work not found', Response::HTTP_NOT_FOUND);
         }
         
+        if ($targetAction === 'light-novel') {
+            $targetAction = 'LightNovel'; // kebab case is used for link readability, entities are named with Pascal Case
+        }
         $targetObject = $entityManager->getRepository('App\\Entity\\' . ucfirst($targetAction))->find($id);
 
         if ($targetObject === null) {
