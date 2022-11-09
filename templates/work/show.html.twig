@@ -150,8 +150,24 @@
             <tr>
                 <th>Light novels</th>
                 <td>
-                    {% for lightnovel in work.lightnovels %}
-                        {{ lightnovel.name }}<br>
+                    {% for lightNovel in work.lightNovels %}
+                        {{ lightNovel.name }} - 
+                        <a 
+                            href="#" class="CTA" data-id="{{ work.id }}" 
+                            data-object-id="{{ lightNovel.id }}" data-object-type="light-novel" 
+                            data-token="{{ csrf_token('rate' ~ lightNovel.id) }}" data-action="rate"
+                            >
+                            rate
+                        </a>
+                        <select>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <br>
                     {% else %}
                         No light novel found.
                     {% endfor %}

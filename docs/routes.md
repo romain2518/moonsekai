@@ -35,9 +35,6 @@
 | /work/{id}/manga/{id}/rate | POST | User | rate | |
 | /work/{id}/movie/{id}/rate | POST | User | rate | |
 | /work/{id}/light-novel/{id}/rate | POST | User | rate | |
-| /work/{id}/light-novel/add | GET/POST | LightNovel | new | |
-| /work/{id}/light-novel/{id}/edit | GET/POST | LightNovel | edit | |
-| /work/{id}/light-novel/{id}/delete | POST | LightNovel | delete | |
 | /work/{id}/news/add | GET/POST | WorkNews | new | |
 | /work/{id}/news/{id}/edit | GET/POST | WorkNews | edit | |
 | /work/{id}/news/{id}/delete | POST | WorkNews | delete | |
@@ -94,6 +91,10 @@
 | /back-office/work/{id}/movie/add | GET/POST | Movie | new | |
 | /back-office/work/{id}/movie/{id}/edit | GET/POST | Movie | edit | |
 | /back-office/work/{id}/movie/{id}/delete | POST | Movie | delete | |
+| /work/{id}/light-novel/{limit}/{offset} | GET | LightNovel | index | |
+| /work/{id}/light-novel/add | GET/POST | LightNovel | new | |
+| /work/{id}/light-novel/{id}/edit | GET/POST | LightNovel | edit | |
+| /work/{id}/light-novel/{id}/delete | POST | LightNovel | delete | |
 | /back-office/contact-list/{limit}/{offset} | GET | Contact | index | |
 | /back-office/contact-list/{id}/mark-as-processed | GET | Contact | markAsProcessed | |
 | /back-office/contact-list/{id}/mark-as-unprocessed | GET | Contact | markAsUnprocessed | |

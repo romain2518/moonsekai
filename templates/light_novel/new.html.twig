@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New LightNovel{% endblock %}
+
+{% block body %}
+    <h1>Create new LightNovel</h1>
+
+    {{ include('light_novel/_form.html.twig') }}
+
+    <a href="{{ path('app_light-novel_index', {'work_id': work.id}) }}">back to list</a>
+{% endblock %}
