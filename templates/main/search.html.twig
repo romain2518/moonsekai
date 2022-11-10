@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search{% endblock %}
+
+{% block body %}
+    <h1>Search</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Search') }}</button>
+    {{ form_end(form) }}
+
+    {% if results %}
+        {{ results|length }} result(s) found<br>
+
+        {% for result in results %}
+            {% include 'main/_search_cards/_' ~ subject ~ '.html.twig' %}
+        {% endfor %}
+    {% else %}
+        <p>no records found</p>
+    {% endif %}
+{% endblock %}
