@@ -25,7 +25,7 @@
                 {% if work.user is not null %}
                     <td><a href="{{ path('app_user_profile', {'id': work.user.id}) }}">{{ work.user.pseudo }}</a></td>
                 {% else %}
-                    <td>Banned user</td>
+                    <td>Deleted or banned user</td>
                 {% endif %}
                 <td>{{ work.createdAt ? work.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>

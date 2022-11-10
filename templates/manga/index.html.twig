@@ -28,7 +28,7 @@
                 {% if manga.user is not null %}
                     <td><a href="{{ path('app_user_profile', {'id': manga.user.id}) }}">{{ manga.user.pseudo }}</a></td>
                 {% else %}
-                    <td>Banned user</td>
+                    <td>Deleted or banned user</td>
                 {% endif %}
                 <td>{{ manga.createdAt ? manga.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ manga.updatedAt ? manga.updatedAt|date('Y-m-d H:i:s') : '' }}</td>

@@ -28,7 +28,7 @@
                 {% if anime.user is not null %}
                     <td><a href="{{ path('app_user_profile', {'id': anime.user.id}) }}">{{ anime.user.pseudo }}</a></td>
                 {% else %}
-                    <td>Banned user</td>
+                    <td>Deleted or banned user</td>
                 {% endif %}
                 <td>{{ anime.createdAt ? anime.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ anime.updatedAt ? anime.updatedAt|date('Y-m-d H:i:s') : '' }}</td>

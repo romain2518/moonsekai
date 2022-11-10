@@ -26,7 +26,7 @@
                 {% if season.user is not null %}
                     <td><a href="{{ path('app_user_profile', {'id': season.user.id}) }}">{{ season.user.pseudo }}</a></td>
                 {% else %}
-                    <td>Banned user</td>
+                    <td>Deleted or banned user</td>
                 {% endif %}
                 <td>{{ season.createdAt ? season.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ season.updatedAt ? season.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
