@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}News index{% endblock %}
+
+{% block body %}
+    <h1>News index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Message</th>
+                <th>PicturePath</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for news in news %}
+            <tr>
+                <td>{{ news.title }}</td>
+                <td>{{ news.message }}</td>
+                <td>{{ news.picturePath is null ? 'No image found' : news.picturePath }}</td>
+                {% if news.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': news.user.id}) }}">{{ news.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Deleted or banned user</td>
+                {% endif %}
+                <td>{{ news.createdAt ? news.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ news.updatedAt ? news.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_news_edit', {'id': news.id}) }}">edit</a>
+                    {{ include('news/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_news_new') }}">Create new</a>
+    <a href="{{ path('app_main_back-office') }}">Back to back-office</a>
+{% endblock %}

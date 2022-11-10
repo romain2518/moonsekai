@@ -5,9 +5,12 @@ namespace App\Entity;
 use App\Repository\NewsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: NewsRepository::class)]
+#[Vich\Uploadable]
 #[ORM\HasLifecycleCallbacks]
 class News
 {
@@ -31,6 +34,15 @@ class News
     )]
     #[Assert\NotBlank]
     private ?string $message = null;
+
+    #[Vich\UploadableField(mapping: 'news_pictures', fileNameProperty: 'picturePath')]
+    #[Assert\File(
+        maxSize: "5M",
+        mimeTypes: ["image/jpeg", "image/png"],
+        maxSizeMessage: "The maximum allowed file size is 5MB.",
+        mimeTypesMessage: "Only .png, .jpg, .jpeg, .jfif, .pjpeg and .pjp are allowed."
+    )]
+    private ?File $pictureFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picturePath = null;
@@ -70,6 +82,23 @@ class News
     public function setMessage(string $message): self
     {
         $this->message = $message;
+
+        return $this;
+    }
+
+    public function getPictureFile(): ?File
+    {
+        return $this->pictureFile;
+    }
+
+    public function setPictureFile(?File $pictureFile = null): self
+    {
+        $this->pictureFile = $pictureFile;
+
+        if (null !== $pictureFile) {
+            // Needed to trigger event listener
+            $this->updatedAt = new \DateTime();
+        }
 
         return $this;
     }
