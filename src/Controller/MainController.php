@@ -65,6 +65,7 @@ class MainController extends AbstractController
                     break;
             }
 
+            //? Basic search
             $results = $entityManager
                 ->getRepository('App\\Entity\\' . $subject)
                 ->createQueryBuilder('r')
@@ -76,6 +77,35 @@ class MainController extends AbstractController
                 ->getQuery()
                 ->getResult()
             ;
+
+            //? Advanced search
+            if (empty($results) && in_array($subject, ['Anime', 'LightNovel', 'Manga', 'Movie', 'Work'])) {
+                $advancedSearchProperties = [
+                    'Anime'      => ['name', 'state', 'author', 'animationStudio', 'releaseYear'],
+                    'LightNovel' => ['name', 'author', 'editor', 'releaseYear'],
+                    'Manga'      => ['name', 'state', 'releaseRegularity', 'author', 'designer', 'editor', 'releaseYear'],
+                    'Movie'      => ['name', 'duration', 'animationStudio', 'releaseYear'],
+                    'Work'       => ['name', 'type', 'nativeCountry', 'originalName'],
+                ];
+
+                $whereStatement = '';
+                foreach ($advancedSearchProperties[$subject] as $key => $property) {
+                    $whereStatement .= "r.$property LIKE :query";
+                    $whereStatement .= $key !== count($advancedSearchProperties[$subject]) -1 ? ' OR ' : '';
+                }
+                
+                $results = $entityManager
+                    ->getRepository('App\\Entity\\' . $subject)
+                    ->createQueryBuilder('r')
+                    ->andWhere($whereStatement)
+                    ->setParameter('query', '%' . $form->get('query')->getData() . '%')
+                    ->orderBy("r.$field", 'ASC')
+                    ->setFirstResult($offset)
+                    ->setMaxResults($limit)
+                    ->getQuery()
+                    ->getResult()
+                ;
+            }
         }
 
         return $this->render('main/search.html.twig', [
