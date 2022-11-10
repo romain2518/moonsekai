@@ -26,7 +26,7 @@
                 {% if volume.user is not null %}
                     <td><a href="{{ path('app_user_profile', {'id': volume.user.id}) }}">{{ volume.user.pseudo }}</a></td>
                 {% else %}
-                    <td>Banned user</td>
+                    <td>Deleted or banned user</td>
                 {% endif %}
                 <td>{{ volume.createdAt ? volume.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ volume.updatedAt ? volume.updatedAt|date('Y-m-d H:i:s') : '' }}</td>

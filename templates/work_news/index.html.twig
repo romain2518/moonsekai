@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th>Title</th>
+                <th>Message</th>
                 <th>PicturePath</th>
                 <th>Creator</th>
                 <th>CreatedAt</th>
@@ -20,11 +21,12 @@
         {% for work_news in work_news %}
             <tr>
                 <td>{{ work_news.title }}</td>
+                <td>{{ work_news.message }}</td>
                 <td>{{ work_news.picturePath is null ? 'No image found' : work_news.picturePath }}</td>
                 {% if work_news.user is not null %}
                     <td><a href="{{ path('app_user_profile', {'id': work_news.user.id}) }}">{{ work_news.user.pseudo }}</a></td>
                 {% else %}
-                    <td>Banned user</td>
+                    <td>Deleted or banned user</td>
                 {% endif %}
                 <td>{{ work_news.createdAt ? work_news.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ work_news.updatedAt ? work_news.updatedAt|date('Y-m-d H:i:s') : '' }}</td>

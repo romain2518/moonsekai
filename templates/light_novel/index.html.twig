@@ -26,7 +26,7 @@
                 {% if light_novel.user is not null %}
                     <td><a href="{{ path('app_user_profile', {'id': light_novel.user.id}) }}">{{ light_novel.user.pseudo }}</a></td>
                 {% else %}
-                    <td>Banned user</td>
+                    <td>Deleted or banned user</td>
                 {% endif %}
                 <td>{{ light_novel.createdAt ? light_novel.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ light_novel.updatedAt ? light_novel.updatedAt|date('Y-m-d H:i:s') : '' }}</td>

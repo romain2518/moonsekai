@@ -24,7 +24,7 @@
                 {% if chapter.user is not null %}
                     <td><a href="{{ path('app_user_profile', {'id': chapter.user.id}) }}">{{ chapter.user.pseudo }}</a></td>
                 {% else %}
-                    <td>Banned user</td>
+                    <td>Deleted or banned user</td>
                 {% endif %}
                 <td>{{ chapter.createdAt ? chapter.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ chapter.updatedAt ? chapter.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
