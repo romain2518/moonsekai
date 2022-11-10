@@ -11,6 +11,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: NewsRepository::class)]
 #[Vich\Uploadable]
+#[ORM\Index(name: 'idx_search', fields: ['title'])]
 #[ORM\HasLifecycleCallbacks]
 class News
 {
