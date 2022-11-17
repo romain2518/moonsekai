@@ -21,6 +21,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class CalendarEventController extends AbstractController
 {
+    #[Route('/calendar', name: 'app_calendar-event_calendar', methods: ['GET'])]
+    public function calendar(CalendarEventRepository $calendarEventRepository)
+    {
+        // dd($calendarEventRepository->findAllWithTarget());
+        return $this->render('calendar_event/calendar.html.twig', [
+            'calendar_events' => $calendarEventRepository->findAllWithTarget(),
+        ]);
+    }
+
+    #[Route('/personal-calendar', name: 'app_calendar-event_personal-calendars', methods: ['GET'])]
+    public function personalCalendar()
+    {
+        # code...
+    }
+
     #[Route('/back-office/calendar/{limit}/{offset}', name: 'app_calendar-event_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
     public function index(CalendarEventRepository $calendarEventRepository, int $limit = 20, int $offset = 0): Response
     {

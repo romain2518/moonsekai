@@ -49,6 +49,8 @@ class CalendarEvent
 
     private ?int $workId = null;
 
+    private ?string $picturePath = null;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
@@ -156,6 +158,18 @@ class CalendarEvent
     public function setWorkId(?string $workId): self
     {
         $this->workId = $workId;
+
+        return $this;
+    }
+
+    public function getPicturePath(): ?string
+    {
+        return $this->picturePath;
+    }
+
+    public function setPicturePath(?string $picturePath): self
+    {
+        $this->picturePath = $picturePath;
 
         return $this;
     }

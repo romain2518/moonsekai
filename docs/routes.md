@@ -36,7 +36,7 @@
 | /work/{id}/manga/{id}/rate | POST | User | rate | |
 | /work/{id}/movie/{id}/rate | POST | User | rate | |
 | /work/{id}/light-novel/{id}/rate | POST | User | rate | |
-| /calendar | GET | Calendar | index | |
+| /calendar | GET | Calendar | calendar | |
 | /personal-calendar | GET | Calendar | personalCalendar | |
 | /private-message/{limit}/{offset} | GET | PrivateMessage | index | |
 | /private-message/{user_receiver_id} | GET | PrivateMessage | show | |

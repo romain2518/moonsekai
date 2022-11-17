@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendar{% endblock %}
+
+{% block body %}
+    <h1>Calendar</h1>
+    
+    <div id="calendar"></div>
+
+    <script>
+        const init = function() {
+
+        }
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" 
+        integrity="sha256-5veQuRbWaECuYxwap/IOE/DAwNxgm4ikX7nrgsqYp88=" crossorigin="anonymous">
+
+    <style>
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 10px;
+        }
+
+        /*Custome Stye Calender*/
+        .fc-event {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fc-event img {
+            width: -webkit-fill-available;
+        }
+
+        .tooltip {
+            border: 1px solid #333;
+            background-color: #059615 !important;
+            color: #fff;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js" 
+        integrity="sha256-7PzqE1MyWa/IV5vZumk1CVO6OQbaJE4ns7vmxuUP/7g=" crossorigin="anonymous"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let calendarEl = document.getElementById('calendar');
+
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'fr',
+                firstDay: 1,
+                initialView: 'dayGridMonth',
+                events: [
+                    {% for event in calendar_events %}
+                        {
+                            title: '{{ event.title|e('js') }}',
+                            start: '{{ event.start|date('Y-m-d H:i') }}',
+                            end: '{{ event.end|date('Y-m-d H:i') }}',
+                            picturePath: '{{ asset("assets/images/" ~ event.picturePath) }}',
+                            targetUrl: '{{ 
+                                event.targetTable[11:] is same as('News') 
+                                ? path('app_news_show', {'id': event.targetId}) 
+                                : path('app_work_show', {'id': event.workId}) }}',
+                            targetName: '{{ event.targetName|e('js') }}',
+                        },
+                    {% endfor %}
+                ],
+                eventMouseEnter: function ({el: element}) {
+                    element.classList.add('tooltip');
+                },
+                eventMouseLeave: function ({el: element}) {
+                    element.classList.remove('tooltip');
+                },
+                eventContent: function (arg) {
+                    const dateElm = document.createElement('p');
+                    dateElm.innerText = (new Date(arg.event.start)).toLocaleTimeString('fr-FR');
+
+                    const titleElm = document.createElement('p');
+                    titleElm.innerText = arg.event.title;
+
+                    const linkElm = document.createElement('a');
+                    linkElm.innerText = arg.event.extendedProps.targetName;
+                    linkElm.href = arg.event.extendedProps.targetUrl;
+
+                    const imageElm = document.createElement('img');
+                    imageElm.src = arg.event.extendedProps.picturePath;
+
+                    let arrayOfDomNodes = [ dateElm, titleElm, linkElm, imageElm ];
+                    return { domNodes: arrayOfDomNodes };
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock %}
