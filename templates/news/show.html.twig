@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}News{% endblock %}
+
+{% block body %}
+    <h1>News</h1>
+
+    <p>Title : {{ news.title }}</p>
+    <p>Message : {{ news.message }}</p>
+    <p>PicturePath : {{ news.picturePath is null ? 'No image found' : news.picturePath }}</p>
+    <p>
+        Creator :
+        {% if news.user is not null %}
+            <a href="{{ path('app_user_profile', {'id': news.user.id}) }}">{{ news.user.pseudo }}</a>
+        {% else %}
+            Deleted or banned user
+        {% endif %}
+    </p>
+    <p>CreatedAt : {{ news.createdAt ? news.createdAt|date('Y-m-d H:i:s') : '' }}</p>
+    <p>UpdatedAt : {{ news.updatedAt ? news.updatedAt|date('Y-m-d H:i:s') : '' }}</p>
+{% endblock %}
