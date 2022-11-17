@@ -43,7 +43,7 @@ class EpisodeRepository extends ServiceEntityRepository
     /**
      * @return Episode[] Returns an array of Episode objects ordered by casted name
      */
-    public function findBySeasonOrderedByCastedName(Season $season, int $limit, int $offset): array
+    public function findBySeasonOrderedByCastedName(Season $season, ?int $limit, ?int $offset): array
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.season = :season')

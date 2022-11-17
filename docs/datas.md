@@ -79,7 +79,7 @@
 |--|--|--|--|
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
-| title | VARCHAR(100) | Not null | min: 5<br> max: 100<br> Notblank |
+| title | VARCHAR(100) | Not null, index | min: 5<br> max: 100<br> Notblank |
 | message | VARCHAR(255) | Not null | min: 5<br> max: 255<br> Notblank |
 | picture_path | VARCHAR(255) | Null | |
 | created_at | datetime | Not null | |
@@ -195,7 +195,7 @@
 | id | int | Primary key, unsigned, not null, auto_increment | |
 | user_id | ENTITY | Foreign key | |
 | work_id | ENTITY | Foreign key | |
-| title | VARCHAR(100) | Not null | min: 5<br> max: 100<br> Notblank |
+| title | VARCHAR(100) | Not null, index | min: 5<br> max: 100<br> Notblank |
 | message | VARCHAR(255) | Not null | min: 5<br> max: 255<br> Notblank |
 | picture_path | VARCHAR(255) | Null | |
 | created_at | datetime | Not null | |

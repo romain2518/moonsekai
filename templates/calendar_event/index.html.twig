@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CalendarEvent index{% endblock %}
+
+{% block body %}
+    <h1>CalendarEvent index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Target type</th>
+                <th>Target name</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for calendar_event in calendar_events %}
+            <tr>
+                <td>{{ calendar_event.title }}</td>
+                <td>{{ calendar_event.start ? calendar_event.start|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ calendar_event.end ? calendar_event.end|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ calendar_event.targetTable[11:] }}</td>
+                
+                {% if calendar_event.targetTable[11:] is same as('News') %}
+                    <td><a href="{{ path('app_news_show', {'id': calendar_event.targetId}) }}">{{ calendar_event.targetName }}</a></td>
+                {% else %}
+                    <td><a href="{{ path('app_work_show', {'id': calendar_event.workId}) }}">{{ calendar_event.targetName }}</a></td>
+                {% endif %}
+
+                {% if calendar_event.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': calendar_event.user.id}) }}">{{ calendar_event.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Deleted or banned user</td>
+                {% endif %}
+                <td>{{ calendar_event.createdAt ? calendar_event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ calendar_event.updatedAt ? calendar_event.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_calendar-event_edit', {'id': calendar_event.id}) }}">edit</a>
+                    {{ include('calendar_event/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_calendar-event_new') }}">Create new</a>
+    <a href="{{ path('app_main_back-office') }}">Back to back-office</a>
+{% endblock %}
