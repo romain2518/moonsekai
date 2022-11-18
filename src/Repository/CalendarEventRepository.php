@@ -54,7 +54,12 @@ class CalendarEventRepository extends ServiceEntityRepository
             SELECT * FROM (
                 SELECT
                     start, title,
-                    (SELECT number FROM chapter WHERE id = target_id) AS target_name,
+                    (SELECT
+                        CASE
+                            WHEN name is not null THEN CONCAT(number, " : ", name)
+                            ELSE number
+                        END
+                    FROM chapter WHERE id = target_id) AS target_name,
                     (SELECT w.id FROM chapter c
                     INNER JOIN volume v ON volume_id = v.id
                     INNER JOIN manga m ON manga_id = m.id
@@ -62,7 +67,7 @@ class CalendarEventRepository extends ServiceEntityRepository
                     WHERE c.id = target_id) AS work_id,
                     (SELECT
                         CASE
-                            WHEN null != v.picture_path THEN CONCAT("volumePictures/", v.picture_path)
+                            WHEN v.picture_path is not null THEN CONCAT("volumePictures/", v.picture_path)
                             ELSE CONCAT("mangaPictures/", m.picture_path)
                         END
                     FROM chapter c
@@ -73,7 +78,12 @@ class CalendarEventRepository extends ServiceEntityRepository
                 UNION ALL
                 SELECT
                     start, title,
-                    (SELECT number FROM episode WHERE id = target_id) AS target_name, 
+                    (SELECT
+                        CASE
+                            WHEN name is not null THEN CONCAT(number, " : ", name)
+                            ELSE number
+                        END
+                    FROM episode WHERE id = target_id) AS target_name, 
                     (SELECT w.id FROM episode e
                     INNER JOIN season s ON season_id = s.id
                     INNER JOIN anime a ON anime_id = a.id
@@ -81,7 +91,7 @@ class CalendarEventRepository extends ServiceEntityRepository
                     WHERE e.id = target_id) AS work_id,
                     (SELECT
                         CASE
-                            WHEN null != s.picture_path THEN CONCAT("seasonPictures/", s.picture_path)
+                            WHEN s.picture_path is not null THEN CONCAT("seasonPictures/", s.picture_path)
                             ELSE CONCAT("animePictures/", a.picture_path)
                         END
                     FROM episode e
@@ -116,7 +126,7 @@ class CalendarEventRepository extends ServiceEntityRepository
                     (SELECT null) AS work_id,
                     (SELECT
                         CASE
-                            WHEN null != n.picture_path THEN CONCAT("newsPictures/", n.picture_path)
+                            WHEN n.picture_path is not null THEN CONCAT("newsPictures/", n.picture_path)
                             ELSE null
                         END
                     FROM news n
@@ -127,11 +137,11 @@ class CalendarEventRepository extends ServiceEntityRepository
                     start, title,
                     (SELECT title FROM work_news WHERE id = target_id) AS target_name, 
                     (SELECT w.id FROM work_news wn
-                    INNER JOIN work w ON work_id = wn.id
+                    INNER JOIN work w ON work_id = w.id
                     WHERE wn.id = target_id) AS work_id,
                     (SELECT
                         CASE
-                            WHEN null != wn.picture_path THEN CONCAT("workNewsPictures/", wn.picture_path)
+                            WHEN wn.picture_path is not null THEN CONCAT("workNewsPictures/", wn.picture_path)
                             ELSE CONCAT("workPictures/", w.picture_path)
                         END
                     FROM work_news wn

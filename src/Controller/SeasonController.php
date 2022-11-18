@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Anime;
+use App\Entity\CalendarEvent;
+use App\Entity\Episode;
 use App\Entity\Season;
 use App\Entity\Work;
 use App\Form\SeasonType;
+use App\Repository\CalendarEventRepository;
 use App\Repository\SeasonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
@@ -14,6 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/back-office/work/{work_id}/anime/{anime_id}/season')]
 #[Entity('work', expr: 'repository.find(work_id)')]
@@ -39,7 +46,7 @@ class SeasonController extends AbstractController
     }
 
     #[Route('/add', name: 'app_season_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Work $work = null, Anime $anime = null, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function new(Request $request, Work $work = null, Anime $anime = null, EntityManagerInterface $entityManager, UserInterface $user, ValidatorInterface $validator): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -53,11 +60,46 @@ class SeasonController extends AbstractController
         $form = $this->createForm(SeasonType::class, $season);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $eventDateErrors = new ConstraintViolationList();
+        foreach ($form->get('episodes')->all() as $episode) {
+            if ($episode->get('addCalendarEvent')->getData()) {
+                $eventDateErrors->addAll(
+                    $validator->validate($episode->get('eventDate')->getData(), [
+                        new NotBlank(message: 'The event date should not be blank if event checkbox is checked.'),
+                        new GreaterThan('now', message: 'The event date must be greater than {{ compared_value }}.'),
+                    ])
+                );
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid() && count($eventDateErrors) === 0) {
             $season->setUser($user);
             $season->setAnime($anime);
 
             $entityManager->persist($season);
+            $entityManager->flush();
+
+            //? Creating calendar event if needed
+            foreach ($form->get('episodes')->all() as $episode) {
+                if ($episode->get('addCalendarEvent')->getData()) {
+                    $calendarEvent = new CalendarEvent();
+    
+                    $calendarEvent
+                        ->setTitle(
+                            $episode->getData()->getNumber() . 
+                            empty($episode->getData()->getName()) 
+                            ? '' : ' : ' . $episode->getData()->getName()
+                            )
+                        ->setStart($episode->get('eventDate')->getData())
+                        ->setTargetTable(Episode::class)
+                        ->setTargetId($episode->getData()->getId())
+                        ->setUser($user)
+                    ;
+    
+                    $entityManager->persist($calendarEvent);
+                }
+            }
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_season_index', ['work_id' => $work->getId(), 'anime_id' => $anime->getId()], Response::HTTP_SEE_OTHER);
@@ -72,7 +114,11 @@ class SeasonController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_season_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Work $work = null, Anime $anime = null, Season $season = null, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function edit(
+        Request $request, Work $work = null, Anime $anime = null, 
+        Season $season = null, CalendarEventRepository $calendarEventRepository,
+        EntityManagerInterface $entityManager, UserInterface $user, ValidatorInterface $validator
+        ): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -89,10 +135,49 @@ class SeasonController extends AbstractController
         $form = $this->createForm(SeasonType::class, $season);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $eventDateErrors = new ConstraintViolationList();
+        foreach ($form->get('episodes')->all() as $episode) {
+            if ($episode->get('addCalendarEvent')->getData()) {
+                $eventDateErrors->addAll(
+                    $validator->validate($episode->get('eventDate')->getData(), [
+                        new NotBlank(message: 'The event date should not be blank if event checkbox is checked.'),
+                        new GreaterThan('now', message: 'The event date must be greater than {{ compared_value }}.'),
+                    ])
+                );
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid() && count($eventDateErrors) === 0) {
             $season->setUser($user);
             $season->setAnime($anime);
 
+            $entityManager->flush();
+
+            //? Creating calendar event if needed
+            foreach ($form->get('episodes')->all() as $episode) {
+                if ($episode->get('addCalendarEvent')->getData()) {
+                    //? Searching for existing calendar event
+                    $calendarEvent = $calendarEventRepository->findOneBy(['targetTable' => Episode::class, 'targetId' => $episode->getData()->getId()]);
+                    if (null === $calendarEvent) {
+                        $calendarEvent = new CalendarEvent();
+                    }
+    
+                    $calendarEvent
+                        ->setTitle(
+                            $episode->getData()->getNumber() . 
+                            (empty($episode->getData()->getName()) 
+                            ? '' : ' : ' . $episode->getData()->getName())
+                        )
+                        ->setStart($episode->get('eventDate')->getData())
+                        ->setTargetTable(Episode::class)
+                        ->setTargetId($episode->getData()->getId())
+                        ->setUser($user)
+                    ;
+    
+                    $entityManager->persist($calendarEvent);
+                }
+            }
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_season_index', ['work_id' => $work->getId(), 'anime_id' => $anime->getId()], Response::HTTP_SEE_OTHER);

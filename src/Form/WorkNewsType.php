@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\WorkNews;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -17,6 +19,16 @@ class WorkNewsType extends AbstractType
             ->add('message')
             ->add('pictureFile', VichImageType::class, [
                 'required' => false,
+            ])
+            ->add('addCalendarEvent', CheckboxType::class, [
+                'required' => false,
+                'mapped' => false,
+            ])
+            ->add('eventDate', DateTimeType::class, [
+                'required' => false,
+                'mapped' => false,
+                'widget' => 'single_text',
+                'html5' => 'false',
             ])
         ;
     }
