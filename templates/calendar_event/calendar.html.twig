@@ -5,13 +5,11 @@
 {% block body %}
     <h1>Calendar</h1>
     
+    {% if calendar_events is empty %}
+        No events found...
+    {% endif %}
+
     <div id="calendar"></div>
-
-    <script>
-        const init = function() {
-
-        }
-    </script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -20,7 +18,6 @@
 
     <style>
         #calendar {
-            max-width: 900px;
             margin: 40px auto;
             padding: 0 10px;
         }
@@ -29,6 +26,10 @@
         .fc-event {
             display: flex;
             flex-direction: column;
+        }
+
+        .fc-daygrid-event {
+            white-space: normal;
         }
 
         .fc-event img {
@@ -55,13 +56,15 @@
                 locale: 'fr',
                 firstDay: 1,
                 initialView: 'dayGridMonth',
+                dayMaxEventRows: 2, // Max event number in one case (add "+ n more" button if the maximum number is exceeded
+                nextDayThreshold: '01:00:00', // Prevent event from appearing on two days (as events only span 1 hour)
                 events: [
                     {% for event in calendar_events %}
                         {
                             title: '{{ event.title|e('js') }}',
                             start: '{{ event.start|date('Y-m-d H:i') }}',
                             end: '{{ event.end|date('Y-m-d H:i') }}',
-                            picturePath: '{{ asset("assets/images/" ~ event.picturePath) }}',
+                            picturePath: '{{ event.picturePath is null ? null : asset("assets/images/" ~ event.picturePath) }}',
                             targetUrl: '{{ 
                                 event.targetTable[11:] is same as('News') 
                                 ? path('app_news_show', {'id': event.targetId}) 

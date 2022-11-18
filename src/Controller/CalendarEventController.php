@@ -8,12 +8,12 @@ use App\Entity\Episode;
 use App\Entity\LightNovel;
 use App\Entity\Movie;
 use App\Entity\News;
+use App\Entity\User;
 use App\Entity\WorkNews;
 use App\Form\CalendarEventType;
 use App\Repository\CalendarEventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,28 +24,31 @@ class CalendarEventController extends AbstractController
     #[Route('/calendar', name: 'app_calendar-event_calendar', methods: ['GET'])]
     public function calendar(CalendarEventRepository $calendarEventRepository)
     {
-        // dd($calendarEventRepository->findAllWithTarget());
         return $this->render('calendar_event/calendar.html.twig', [
             'calendar_events' => $calendarEventRepository->findAllWithTarget(),
         ]);
     }
 
     #[Route('/personal-calendar', name: 'app_calendar-event_personal-calendars', methods: ['GET'])]
-    public function personalCalendar()
+    public function personalCalendar(CalendarEventRepository $calendarEventRepository, UserInterface $user)
     {
-        # code...
+        /** @var User $user */
+
+        return $this->render('calendar_event/calendar.html.twig', [
+            'calendar_events' => $calendarEventRepository->findAllWithTarget($user),
+        ]);
     }
 
     #[Route('/back-office/calendar/{limit}/{offset}', name: 'app_calendar-event_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
     public function index(CalendarEventRepository $calendarEventRepository, int $limit = 20, int $offset = 0): Response
     {
         return $this->render('calendar_event/index.html.twig', [
-            'calendar_events' => $calendarEventRepository->findAllWithTarget($limit, $offset),
+            'calendar_events' => $calendarEventRepository->findAllWithTarget(null, $limit, $offset),
         ]);
     }
 
     #[Route('/back-office/calendar/add', name: 'app_calendar-event_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function new(Request $request, CalendarEventRepository $calendarEventRepository, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
         $calendarEvent = new CalendarEvent();
         $form = $this->createForm(CalendarEventType::class, $calendarEvent);
@@ -64,12 +67,18 @@ class CalendarEventController extends AbstractController
             //? Form validated the target table but we still need to check the target id
             $target = $entityManager->getRepository($calendarEvent->getTargetTable())->find($calendarEvent->getTargetId());
             if (null !== $target) {
-                $calendarEvent->setUser($user);
+                //? Checking if an event with this target already exists
+                $targetedCalendarEvent = $calendarEventRepository->findOneBy(['targetTable' => $calendarEvent->getTargetTable(), 'targetId' => $calendarEvent->getTargetId()]);
+                if (null === $targetedCalendarEvent) {
+                    $calendarEvent->setUser($user);
+                    
+                    $entityManager->persist($calendarEvent);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('app_calendar-event_index', [], Response::HTTP_SEE_OTHER);
+                }
                 
-                $entityManager->persist($calendarEvent);
-                $entityManager->flush();
-                
-                return $this->redirectToRoute('app_calendar-event_index', [], Response::HTTP_SEE_OTHER);
+                $this->addFlash('form_errors', 'An event with this target already exists.');
             }
 
             $this->addFlash('form_errors', 'The selected target is invalid.');
@@ -82,7 +91,7 @@ class CalendarEventController extends AbstractController
     }
 
     #[Route('/back-office/calendar/{id}/edit', name: 'app_calendar-event_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, CalendarEvent $calendarEvent = null, EntityManagerInterface $entityManager, UserInterface $user, EventDispatcherInterface $dispatcher): Response
+    public function edit(Request $request, CalendarEvent $calendarEvent = null, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
         if (null === $calendarEvent) {
             throw $this->createNotFoundException('Calendar event not found.');

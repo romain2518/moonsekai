@@ -1,6 +1,6 @@
 {% for flash_error in app.flashes('form_errors') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+{% endfor %}
 {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
