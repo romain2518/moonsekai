@@ -25,6 +25,7 @@
 | /notification/{id}/mark-as-read | GET | Notification | markAsRead | |
 | /notification/{id}/mark-as-unread | GET | Notification | markAsUnread | |
 | /notification/{id}/delete | POST | Notification | delete | |
+| /news/{id} | GET | News | show | |
 | /platform/{id} | GET | Platform | show | |
 | /followed-work/{limit}/{offset} | GET | User | listFollowedWork | |
 | /follow | POST | User | follow | |
@@ -35,11 +36,8 @@
 | /work/{id}/manga/{id}/rate | POST | User | rate | |
 | /work/{id}/movie/{id}/rate | POST | User | rate | |
 | /work/{id}/light-novel/{id}/rate | POST | User | rate | |
-| /calendar | GET | Calendar | index | |
+| /calendar | GET | Calendar | calendar | |
 | /personal-calendar | GET | Calendar | personalCalendar | |
-| /calendar/add | POST | Calendar | new | |
-| /calendar/{id}/edit | POST | Calendar | edit | |
-| /calendar/{id}/delete | POST | Calendar | delete | |
 | /private-message/{limit}/{offset} | GET | PrivateMessage | index | |
 | /private-message/{user_receiver_id} | GET | PrivateMessage | show | |
 | /private-message/{user_receiver_id}/add | GET/POST | PrivateMessage | new | |
@@ -96,6 +94,10 @@
 | /back-office/work/{id}/news/add | GET/POST | WorkNews | new | |
 | /back-office/work/{id}/news/{id}/edit | GET/POST | WorkNews | edit | |
 | /back-office/work/{id}/news/{id}/delete | POST | WorkNews | delete | |
+| /back-office/calendar/{limit}/{offset} | GET | Calendar | index | |
+| /back-office/calendar/add | GET/POST | Calendar | new | |
+| /back-office/calendar/{id}/edit | GET/POST | Calendar | edit | |
+| /back-office/calendar/{id}/delete | POST | Calendar | delete | |
 | /back-office/contact-list/{limit}/{offset} | GET | Contact | index | |
 | /back-office/contact-list/{id}/mark-as-processed | GET | Contact | markAsProcessed | |
 | /back-office/contact-list/{id}/mark-as-unprocessed | GET | Contact | markAsUnprocessed | |

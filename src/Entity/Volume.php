@@ -62,7 +62,7 @@ class Volume
     #[ORM\JoinColumn(nullable: false)]
     private ?Manga $manga = null;
 
-    #[ORM\OneToMany(mappedBy: 'volume', targetEntity: Chapter::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'volume', targetEntity: Chapter::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $chapters;
 
     public function __construct()

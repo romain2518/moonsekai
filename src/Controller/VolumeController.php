@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\CalendarEvent;
+use App\Entity\Chapter;
 use App\Entity\Manga;
 use App\Entity\Volume;
 use App\Entity\Work;
 use App\Form\VolumeType;
+use App\Repository\CalendarEventRepository;
 use App\Repository\VolumeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
@@ -14,6 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/back-office/work/{work_id}/manga/{manga_id}/volume')]
 #[Entity('work', expr: 'repository.find(work_id)')]
@@ -39,7 +46,7 @@ class VolumeController extends AbstractController
     }
 
     #[Route('/add', name: 'app_volume_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Work $work = null, Manga $manga = null, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function new(Request $request, Work $work = null, Manga $manga = null, EntityManagerInterface $entityManager, UserInterface $user, ValidatorInterface $validator): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -53,14 +60,53 @@ class VolumeController extends AbstractController
         $form = $this->createForm(VolumeType::class, $volume);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $eventDateErrors = new ConstraintViolationList();
+        foreach ($form->get('chapters')->all() as $chapter) {
+            if ($chapter->get('addCalendarEvent')->getData()) {
+                $eventDateErrors->addAll(
+                    $validator->validate($chapter->get('eventDate')->getData(), [
+                        new NotBlank(message: 'The event date should not be blank if event checkbox is checked.'),
+                        new GreaterThan('now', message: 'The event date must be greater than {{ compared_value }}.'),
+                    ])
+                );
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid() && count($eventDateErrors) === 0) {
             $volume->setUser($user);
             $volume->setManga($manga);
 
             $entityManager->persist($volume);
             $entityManager->flush();
 
+            //? Creating calendar event if needed
+            foreach ($form->get('chapters')->all() as $chapter) {
+                if ($chapter->get('addCalendarEvent')->getData()) {
+                    $calendarEvent = new CalendarEvent();
+    
+                    $calendarEvent
+                        ->setTitle(
+                            $chapter->getData()->getNumber() . 
+                            empty($chapter->getData()->getName()) 
+                            ? '' : ' : ' . $chapter->getData()->getName()
+                            )
+                        ->setStart($chapter->get('eventDate')->getData())
+                        ->setTargetTable(Chapter::class)
+                        ->setTargetId($chapter->getData()->getId())
+                        ->setUser($user)
+                    ;
+    
+                    $entityManager->persist($calendarEvent);
+                }
+            }
+            
+            $entityManager->flush();
+
             return $this->redirectToRoute('app_volume_index', ['work_id' => $work->getId(), 'manga_id' => $manga->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        foreach ($eventDateErrors as $error) {
+            $this->addFlash('form_errors', $error->getMessage());
         }
 
         return $this->renderForm('volume/new.html.twig', [
@@ -72,7 +118,11 @@ class VolumeController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_volume_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Work $work = null, Manga $manga = null, Volume $volume = null, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function edit(
+        Request $request, Work $work = null, Manga $manga = null, 
+        Volume $volume = null, CalendarEventRepository $calendarEventRepository,
+        EntityManagerInterface $entityManager, UserInterface $user, ValidatorInterface $validator
+        ): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -89,13 +139,56 @@ class VolumeController extends AbstractController
         $form = $this->createForm(VolumeType::class, $volume);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $eventDateErrors = new ConstraintViolationList();
+        foreach ($form->get('chapters')->all() as $chapter) {
+            if ($chapter->get('addCalendarEvent')->getData()) {
+                $eventDateErrors->addAll(
+                    $validator->validate($chapter->get('eventDate')->getData(), [
+                        new NotBlank(message: 'The event date should not be blank if event checkbox is checked.'),
+                        new GreaterThan('now', message: 'The event date must be greater than {{ compared_value }}.'),
+                    ])
+                );
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid() && count($eventDateErrors) === 0) {
             $volume->setUser($user);
             $volume->setManga($manga);
 
             $entityManager->flush();
 
+            //? Creating calendar event if needed
+            foreach ($form->get('chapters')->all() as $chapter) {
+                if ($chapter->get('addCalendarEvent')->getData()) {
+                    //? Searching for existing calendar event
+                    $calendarEvent = $calendarEventRepository->findOneBy(['targetTable' => Chapter::class, 'targetId' => $chapter->getData()->getId()]);
+                    if (null === $calendarEvent) {
+                        $calendarEvent = new CalendarEvent();
+                    }
+    
+                    $calendarEvent
+                        ->setTitle(
+                            $chapter->getData()->getNumber() . 
+                            (empty($chapter->getData()->getName()) 
+                            ? '' : ' : ' . $chapter->getData()->getName())
+                        )
+                        ->setStart($chapter->get('eventDate')->getData())
+                        ->setTargetTable(Chapter::class)
+                        ->setTargetId($chapter->getData()->getId())
+                        ->setUser($user)
+                    ;
+    
+                    $entityManager->persist($calendarEvent);
+                }
+            }
+            
+            $entityManager->flush();
+
             return $this->redirectToRoute('app_volume_index', ['work_id' => $work->getId(), 'manga_id' => $manga->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        foreach ($eventDateErrors as $error) {
+            $this->addFlash('form_errors', $error->getMessage());
         }
 
         return $this->renderForm('volume/edit.html.twig', [

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CalendarEvent{% endblock %}
+
+{% block body %}
+    <h1>CalendarEvent</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ calendar_event.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ calendar_event.title }}</td>
+            </tr>
+            <tr>
+                <th>Start</th>
+                <td>{{ calendar_event.start ? calendar_event.start|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>End</th>
+                <td>{{ calendar_event.end ? calendar_event.end|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>TargetTable</th>
+                <td>{{ calendar_event.targetTable }}</td>
+            </tr>
+            <tr>
+                <th>TargetId</th>
+                <td>{{ calendar_event.targetId }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ calendar_event.createdAt ? calendar_event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ calendar_event.updatedAt ? calendar_event.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_calendar_event_index') }}">back to list</a>
+
+    <a href="{{ path('app_calendar_event_edit', {'id': calendar_event.id}) }}">edit</a>
+
+    {{ include('calendar_event/_delete_form.html.twig') }}
+{% endblock %}

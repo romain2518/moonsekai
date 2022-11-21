@@ -43,7 +43,7 @@ class ChapterRepository extends ServiceEntityRepository
     /**
      * @return Chapter[] Returns an array of Chapter objects ordered by casted name
      */
-    public function findByVolumeOrderedByCastedName(Volume $volume, int $limit, int $offset): array
+    public function findByVolumeOrderedByCastedName(Volume $volume, ?int $limit, ?int $offset): array
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.volume = :volume')

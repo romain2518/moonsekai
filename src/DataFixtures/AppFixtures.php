@@ -271,7 +271,7 @@ class AppFixtures extends Fixture
                     ->setDescription(random_int(0, 1) ? $faker->realText(1000) : null) // Randomly set a description or nothing
                     ->setDuration(random_int(1, 300))
                     ->setAnimationStudio($faker->company())
-                    ->setReleaseYear($faker->dateTimeBetween('1900', '+10 years'))
+                    ->setReleaseYear(random_int(1990, 2030))
                     ->setPicturePath("$counter.jpg")
                     ;
                 $movies[] = $movie;
@@ -292,7 +292,7 @@ class AppFixtures extends Fixture
                     ->setDescription(random_int(0, 1) ? $faker->realText(1000) : null) // Randomly set a description or nothing
                     ->setAuthor($faker->realTextBetween(1, 100))
                     ->setEditor($faker->realTextBetween(1, 100))
-                    ->setReleaseYear($faker->dateTimeBetween('1900', '+10 years'))
+                    ->setReleaseYear(random_int(1990, 2030))
                     ->setPicturePath("$counter.jpg")
                     ;
                 $lightNovels[] = $lightNovel;

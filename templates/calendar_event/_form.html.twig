@@ -1,0 +1,66 @@
+{% for flash_error in app.flashes('form_errors') %}
+    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+{% endfor %}
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+<script>
+let targetTableElm = document.querySelector('#calendar_event_targetTable');
+let selectWorkElm = document.querySelector('#calendar_event_work');
+let formElm = document.querySelector('form[name=calendar_event]');
+
+function handleSelectChange() {
+    if (targetTableElm.value === 'App\\Entity\\News') {
+        selectWorkElm.closest('div').style.display = 'none';
+        selectWorkElm.removeAttribute('required');
+    } else {
+        selectWorkElm.closest('div').style.display = 'block';
+        selectWorkElm.setAttribute('required', '');
+    }
+
+    let bodyFormData = new FormData();
+    bodyFormData.append(targetTableElm.name, targetTableElm.value);
+    // selectWorkElm is not reachable when hidden
+    if (selectWorkElm.closest('div').style.display !== 'none') {
+        bodyFormData.append(selectWorkElm.name, selectWorkElm.value);
+    }
+
+    const httpHeaders = new Headers();
+
+    let init = {
+        method: formElm.method,
+        headers: httpHeaders,
+        mode: 'cors',
+        body: bodyFormData,
+        cache: 'default' 
+    };
+
+    fetch(formElm.action, init)
+        .then(function (response) {
+            return response.text();
+        }).then(function (html) {
+            const parser = new DOMParser(),
+                doc = parser.parseFromString(html, 'text/html');
+
+            document.querySelector('#calendar_event_targetId').replaceWith(
+                doc.querySelector('#calendar_event_targetId')
+            );
+        });
+}
+
+targetTableElm.addEventListener('change', handleSelectChange);
+selectWorkElm.addEventListener('change', handleSelectChange);
+
+// Hide work input when loading if needed
+document.addEventListener('DOMContentLoaded', function () {
+    if (targetTableElm.value === 'App\\Entity\\News' || targetTableElm.value === '') {
+        selectWorkElm.closest('div').style.display = 'none';
+        selectWorkElm.removeAttribute('required');
+    } else {
+        selectWorkElm.closest('div').style.display = 'block';
+        selectWorkElm.setAttribute('required', '');
+    }
+});
+</script>

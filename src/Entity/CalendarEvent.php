@@ -27,19 +27,29 @@ class CalendarEvent
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\GreaterThan('now')]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?\DateTimeInterface $start = null;
     
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\GreaterThan('now')]
     private ?\DateTimeInterface $end = null;
 
     #[ORM\Column(length: 190)]
+    #[Assert\Choice(callback: 'getTargetTables')]
     private ?string $targetTable = null;
 
     #[ORM\Column(options: [
         'unsigned' => true
     ])]
+    #[Assert\Positive(message: 'This value is invalid.')]
+    #[Assert\NotBlank()]
     private ?int $targetId = null;
+
+    private ?string $targetName = null;
+
+    private ?int $workId = null;
+
+    private ?string $picturePath = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -50,6 +60,18 @@ class CalendarEvent
     #[ORM\ManyToOne(inversedBy: 'calendarEvents')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
+
+    public static function getTargetTables(): array
+    {
+        return [
+            'Chapter' => Chapter::class,
+            'Episode' => Episode::class,
+            'Light novel' => LightNovel::class,
+            'Movie' => Movie::class,
+            'News' => News::class,
+            'Work News' => WorkNews::class,
+        ];
+    }
 
     public function getId(): ?int
     {
@@ -109,9 +131,45 @@ class CalendarEvent
         return $this->targetId;
     }
 
-    public function setTargetId(int $targetId): self
+    public function setTargetId(?int $targetId): self
     {
         $this->targetId = $targetId;
+
+        return $this;
+    }
+
+    public function getTargetName(): ?string
+    {
+        return $this->targetName;
+    }
+
+    public function setTargetName(?string $targetName): self
+    {
+        $this->targetName = $targetName;
+
+        return $this;
+    }
+
+    public function getWorkId(): ?string
+    {
+        return $this->workId;
+    }
+
+    public function setWorkId(?string $workId): self
+    {
+        $this->workId = $workId;
+
+        return $this;
+    }
+
+    public function getPicturePath(): ?string
+    {
+        return $this->picturePath;
+    }
+
+    public function setPicturePath(?string $picturePath): self
+    {
+        $this->picturePath = $picturePath;
 
         return $this;
     }
@@ -138,6 +196,15 @@ class CalendarEvent
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateEnd(): void
+    {
+        $this->setEnd(
+            (\DateTime::createFromInterface($this->getStart()))->add(new \DateInterval('PT1H'))
+        );
     }
 
     #[ORM\PrePersist]
