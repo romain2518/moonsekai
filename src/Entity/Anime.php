@@ -292,7 +292,10 @@ class Anime
      */
     public function getSeasons(): Collection
     {
-        return $this->seasons;
+        $sortedArray = $this->seasons->toArray();
+        usort($sortedArray, fn ($a, $b) => $a->getNumber() <=> $b->getNumber());
+        
+        return new ArrayCollection($sortedArray);
     }
 
     public function addSeason(Season $season): self

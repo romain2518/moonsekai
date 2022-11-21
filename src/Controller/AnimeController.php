@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Anime;
 use App\Entity\Work;
 use App\Form\AnimeType;
-use App\Repository\AnimeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class AnimeController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_anime_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work = null, AnimeRepository $animeRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -27,7 +26,7 @@ class AnimeController extends AbstractController
 
         return $this->render('anime/index.html.twig', [
             'work' => $work,
-            'animes' => $animeRepository->findBy(['work' => $work], ['name' => 'ASC'], $limit, $offset),
+            'animes' => $work->getAnimes()->slice($offset, $limit),
         ]);
     }
 

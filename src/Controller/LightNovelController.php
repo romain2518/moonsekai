@@ -7,7 +7,6 @@ use App\Entity\LightNovel;
 use App\Entity\Work;
 use App\Form\LightNovelType;
 use App\Repository\CalendarEventRepository;
-use App\Repository\LightNovelRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +23,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class LightNovelController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_light-novel_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work = null, LightNovelRepository $lightNovelRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -32,7 +31,7 @@ class LightNovelController extends AbstractController
 
         return $this->render('light_novel/index.html.twig', [
             'work' => $work,
-            'light_novels' => $lightNovelRepository->findBy(['work' => $work], ['name' => 'ASC'], $limit, $offset),
+            'light_novels' => $work->getLightNovels()->slice($offset, $limit),
         ]);
     }
 

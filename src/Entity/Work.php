@@ -89,24 +89,30 @@ class Work
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'work', targetEntity: Movie::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $movies;
 
     #[ORM\OneToMany(mappedBy: 'work', targetEntity: LightNovel::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $lightNovels;
 
     #[ORM\OneToMany(mappedBy: 'work', targetEntity: WorkNews::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['title' => 'ASC'])]
     private Collection $workNews;
 
     #[ORM\OneToMany(mappedBy: 'work', targetEntity: Manga::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $mangas;
 
     #[ORM\OneToMany(mappedBy: 'work', targetEntity: Anime::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $animes;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'works')]
     private Collection $tags;
 
     #[ORM\ManyToMany(targetEntity: Platform::class, inversedBy: 'works')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $platforms;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'followedWorks')]
@@ -190,7 +196,9 @@ class Work
 
     public function getAlternativeName(): array
     {
-        return $this->alternativeName;
+        $sortedArray = $this->alternativeName;
+        sort($sortedArray);
+        return $sortedArray;
     }
 
     public function setAlternativeName(?array $alternativeName): self

@@ -194,7 +194,10 @@ class Volume
      */
     public function getChapters(): Collection
     {
-        return $this->chapters;
+        $sortedArray = $this->chapters->toArray();
+        usort($sortedArray, fn ($a, $b) => $a->getNumber() <=> $b->getNumber());
+        
+        return new ArrayCollection($sortedArray);
     }
 
     public function addChapter(Chapter $chapter): self

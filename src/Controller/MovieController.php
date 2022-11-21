@@ -7,7 +7,6 @@ use App\Entity\Movie;
 use App\Entity\Work;
 use App\Form\MovieType;
 use App\Repository\CalendarEventRepository;
-use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +23,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class MovieController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_movie_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work = null, MovieRepository $movieRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -32,7 +31,7 @@ class MovieController extends AbstractController
 
         return $this->render('movie/index.html.twig', [
             'work' => $work,
-            'movies' => $movieRepository->findBy(['work' => $work], ['name' => 'ASC'], $limit, $offset),
+            'movies' => $work->getMovies()->slice($offset, $limit),
         ]);
     }
 

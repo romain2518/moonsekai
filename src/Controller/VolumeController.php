@@ -9,7 +9,6 @@ use App\Entity\Volume;
 use App\Entity\Work;
 use App\Form\VolumeType;
 use App\Repository\CalendarEventRepository;
-use App\Repository\VolumeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class VolumeController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_volume_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work = null, Manga $manga = null, VolumeRepository $volumeRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, Manga $manga = null, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -41,7 +40,7 @@ class VolumeController extends AbstractController
         return $this->render('volume/index.html.twig', [
             'work' => $work,
             'manga' => $manga,
-            'volumes' => $volumeRepository->findBy(['manga' => $manga], ['number' => 'ASC'], $limit, $offset),
+            'volumes' => $manga->getVolumes()->slice($offset, $limit),
         ]);
     }
 

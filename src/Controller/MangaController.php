@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Manga;
 use App\Entity\Work;
 use App\Form\MangaType;
-use App\Repository\MangaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class MangaController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_manga_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work = null, MangaRepository $mangaRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -27,7 +26,7 @@ class MangaController extends AbstractController
 
         return $this->render('manga/index.html.twig', [
             'work' => $work,
-            'mangas' => $mangaRepository->findBy(['work' => $work], ['name' => 'ASC'], $limit, $offset),
+            'mangas' => $work->getMangas()->slice($offset, $limit),
         ]);
     }
 

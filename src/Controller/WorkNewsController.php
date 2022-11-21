@@ -7,7 +7,6 @@ use App\Entity\Work;
 use App\Entity\WorkNews;
 use App\Form\WorkNewsType;
 use App\Repository\CalendarEventRepository;
-use App\Repository\WorkNewsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +23,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class WorkNewsController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_work-news_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work = null, WorkNewsRepository $workNewsRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -32,7 +31,7 @@ class WorkNewsController extends AbstractController
 
         return $this->render('work_news/index.html.twig', [
             'work' => $work,
-            'work_news' => $workNewsRepository->findBy(['work' => $work], ['title' => 'ASC'], $limit, $offset),
+            'work_news' => $work->getWorkNews()->slice($offset, $limit),
         ]);
     }
 
