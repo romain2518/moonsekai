@@ -41,7 +41,7 @@ class SeasonController extends AbstractController
         return $this->render('season/index.html.twig', [
             'work' => $work,
             'anime' => $anime,
-            'seasons' => $seasonRepository->findBy(['anime' => $anime], ['number' => 'ASC'], $limit, $offset),
+            'seasons' => $seasonRepository->findByAnimeOrderedByCastedName($anime, $limit, $offset),
         ]);
     }
 

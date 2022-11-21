@@ -41,7 +41,7 @@ class VolumeController extends AbstractController
         return $this->render('volume/index.html.twig', [
             'work' => $work,
             'manga' => $manga,
-            'volumes' => $volumeRepository->findBy(['manga' => $manga], ['number' => 'ASC'], $limit, $offset),
+            'volumes' => $volumeRepository->findByMangaOrderedByCastedName($manga, $limit, $offset),
         ]);
     }
 

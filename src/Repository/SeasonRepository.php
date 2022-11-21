@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Anime;
 use App\Entity\Season;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,6 +38,22 @@ class SeasonRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return Season[] Returns an array of Season objects ordered by casted name
+     */
+    public function findByAnimeOrderedByCastedName(Anime $anime, ?int $limit, ?int $offset): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.anime = :anime')
+            ->setParameter('anime', $anime)
+            ->orderBy('CAST(s.number as decimal)', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**
