@@ -33,7 +33,7 @@ class Tag
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tags')]
+    #[ORM\ManyToOne(inversedBy: 'tags', fetch: 'EAGER')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 

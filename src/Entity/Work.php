@@ -84,7 +84,7 @@ class Work
     #[ORM\OneToMany(mappedBy: 'work', targetEntity: Progress::class, orphanRemoval: true)]
     private Collection $progress;
 
-    #[ORM\ManyToOne(inversedBy: 'works')]
+    #[ORM\ManyToOne(inversedBy: 'works', fetch: 'EAGER')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 
@@ -109,6 +109,7 @@ class Work
     private Collection $animes;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'works')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $tags;
 
     #[ORM\ManyToMany(targetEntity: Platform::class, inversedBy: 'works')]
