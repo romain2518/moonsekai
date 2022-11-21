@@ -472,6 +472,14 @@ class Work
      */
     public function getTags(): Collection
     {
+        // Tag 'Autre' must be the last of the collection
+        foreach ($this->tags->toArray() as $key => $tag) {
+            if ('Autre' === $tag->getName()) {
+                $this->tags->remove($key);
+                $this->tags->add($tag);
+            }
+        }
+
         return $this->tags;
     }
 

@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,40 @@ class TagRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return Tag[] Returns an array of Tag objects
+     * Tag with name 'Autre' will be the last item
+     */
+    public function findWithCustomOrder(int $limit = null, int $offset = null): array
+    {
+        $entityManager = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($entityManager);
+        $rsm->addRootEntityFromClassMetadata(Tag::class, 't');
+        
+        //? SQL
+        $sql = '
+            SELECT *, 1 AS custom_order FROM tag WHERE name != "Autre"
+            UNION ALL
+            SELECT *, 2 AS custom_order FROM tag WHERE name = "Autre"
+            ORDER BY custom_order, name
+        ';
+
+        $sql .= null !== $limit && $limit > 1 ? ' LIMIT :limit' : '';        
+        $sql .= null !== $offset && $offset > 1 ? ' OFFSET :offset' : '';
+
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+
+        if (null !== $limit && $limit > 1) {
+            $query->setParameter('limit', $limit, ParameterType::INTEGER);
+        }
+
+        if (null !== $offset && $offset > 1) {
+            $query->setParameter('offset', $offset, ParameterType::INTEGER);
+        }
+
+        return $query->getResult();
     }
 
 //    /**
