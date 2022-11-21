@@ -45,9 +45,10 @@ class WorkController extends AbstractController
         ]);
     }
 
-    #[Route('/work/{id}', name: 'app_work_show', methods: ['GET'])]
-    public function show(Work $work = null): Response
+    #[Route('/work/{id}', name: 'app_work_show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function show(int $id, WorkRepository $workRepository): Response
     {
+        $work = $workRepository->findOneEagerMode($id);
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
         }

@@ -56,6 +56,24 @@ class WorkRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findOneEagerMode(int $id): ?Work
+    {
+        return $this->createQueryBuilder('w')
+            ->addSelect('movies, lightNovels, workNews, mangas, animes, tags, platforms')
+            ->innerJoin('w.movies'      , 'movies')
+            ->innerJoin('w.lightNovels' , 'lightNovels')
+            ->innerJoin('w.workNews'    , 'workNews')
+            ->innerJoin('w.mangas'      , 'mangas')
+            ->innerJoin('w.animes'      , 'animes')
+            ->innerJoin('w.tags'        , 'tags')
+            ->innerJoin('w.platforms'   , 'platforms')
+            ->andWhere('w.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 //    /**
 //     * @return Work[] Returns an array of Work objects
 //     */
