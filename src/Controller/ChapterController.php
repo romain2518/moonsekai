@@ -9,7 +9,6 @@ use App\Entity\Volume;
 use App\Entity\Work;
 use App\Form\ChapterType;
 use App\Repository\CalendarEventRepository;
-use App\Repository\ChapterRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ChapterController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_chapter_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work = null, Manga $manga = null, Volume $volume = null, ChapterRepository $chapterRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, Manga $manga = null, Volume $volume = null, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -46,7 +45,7 @@ class ChapterController extends AbstractController
             'work' => $work,
             'manga' => $manga,
             'volume' => $volume,
-            'chapters' => $chapterRepository->findByVolumeOrderedByCastedName($volume, $limit, $offset),
+            'chapters' => $volume->getChapters()->slice($offset, $limit),
         ]);
     }
 

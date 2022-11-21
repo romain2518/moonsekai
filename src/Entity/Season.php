@@ -193,7 +193,10 @@ class Season
      */
     public function getEpisodes(): Collection
     {
-        return $this->episodes;
+        $sortedArray = $this->episodes->toArray();
+        usort($sortedArray, fn ($a, $b) => $a->getNumber() <=> $b->getNumber());
+        
+        return new ArrayCollection($sortedArray);
     }
 
     public function addEpisode(Episode $episode): self

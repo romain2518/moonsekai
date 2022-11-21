@@ -9,7 +9,6 @@ use App\Entity\Season;
 use App\Entity\Work;
 use App\Form\EpisodeType;
 use App\Repository\CalendarEventRepository;
-use App\Repository\EpisodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class EpisodeController extends AbstractController
 {
     #[Route('/{limit}/{offset}', name: 'app_episode_index', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
-    public function index(Work $work = null, Anime $anime = null, Season $season = null, EpisodeRepository $episodeRepository, int $limit = 20, int $offset = 0): Response
+    public function index(Work $work = null, Anime $anime = null, Season $season = null, int $limit = 20, int $offset = 0): Response
     {
         if (null === $work) {
             throw $this->createNotFoundException('Work not found.');
@@ -46,7 +45,7 @@ class EpisodeController extends AbstractController
             'work' => $work,
             'anime' => $anime,
             'season' => $season,
-            'episodes' => $episodeRepository->findBySeasonOrderedByCastedName($season, $limit, $offset),
+            'episodes' => $season->getEpisodes()->slice($offset, $limit),
         ]);
     }
 

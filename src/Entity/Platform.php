@@ -62,6 +62,7 @@ class Platform
     private ?User $user = null;
 
     #[ORM\ManyToMany(targetEntity: Work::class, mappedBy: 'platforms')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $works;
 
     public function __construct()

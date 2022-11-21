@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Manga;
 use App\Entity\Volume;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -38,22 +37,6 @@ class VolumeRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
-    }
-
-    /**
-     * @return Volume[] Returns an array of Volume objects ordered by casted name
-     */
-    public function findByMangaOrderedByCastedName(Manga $manga, ?int $limit, ?int $offset): array
-    {
-        return $this->createQueryBuilder('v')
-            ->andWhere('v.manga = :manga')
-            ->setParameter('manga', $manga)
-            ->orderBy('CAST(v.number as decimal)', 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult()
-        ;
     }
 
 //    /**

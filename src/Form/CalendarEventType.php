@@ -10,12 +10,8 @@ use App\Entity\Movie;
 use App\Entity\News;
 use App\Entity\Work;
 use App\Entity\WorkNews;
-use App\Repository\ChapterRepository;
-use App\Repository\EpisodeRepository;
-use App\Repository\LightNovelRepository;
-use App\Repository\MovieRepository;
 use App\Repository\NewsRepository;
-use App\Repository\WorkNewsRepository;
+use App\Repository\WorkRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -31,12 +27,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class CalendarEventType extends AbstractType
 {
     public function __construct(
+        private WorkRepository $workRepository,
         private NewsRepository $newsRepository,
-        private EpisodeRepository $episodeRepository,
-        private ChapterRepository $chapterRepository,
-        private LightNovelRepository $lightNovelRepository,
-        private MovieRepository $movieRepository,
-        private WorkNewsRepository $workNewsRepository,
     ) {
     }
 
@@ -119,62 +111,71 @@ class CalendarEventType extends AbstractType
                 }
                 break;
             case Movie::class:
-                foreach ($this->movieRepository->findBy(['work' => $work], ['name' => 'ASC']) as $movie) {
+                foreach ($work->getMovies() as $movie) {
                     $choices[$movie->getName()] = $movie->getId();
                 }
                 break;
             case LightNovel::class:
-                foreach ($this->lightNovelRepository->findBy(['work' => $work], ['name' => 'ASC']) as $lightNovel) {
+                foreach ($work->getLightNovels() as $lightNovel) {
                     $choices[$lightNovel->getName()] = $lightNovel->getId();
                 }
                 break;
             case WorkNews::class:
-                foreach ($this->workNewsRepository->findBy(['work' => $work], ['title' => 'ASC']) as $workNews) {
+                foreach ($work->getWorkNews() as $workNews) {
                     $choices[$workNews->getTitle()] = $workNews->getId();
                 }           
                 break;
             case Chapter::class:
-                $qb = $this->chapterRepository->createQueryBuilder('c')
-                    ->addSelect('v, m')
-                    ->innerJoin('c.volume', 'v' )
-                    ->innerJoin('v.manga', 'm')
-                    ->where('m.work = :work')
-                    ->addOrderBy('m.name', 'ASC')
-                    ->addOrderBy('CAST(v.number AS decimal)', 'ASC')
-                    ->addOrderBy('CAST(c.number AS decimal)', 'ASC')
+                $qb = $this->workRepository->createQueryBuilder('w')
+                    ->addSelect('m, v, c')
+                    ->innerJoin('w.mangas', 'm')
+                    ->innerJoin('m.volumes', 'v' )
+                    ->innerJoin('v.chapters', 'c' )
+                    ->where('w = :work')
                     ->setParameter('work', $work)
                     ->getQuery()
                 ;
-                $chapters = $qb->getResult();
 
-                foreach ($chapters as $chapter) {
-                    $choices[
-                        $chapter->getVolume()->getManga()->getName()][
-                            $chapter->getVolume()->getNumber() . ' ' . $chapter->getVolume()->getName()][
-                                $chapter->getNumber() . ' ' . $chapter->getName()
-                                ] = $chapter->getId();
+                /** @var Work $work */
+                $work = $qb->getOneOrNullResult();
+
+                foreach ($work->getMangas() as $manga) {
+                    foreach ($manga->getVolumes() as $volume) {
+                        foreach ($volume->getChapters() as $chapter) {
+                            $choices[
+                               $manga->getName()][
+                                    $volume->getNumber() . ' ' . $volume->getName()][
+                                        $chapter->getNumber() . ' ' . $chapter->getName()
+                                        ] = $chapter->getId();
+                        }
+                    }
                 }
                 break;
+
             case Episode::class:
-                $qb = $this->episodeRepository->createQueryBuilder('e')
-                    ->addSelect('s, a')
-                    ->innerJoin('e.season', 's' )
-                    ->innerJoin('s.anime', 'a')
-                    ->where('a.work = :work')
-                    ->addOrderBy('a.name', 'ASC')
-                    ->addOrderBy('CAST(s.number AS decimal)', 'ASC')
-                    ->addOrderBy('CAST(e.number AS decimal)', 'ASC')
+                $qb = $this->workRepository->createQueryBuilder('w')
+                    ->addSelect('a, s, e')
+                    ->innerJoin('w.animes', 'a')
+                    ->innerJoin('a.seasons', 's' )
+                    ->innerJoin('s.episodes', 'e' )
+                    ->where('w = :work')
                     ->setParameter('work', $work)
                     ->getQuery()
                 ;
-                $episodes = $qb->getResult();
 
-                foreach ($episodes as $episode) {
-                    $choices[
-                        $episode->getSeason()->getAnime()->getName()][
-                            $episode->getSeason()->getNumber() . ' ' . $episode->getSeason()->getName()][
-                                $episode->getNumber() . ' ' . $episode->getName()
-                                ] = $episode->getId();
+                /** @var Work $work */
+                $work = $qb->getOneOrNullResult();
+
+                foreach ($work->getAnimes() as $anime) {
+                    foreach ($anime->getSeasons() as $season) {
+                        foreach ($season->getEpisodes() as $episode) {
+                            $choices[
+                               $anime->getName()][
+                                    $season->getNumber() . ' ' . $season->getName()][
+                                        $episode->getNumber() . ' ' . $episode->getName()
+                                        ] = $episode->getId();
+                        }
+                    }
                 }
                 break;
         }

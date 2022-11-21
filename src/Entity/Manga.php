@@ -339,7 +339,10 @@ class Manga
      */
     public function getVolumes(): Collection
     {
-        return $this->volumes;
+        $sortedArray = $this->volumes->toArray();
+        usort($sortedArray, fn ($a, $b) => $a->getNumber() <=> $b->getNumber());
+        
+        return new ArrayCollection($sortedArray);
     }
 
     public function addVolume(Volume $volume): self

@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Episode;
-use App\Entity\Season;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -38,22 +37,6 @@ class EpisodeRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
-    }
-
-    /**
-     * @return Episode[] Returns an array of Episode objects ordered by casted name
-     */
-    public function findBySeasonOrderedByCastedName(Season $season, ?int $limit, ?int $offset): array
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.season = :season')
-            ->setParameter('season', $season)
-            ->orderBy('CAST(e.number as decimal)', 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult()
-        ;
     }
 
 //    /**
