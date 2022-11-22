@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\SearchFormType;
+use App\Repository\WorkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +44,7 @@ class MainController extends AbstractController
     }
 
     #[Route('/search/{limit}/{offset}', name: 'app_main_search', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET', 'POST'])]
-    public function search(Request $request, EntityManagerInterface $entityManager, int $limit = 20, int $offset = 0): Response
+    public function search(Request $request, EntityManagerInterface $entityManager, WorkRepository $workRepository, int $limit = 20, int $offset = 0): Response
     {
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
@@ -66,14 +67,64 @@ class MainController extends AbstractController
             }
 
             //? Basic search
-            $results = $entityManager
+            $qb = $entityManager
                 ->getRepository('App\\Entity\\' . $subject)
                 ->createQueryBuilder('r')
+            ;
+
+            $tags = $form->get('tags')->getData()->getValues();
+            if (!empty($tags) && in_array($subject, ['Anime', 'LightNovel', 'Manga', 'Movie', 'Work', 'WorkNews'])) {
+                /** The tag where must look like:
+                 *  WHERE 
+                 *      t.name = 'Guerre' 
+                 *      AND w.id IN (
+                 *          SELECT w.id FROM work w
+                 *          INNER JOIN work_tag ON w.id = work_id
+                 *          INNER JOIN tag t ON t.id = tag_id
+                 *          WHERE t.name = 'Autre'
+                 *      )
+                 */
+
+                //If subject is not Work, Work needs to be joined
+                if ('Work' !== $subject) {
+                    $qb
+                        ->innerJoin('r.work', 'w')
+                        ->innerJoin('w.tags', 't')
+                    ;
+                } else {
+                    $qb->innerJoin('r.tags', 't');
+                }
+                
+                $expr = $entityManager->getExpressionBuilder();
+                foreach ($tags as $key => $tag) {
+                    //First where statement is different
+                    if (0 === $key) {
+                        $qb->andWhere("t.name = :tag$key");
+                    } else {
+                        $qb->andWhere(
+                            $expr->in(
+                                'Work' !== $subject ? 'w.id' : 'r.id',
+                                $workRepository->createQueryBuilder("w$key")
+                                    ->innerJoin("w$key.tags", "t$key")
+                                    ->where("t$key.name = :tag$key")
+                                    ->getDQL()
+                                )
+                            );
+                    }
+
+                    $qb->setParameter("tag$key", $tag->getName());
+                }
+            }
+
+            $qb
                 ->andWhere("r.$field LIKE :query")
                 ->setParameter('query', '%' . $form->get('query')->getData() . '%')
                 ->orderBy("r.$field", 'ASC')
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)
+            ;
+
+            $results = $qb
                 ->getQuery()
                 ->getResult()
             ;
@@ -118,15 +169,15 @@ class MainController extends AbstractController
     public static function getSearchSubjects(): array
     {
         return [
-            'Anime' => 'Anime',
-            'Light novel' => 'LightNovel',
-            'Manga' => 'Manga',
-            'Movie' => 'Movie',
-            'News' => 'News',
-            'Platform' => 'Platform',
-            'User' => 'User',
-            'Work' => 'Work',
-            'Work news' => 'WorkNews',
+            'Anime'         => 'Anime',
+            'Light novel'   => 'LightNovel',
+            'Manga'         => 'Manga',
+            'Movie'         => 'Movie',
+            'News'          => 'News',
+            'Platform'      => 'Platform',
+            'User'          => 'User',
+            'Work'          => 'Work',
+            'Work news'     => 'WorkNews',
         ];
     }
 }
