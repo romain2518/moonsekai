@@ -20,3 +20,29 @@
         <p>no records found</p>
     {% endif %}
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        const module = {
+            init: function () {
+                module.subjectSelectElm = document.querySelector('#search_form_subject');
+                module.tagContainer = document.querySelector('#search_form_tags').parentElement;
+
+                module.subjectSelectElm.addEventListener('change', module.handleSelectChange);
+                //Triggering handler when DOM content is loaded to properly display the form
+                module.handleSelectChange();
+            },
+            subjectSelectElm: null,
+            tagContainer: null,
+            handleSelectChange: function () {
+                if (['Anime', 'LightNovel', 'Manga', 'Movie', 'Work', 'WorkNews'].includes(module.subjectSelectElm.value)) {
+                    module.tagContainer.style.display = 'block';
+                } else {
+                    module.tagContainer.style.display = 'none';
+                }
+            },
+        };
+
+        document.addEventListener('DOMContentLoaded', module.init);
+    </script>
+{% endblock %}

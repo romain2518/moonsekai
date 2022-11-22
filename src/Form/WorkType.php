@@ -5,7 +5,8 @@ namespace App\Form;
 use App\Entity\Platform;
 use App\Entity\Tag;
 use App\Entity\Work;
-use App\Service\RestCountriesApi;
+use App\Repository\TagRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,7 +20,7 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 class WorkType extends AbstractType
 {
     public function __construct(
-        private RestCountriesApi $restCountriesApi
+        private TagRepository $tagRepository,
     ) {
     }
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -49,12 +50,17 @@ class WorkType extends AbstractType
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
+                'choices' => $this->tagRepository->findWithCustomOrder(),
                 'choice_label' => 'name',
                 'multiple' => true,
                 'expanded' => true,
             ])
             ->add('platforms', EntityType::class, [
                 'class' => Platform::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->orderBy('p.name', 'ASC');
+                },
                 'choice_label' => 'name',
                 'multiple' => true,
                 'expanded' => true,

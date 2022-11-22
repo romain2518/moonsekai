@@ -7,11 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 #[ORM\Index(name: 'idx_search', fields: ['name'])]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['name'], message: 'A tag with this name already exists.')]
 class Tag
 {
     #[ORM\Id]
@@ -19,7 +21,7 @@ class Tag
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, unique: true)]
     #[Assert\Length(
         min: 1,
         max: 100,
