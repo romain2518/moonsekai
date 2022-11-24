@@ -469,7 +469,7 @@ class AppFixtures extends Fixture
                 [
                     'table' => $targetTable,
                     'id' => $targetId
-                ] = $moonsekaiProvider->getRandomCommentTarget($newsList, $movies, $lightNovels, $animes, $mangas, $users);
+                ] = $moonsekaiProvider->getRandomCommentTarget($newsList, $movies, $lightNovels, $animes, $mangas, $users, $workNewsList);
     
                 $comment
                     ->setUser($users[random_int(0,2)])
