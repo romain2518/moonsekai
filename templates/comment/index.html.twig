@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comment index{% endblock %}
+
+{% block body %}
+    <h1>Comment index</h1>
+
+    <p>Go to <a href="{{ targetUrl }}">{{ targetName }}</a></p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Message</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for comment in comments %}
+            <tr>
+                <td>{{ comment.message }}</td>
+                {% if comment.user is not null %}
+                    <td><a href="{{ path('app_user_profile', {'id': comment.user.id}) }}">{{ comment.user.pseudo }}</a></td>
+                {% else %}
+                    <td>Deleted or banned user</td>
+                {% endif %}
+                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ comment.updatedAt ? comment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    {{ include('comment/_delete_form.html.twig') }}
+                </td>
+            </tr>
+            {% if comment.answers is not empty %}
+                <tr>
+                    <td colspan="5">Answers :</td>
+                </tr>
+                {% for answer in comment.answers %}
+                    <tr>
+                        <td>{{ answer.message }}</td>
+                        {% if answer.user is not null %}
+                            <td><a href="{{ path('app_user_profile', {'id': answer.user.id}) }}">{{ answer.user.pseudo }}</a></td>
+                        {% else %}
+                            <td>Deleted or banned user</td>
+                        {% endif %}
+                        <td>{{ answer.createdAt ? answer.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ answer.updatedAt ? answer.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>
+                            {% include 'comment/_delete_form.html.twig' with {'comment': answer} %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="5">--------------</td>
+                </tr>
+            {% endif %}
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path('app_main_back-office') }}">Back to back-office</a>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const comment = {
+            init: function () {
+                document.querySelectorAll('form.comment-delete').forEach(form => {
+                    form.addEventListener('submit', comment.handleSubmit);
+                });
+            },
+            handleSubmit: function (event) {
+                event.preventDefault();
+
+                if (!confirm('Are you sure you want to delete this comment ?')) return;
+
+                const bodyFormData = new FormData(event.currentTarget);
+
+                comment.fetchDelete(
+                    event.currentTarget.action,
+                    bodyFormData
+                );
+            },
+            fetchDelete: async function (endpoint, body) {
+                const httpHeaders = new Headers();
+
+                let init = {
+                        method: 'POST',
+                        headers: httpHeaders,
+                        mode: 'cors',
+                        body: body,
+                        cache: 'default' 
+                    };
+
+                await fetch(endpoint, init)
+                    .then(function (response) {
+                        console.log(response.status);
+                        if (response.status === 204) {
+                            // Here is where comment element should be deleted (if the comment has answers, these should also be deleted)
+                        }
+                    })
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', comment.init);
+
+    </script>
+{% endblock %}

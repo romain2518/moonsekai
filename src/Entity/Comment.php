@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
@@ -17,6 +19,7 @@ class Comment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api_comment_show')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -25,31 +28,54 @@ class Comment
         max: 255,
     )]
     #[Assert\NotBlank]
+    #[Groups('api_comment_show')]
     private ?string $message = null;
 
     #[ORM\Column(length: 190)]
+    #[Groups('api_comment_show')]
     private ?string $targetTable = null;
 
     #[ORM\Column(options: [
         'unsigned' => true
     ])]
+    #[Groups('api_comment_show')]
     private ?int $targetId = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups('api_comment_show')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups('api_comment_show')]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('api_comment_show')]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'answers')]
+    #[Groups('api_comment_show')]
+    #[MaxDepth(1)]
     private ?self $parent = null;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true, fetch: 'EAGER')]
+    #[Groups('api_comment_show')]
+    #[MaxDepth(1)]
     private Collection $answers;
+
+    public static function getTargetTables(): array
+    {
+        return [
+            'anime' => Anime::class,
+            'light-novel' => LightNovel::class,
+            'manga' => Manga::class,
+            'movie' => Movie::class,
+            'news' => News::class,
+            'user' => User::class,
+            'work-news' => WorkNews::class,
+        ];
+    }
 
     public function __construct()
     {

@@ -32,6 +32,7 @@
                 <td>{{ light_novel.updatedAt ? light_novel.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_light-novel_edit', {'work_id': work.id, 'id': light_novel.id}) }}">edit</a>
+                    <a href="{{ path('app_comment_index', {'targetType': 'light-novel', 'targetId': light_novel.id}) }}">manage comments</a>
                     {{ include('light_novel/_delete_form.html.twig') }}
                 </td>
             </tr>

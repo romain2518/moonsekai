@@ -46,6 +46,7 @@
                         <option value="ROLE_USER">User</option>
                     </select>
                     <a href="#" class="CTA" data-id="{{ user.id }}" data-token="{{ csrf_token('manage' ~user.id) }}" data-action="ban">ban</a>
+                    <a href="{{ path('app_comment_index', {'targetType': 'user', 'targetId': user.id}) }}">manage comments</a>
                 </td>
             </tr>
         {% else %}
