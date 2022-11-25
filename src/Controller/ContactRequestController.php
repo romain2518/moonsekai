@@ -7,6 +7,7 @@ use App\Form\ContactRequestType;
 use App\Repository\ContactRequestRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,6 +40,45 @@ class ContactRequestController extends AbstractController
             'contact_request' => $contactRequest,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/back-office/contact-request/{id}/mark-as-{action}', name: 'app_contact-request_mark-as', 
+        requirements: ['action' => '^(processed)|(unprocessed)|(important)|(not-important)$'], 
+        methods: ['POST'], defaults: ['_format' => 'json']
+    )]
+    public function markAs(Request $request, ContactRequest $contactRequest = null, string $action, EntityManagerInterface $entityManager): JsonResponse
+    {
+        if ($contactRequest === null) {
+            return $this->json('Contact request not found', Response::HTTP_NOT_FOUND);
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid('mark' . $contactRequest->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
+        }
+
+        //? Edit the request
+        switch ($action) {
+            case 'processed':
+                $contactRequest->setIsProcessed(true);
+                break;
+            case 'unprocessed':
+                $contactRequest->setIsProcessed(false);
+                break;
+            case 'important':
+                $contactRequest->setIsImportant(true);
+                break;
+            case 'not-important':
+                $contactRequest->setIsImportant(false);
+                break;
+        }
+
+        //? Save
+        $entityManager->flush();
+        
+        return $this->json($contactRequest, Response::HTTP_PARTIAL_CONTENT);
     }
 
     #[Route('/{id}/delete', name: 'app_contact-request_delete', methods: ['POST'])]
