@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\CalendarEvent;
 use App\Entity\News;
+use App\Form\CommentType;
 use App\Form\NewsType;
 use App\Repository\CalendarEventRepository;
+use App\Repository\CommentRepository;
 use App\Repository\NewsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,8 +79,8 @@ class NewsController extends AbstractController
         ]);
     }
 
-    #[Route('news/{id}', name: 'app_news_show', methods: ['GET'])]
-    public function show(News $news = null): Response
+    #[Route('news/{id}/{limit}/{offset}', name: 'app_news_show', requirements: ['limit' => '\d+', 'offset' => '\d+'], methods: ['GET'])]
+    public function show(News $news = null, CommentRepository $commentRepository, int $limit = 20, int $offset = 0): Response
     {
         if (null === $news) {
             throw $this->createNotFoundException('News not found.');
@@ -86,6 +88,13 @@ class NewsController extends AbstractController
 
         return $this->render('news/show.html.twig', [
             'news' => $news,
+            'comments' => $commentRepository->findBy(
+                ['targetTable' => News::class, 'targetId' => $news->getId(), 'parent' => null], 
+                ['createdAt' => 'DESC'],
+                $limit,
+                $offset
+            ),
+            'form' => $this->createForm(CommentType::class, null, ['targetTable' => News::class, 'targetId' => $news->getId()])->createView(),
         ]);
     }
 

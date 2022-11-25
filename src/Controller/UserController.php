@@ -7,9 +7,11 @@ use App\Entity\Progress;
 use App\Entity\Rate;
 use App\Entity\User;
 use App\Entity\Work;
+use App\Form\CommentType;
 use App\Form\DeleteAccountFormType;
 use App\Form\EditLoginsType;
 use App\Form\EditProfileFormType;
+use App\Repository\CommentRepository;
 use App\Repository\ProgressRepository;
 use App\Repository\RateRepository;
 use App\Repository\UserRepository;
@@ -31,12 +33,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
-    {
+    public function __construct(
+        private EmailVerifier $emailVerifier
+    ) {
     }
 
-    #[Route('/profile/{id}', name: 'app_user_profile', requirements: ['id' => '\d+'])]
-    public function profile(UserRepository $userRepository, int $id = null): Response
+    #[Route('/profile/{id}/{limit}/{offset}', name: 'app_user_profile', requirements: ['id' => '\d+', 'limit' => '\d+', 'offset' => '\d+'])]
+    public function profile(UserRepository $userRepository, CommentRepository $commentRepository, int $id = null, int $limit = 20, int $offset = 0): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -52,6 +55,13 @@ class UserController extends AbstractController
 
         return $this->render('user/profile.html.twig', [
             'user' => $user,
+            'comments' => $commentRepository->findBy(
+                ['targetTable' => User::class, 'targetId' => $user->getId(), 'parent' => null], 
+                ['createdAt' => 'DESC'],
+                $limit,
+                $offset
+            ),
+            'form' => $this->createForm(CommentType::class, null, ['targetTable' => User::class, 'targetId' => $user->getId()])->createView(),
         ]);
     }
 

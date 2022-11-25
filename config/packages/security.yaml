@@ -39,8 +39,8 @@ security:
     access_control:
         #? User
         
-        - { path: ^/profile/[0-9]+$, roles: PUBLIC_ACCESS }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/profile/[0-9]+, roles: PUBLIC_ACCESS }
+        - { path: ^/profile$, roles: ROLE_USER }
 
         - { path: ^/edit-logins, roles: ROLE_USER }
         

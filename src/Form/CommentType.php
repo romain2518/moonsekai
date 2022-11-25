@@ -16,9 +16,11 @@ class CommentType extends AbstractType
             ->add('message')
             ->add('targetTable', HiddenType::class, [
                 'mapped' => false,
+                'data' => $options['targetTable'],
             ])
             ->add('targetId', HiddenType::class, [
                 'mapped' => false,
+                'data' => $options['targetId'],
             ])
             ->add('parentId', HiddenType::class, [
                 'mapped' => false
@@ -31,6 +33,8 @@ class CommentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Comment::class,
+            'targetTable' => null,
+            'targetId' => null,
         ]);
     }
 }
