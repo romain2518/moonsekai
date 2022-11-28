@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Send a contact request{% endblock %}
+
+{% block body %}
+    <h1>Send a contact request</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Send') }}</button>
+    {{ form_end(form) }}
+{% endblock %}
