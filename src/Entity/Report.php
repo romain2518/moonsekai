@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReportRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
@@ -14,6 +15,7 @@ class Report
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api_report_show')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -22,10 +24,12 @@ class Report
         max: 255,
     )]
     #[Assert\NotBlank]
+    #[Groups('api_report_show')]
     private ?string $message = null;
 
     #[ORM\Column(length: 60)]
     #[Assert\Choice(callback: 'getTypes')]
+    #[Groups('api_report_show')]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
@@ -34,22 +38,28 @@ class Report
         max: 255,
     )]
     #[Assert\Url]
+    #[Groups('api_report_show')]
     private ?string $url = null;
 
     #[ORM\Column]
+    #[Groups('api_report_show')]
     private ?bool $isProcessed = false;
 
     #[ORM\Column]
+    #[Groups('api_report_show')]
     private ?bool $isImportant = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups('api_report_show')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups('api_report_show')]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'reports', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('api_report_show')]
     private ?User $user = null;
 
     public static function getTypes(): array

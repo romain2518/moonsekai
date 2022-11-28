@@ -7,6 +7,7 @@ use App\Form\ReportType;
 use App\Repository\ReportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,11 +49,59 @@ class ReportController extends AbstractController
         ]);
     }
 
+    #[Route('/back-office/report/{id}/mark-as-{action}', name: 'app_report_mark-as', 
+        requirements: ['action' => '^(processed)|(unprocessed)|(important)|(not-important)$'], 
+        methods: ['POST'], defaults: ['_format' => 'json']
+    )]
+    public function markAs(Request $request, Report $report = null, string $action, EntityManagerInterface $entityManager): JsonResponse
+    {
+        if ($report === null) {
+            return $this->json('Report not found', Response::HTTP_NOT_FOUND);
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid('mark' . $report->getId(), $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
+        }
+
+        //? Edit the report
+        switch ($action) {
+            case 'processed':
+                $report->setIsProcessed(true);
+                break;
+            case 'unprocessed':
+                $report->setIsProcessed(false);
+                break;
+            case 'important':
+                $report->setIsImportant(true);
+                break;
+            case 'not-important':
+                $report->setIsImportant(false);
+                break;
+        }
+
+        //? Save
+        $entityManager->flush();
+        
+        return $this->json(
+            $report, 
+            Response::HTTP_PARTIAL_CONTENT,
+            [],
+            [
+                'groups' => [
+                    'api_report_show'
+                ]
+            ]
+        );
+    }
+
     #[Route('/back-office/report/{id}/delete', name: 'app_report_delete', methods: ['POST'])]
     public function delete(Request $request, Report $report = null, EntityManagerInterface $entityManager): Response
     {
         if (null === $report) {
-            throw $this->createNotFoundException('Contact request not found.');
+            throw $this->createNotFoundException('Report not found.');
         }
 
         if ($this->isCsrfTokenValid('delete'.$report->getId(), $request->request->get('_token'))) {

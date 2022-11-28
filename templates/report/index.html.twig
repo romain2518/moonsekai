@@ -11,8 +11,8 @@
                 <th>Message</th>
                 <th>Type</th>
                 <th>Url</th>
-                <th>IsProcessed</th>
                 <th>IsImportant</th>
+                <th>IsProcessed</th>
                 <th>Creator</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
@@ -25,8 +25,8 @@
                 <td>{{ report.message }}</td>
                 <td>{{ report.type }}</td>
                 <td>{{ report.url }}</td>
-                <td>{{ report.isProcessed ? 'Yes' : 'No' }}</td>
                 <td>{{ report.isImportant ? 'Yes' : 'No' }}</td>
+                <td>{{ report.isProcessed ? 'Yes' : 'No' }}</td>
                 <td><a href="{{ path('app_user_profile', {'id': report.user.id}) }}">{{ report.user.pseudo }}</a></td>
                 <td>{{ report.createdAt ? report.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ report.updatedAt ? report.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
@@ -52,4 +52,66 @@
         </tbody>
     </table>
     <a href="{{ path('app_main_back-office') }}">Back to back-office</a>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const actions = {
+            init: function () {
+                document.querySelectorAll('.CTA').forEach(btn => {
+                    btn.addEventListener('click', actions.handleClick);
+                });
+            },
+            handleClick: function (event) {
+                event.preventDefault();
+
+                const   reportId  = event.currentTarget.dataset.id,
+                        action  = event.currentTarget.dataset.action
+                        token   = event.currentTarget.dataset.token;
+
+                const bodyFormData = new FormData();
+                bodyFormData.append('token', token);
+
+                const status = actions.fetchAction(
+                    reportId,
+                    action,
+                    bodyFormData
+                );
+
+                if (status !== 206) return;
+
+                // Change value
+                switch (action) {
+                    case 'processed':
+                        break;
+                    case 'unprocessed':
+                        break;
+                    case 'important':
+                        break;
+                    case 'not-important':
+                        break;
+                }
+            },
+            fetchAction: async function (reportId, action, body) {
+                const httpHeaders = new Headers();
+
+                let init = {
+                        method: 'POST',
+                        headers: httpHeaders,
+                        mode: 'cors',
+                        body: body,
+                        cache: 'default' 
+                    };
+
+                await fetch(`/back-office/report/${reportId}/mark-as-${action}`, init)
+                    .then(function (response) {
+                        console.log(response.status);
+                        return response.status;
+                    })
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', actions.init);
+
+    </script>
 {% endblock %}

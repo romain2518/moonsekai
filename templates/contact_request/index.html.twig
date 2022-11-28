@@ -68,11 +68,25 @@
                 const bodyFormData = new FormData();
                 bodyFormData.append('token', token);
 
-                actions.fetchAction(
+                const status = actions.fetchAction(
                     requestId,
                     action,
                     bodyFormData
                 );
+
+                if (status !== 206) return;
+
+                // Change value
+                switch (action) {
+                    case 'processed':
+                        break;
+                    case 'unprocessed':
+                        break;
+                    case 'important':
+                        break;
+                    case 'not-important':
+                        break;
+                }
             },
             fetchAction: async function (requestId, action, body) {
                 const httpHeaders = new Headers();
@@ -88,6 +102,7 @@
                 await fetch(`/back-office/contact-request/${requestId}/mark-as-${action}`, init)
                     .then(function (response) {
                         console.log(response.status);
+                        return response.status;
                     })
             }
         }
