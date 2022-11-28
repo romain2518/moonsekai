@@ -29,6 +29,10 @@ class ReportController extends AbstractController
         $form = $this->createForm(ReportType::class, $report);
         $form->handleRequest($request);
 
+        if (empty($form->get('url')->getData())) {
+            $form->get('url')->setData($request->server->get('HTTP_REFERER'));
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $report->setUser($user);
 
