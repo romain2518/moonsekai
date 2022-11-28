@@ -21,7 +21,7 @@ class ContactRequest
         min: 3,
         max: 180,
     )]
-    #[Assert\Email()]
+    #[Assert\Email]
     #[Assert\NotBlank]
     private ?string $applicantEmail = null;
 
