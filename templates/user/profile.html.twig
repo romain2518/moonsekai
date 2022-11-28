@@ -12,7 +12,7 @@
     <p>Biography : {{ user.biography }}</p>
     <p>CreatedAt : {{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</p>
 
-    {% if user.id is same as(app.user.id) %}
+    {% if app.user is not null and user.id is same as(app.user.id) %}
         <a href="#" class="CTA" data-token="{{ csrf_token('subscribe-newsletter' ~ user.id) }}" data-action="subscribe-newsletter">subscribe newsletter</a><br>
         <a href="#" class="CTA" data-token="{{ csrf_token('unsubscribe-newsletter' ~ user.id) }}" data-action="unsubscribe-newsletter">unsubscribe newsletter</a><br>
         <a href="{{ path('app_user_edit-profile') }}">Edit profile</a><br>
@@ -23,6 +23,28 @@
                 Delete account
         </a>
     {% endif %}
+
+    <h2>Add comment</h2>
+    {% if app.user is not null and app.user.isMuted == false %}
+        {% include "comment/_form.html.twig" with {
+            'form': form,
+            'message': '', 
+            'parentId': null
+            }
+        %}
+    {% else %}
+        <p>Please login to post a comment</p>
+    {% endif %}
+
+    <h2>Comments</h2>
+    {% for comment in comments %}
+        <p>{{ comment.message }} By {{ comment.user.pseudo }}<p>
+        {% for answer in comment.answers %}
+            <p style="margin-left: 20px;">{{ answer.message }} By {{ answer.user.pseudo }}<p>        
+        {% endfor %}
+    {% else %}
+        No comment found
+    {% endfor %}
 
     <script>
         const actions = {

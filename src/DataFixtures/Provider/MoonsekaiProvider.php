@@ -95,10 +95,11 @@ class MoonsekaiProvider
     public function getRandomCommentTarget(
         array $newsList, array $movies,
         array $lightNovels, array $animes,
-        array $mangas, array $users
+        array $mangas, array $users,
+        array $workNewsList
         )
     {
-        $allObjects = array_merge($newsList, $movies, $lightNovels, $animes, $mangas, $users);
+        $allObjects = array_merge($newsList, $movies, $lightNovels, $animes, $mangas, $users, $workNewsList);
         $randomTarget = $allObjects[array_rand($allObjects)];
 
         return [

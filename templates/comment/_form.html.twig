@@ -1,0 +1,6 @@
+{{ form_start(form, {'action': path('app_comment_new')}) }}
+    {{ form_widget(form.message, {'value': message}) }}
+    {{ form_widget(form.parentId, {'value': parentId}) }}
+    {{ form_rest(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

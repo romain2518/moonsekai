@@ -18,4 +18,28 @@
     </p>
     <p>CreatedAt : {{ news.createdAt ? news.createdAt|date('Y-m-d H:i:s') : '' }}</p>
     <p>UpdatedAt : {{ news.updatedAt ? news.updatedAt|date('Y-m-d H:i:s') : '' }}</p>
+    
+    <h2>Add comment</h2>
+    {% if app.user is null %}
+        <p>Please login to post a comment</p>
+    {% elseif app.user.isMuted %}
+        <p>You have been silenced, you cannot post a comment.</p>
+    {% else %}
+        {% include "comment/_form.html.twig" with {
+            'form': form,
+            'message': '', 
+            'parentId': null
+            }
+        %}
+    {% endif %}
+
+    <h2>Comments :</h2>
+    {% for comment in comments %}
+        <p>{{ comment.message }} By {{ comment.user.pseudo }}<p>
+        {% for answer in comment.answers %}
+            <p style="margin-left: 20px;">{{ answer.message }} By {{ answer.user.pseudo }}<p>        
+        {% endfor %}
+    {% else %}
+        No comment found
+    {% endfor %}
 {% endblock %}

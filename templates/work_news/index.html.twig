@@ -32,6 +32,7 @@
                 <td>{{ work_news.updatedAt ? work_news.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_work-news_edit', {'work_id': work.id, 'id': work_news.id}) }}">edit</a>
+                    <a href="{{ path('app_comment_index', {'targetType': 'work-news', 'targetId': work_news.id}) }}">manage comments</a>
                     {{ include('work_news/_delete_form.html.twig') }}
                 </td>
             </tr>
