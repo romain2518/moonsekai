@@ -25,11 +25,7 @@ class Report
     private ?string $message = null;
 
     #[ORM\Column(length: 60)]
-    #[Assert\Choice([
-        'user behaviour',
-        'minor error',
-        'bug',
-    ])]
+    #[Assert\Choice(callback: 'getTypes')]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
@@ -55,6 +51,15 @@ class Report
     #[ORM\ManyToOne(inversedBy: 'reports', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    public static function getTypes(): array
+    {
+        return [
+            'user behaviour',
+            'minor error',
+            'bug',
+        ];
+    }
 
     public function getId(): ?int
     {

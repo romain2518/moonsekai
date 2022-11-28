@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Report index{% endblock %}
+
+{% block body %}
+    <h1>Report index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Message</th>
+                <th>Type</th>
+                <th>Url</th>
+                <th>IsProcessed</th>
+                <th>IsImportant</th>
+                <th>Creator</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for report in reports %}
+            <tr>
+                <td>{{ report.message }}</td>
+                <td>{{ report.type }}</td>
+                <td>{{ report.url }}</td>
+                <td>{{ report.isProcessed ? 'Yes' : 'No' }}</td>
+                <td>{{ report.isImportant ? 'Yes' : 'No' }}</td>
+                <td><a href="{{ path('app_user_profile', {'id': report.user.id}) }}">{{ report.user.pseudo }}</a></td>
+                <td>{{ report.createdAt ? report.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ report.updatedAt ? report.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    {{ include('report/_delete_form.html.twig') }}
+                    {% if report.isImportant %}
+                        <a href="#" class="CTA" data-id="{{ report.id }}" data-token="{{ csrf_token('mark' ~ report.id) }}" data-action="not-important">Mark as not important</a>                        
+                    {% else %}
+                        <a href="#" class="CTA" data-id="{{ report.id }}" data-token="{{ csrf_token('mark' ~ report.id) }}" data-action="important">Mark as important</a>                        
+                    {% endif %}
+                    {% if report.isProcessed %}
+                        <a href="#" class="CTA" data-id="{{ report.id }}" data-token="{{ csrf_token('mark' ~ report.id) }}" data-action="unprocessed">Mark as unprocessed</a>                                                
+                    {% else %}
+                        <a href="#" class="CTA" data-id="{{ report.id }}" data-token="{{ csrf_token('mark' ~ report.id) }}" data-action="processed">Mark as processed</a>                                                
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path('app_main_back-office') }}">Back to back-office</a>
+{% endblock %}
