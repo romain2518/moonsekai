@@ -2,28 +2,21 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Comment;
+use App\Entity\Message;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class CommentVoter extends Voter
+class MessageVoter extends Voter
 {
-    public const EDIT = 'COMMENT_EDIT';
-    public const DELETE = 'COMMENT_DELETE';
-
-    public function __construct(
-        private Security $security
-    ) {
-    }
+    public const OWNER = 'MESSAGE_OWNER';
 
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::DELETE])
-            && $subject instanceof \App\Entity\Comment;
+        return in_array($attribute, [self::OWNER])
+            && $subject instanceof \App\Entity\Message;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -36,13 +29,9 @@ class CommentVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case self::EDIT:
-                /** @var Comment $subject */
-                return $subject->getUser() === $user; // Returns true if the comment author is the logged in user
-                break;
-            case self::DELETE:
-                // Returns true if the comment author is the logged in user OR if logged in user is granted the role moderator
-                return $subject->getUser() === $user || $this->security->isGranted('ROLE_MODERATOR');
+            case self::OWNER:
+                 /** @var Message $subject */
+                 return $subject->getUserSender() === $user; // Returns true if the message sender is the logged in user
                 break;
         }
 

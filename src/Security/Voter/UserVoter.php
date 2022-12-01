@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserVoter extends Voter
 {
+    public const NOT_MUTED = 'USER_NOT_MUTED';
     public const EDIT_SELF = 'USER_EDIT_SELF';
     public const EDIT_USER_MANAGE = 'USER_MANAGE';
     public const EDIT_USER_RANK = 'USER_EDIT_RANK';
@@ -26,8 +27,9 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return (in_array($attribute, [self::EDIT_SELF, self::EDIT_USER_MANAGE])
-            && $subject instanceof \App\Entity\User)
+        return self::NOT_MUTED === $attribute && null === $subject
+            || (in_array($attribute, [self::EDIT_SELF, self::EDIT_USER_MANAGE])
+                && $subject instanceof \App\Entity\User)
             || ($attribute === self::EDIT_USER_RANK && is_string($subject));
     }
 
@@ -41,6 +43,10 @@ class UserVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            case self::NOT_MUTED:
+                /** @var User $user */
+                return !$user->isMuted(); // Returns true if the logged in user is not muted
+                break;
             case self::EDIT_SELF:
                 /** @var User $subject */
                 return $user === $subject; // Return true if the requested user is the one logged in

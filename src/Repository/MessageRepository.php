@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Message;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,24 @@ class MessageRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return Message[] Returns an array of Message objects
+     */
+    public function findByUsers(User $user1, User $user2, $limit = null, $offset = null): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.userSender = :user1 AND m.userReceiver = :user2')
+            ->orWhere('m.userSender = :user2 AND m.userReceiver = :user1')
+            ->setParameter('user1', $user1)
+            ->setParameter('user2', $user2)
+            ->orderBy('m.createdAt', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**

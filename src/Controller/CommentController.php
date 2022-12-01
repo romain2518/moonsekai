@@ -87,7 +87,7 @@ class CommentController extends AbstractController
         }
 
         //? Checking if user is not muted
-        $this->denyAccessUnlessGranted('COMMENT_NOT_MUTED');
+        $this->denyAccessUnlessGranted('USER_NOT_MUTED');
 
         //? Checking if target exists
         if (!in_array($form->get('targetTable')->getData(), Comment::getTargetTables())) {
@@ -159,7 +159,7 @@ class CommentController extends AbstractController
         }
 
         //? Checking if user is not muted and if logged in user is the author of the comment
-        $this->denyAccessUnlessGranted('COMMENT_NOT_MUTED');
+        $this->denyAccessUnlessGranted('USER_NOT_MUTED');
         $this->denyAccessUnlessGranted('COMMENT_EDIT', $comment);
 
         $comment->setUser($user);

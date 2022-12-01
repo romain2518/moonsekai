@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -54,6 +56,35 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
 
         $this->add($user, true);
+    }
+
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function findConversationsUsersByUser(User $user): array
+    {
+        $entityManager = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($entityManager);
+        $rsm->addRootEntityFromClassMetadata(User::class, 'u');
+
+        $sql = '
+            SELECT user.*
+            FROM user
+            INNER JOIN
+            (
+                SELECT max(created_at) latest_created_at, user_sender_id, user_receiver_id
+                FROM message
+                WHERE user_sender_id = :user_id OR user_receiver_id = :user_id
+                GROUP BY (user_sender_id + user_receiver_id - :user_id)
+            ) m2
+            ON user.id = (user_sender_id + user_receiver_id - :user_id)
+            ORDER BY latest_created_at
+        ';
+
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $query->setParameter('user_id', $user->getId(), ParameterType::INTEGER);
+
+        return $query->getResult();
     }
 
 //    /**
