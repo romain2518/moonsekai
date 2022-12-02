@@ -9,13 +9,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class MessageVoter extends Voter
 {
-    public const OWNER = 'MESSAGE_OWNER';
+    public const SENDER = 'MESSAGE_SENDER';
+    public const RECEIVER = 'MESSAGE_RECEIVER';
 
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::OWNER])
+        return in_array($attribute, [self::SENDER, self::RECEIVER])
             && $subject instanceof \App\Entity\Message;
     }
 
@@ -29,9 +30,13 @@ class MessageVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case self::OWNER:
+            case self::SENDER:
                  /** @var Message $subject */
                  return $subject->getUserSender() === $user; // Returns true if the message sender is the logged in user
+                break;
+            case self::RECEIVER:
+                /** @var Message $subject */
+                return $subject->getUserReceiver() === $user; // Returns true if the message receiver is the logged in user
                 break;
         }
 

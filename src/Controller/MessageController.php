@@ -131,7 +131,7 @@ class MessageController extends AbstractController
 
         //? Checking if user is not muted and if user is the message sender
         $this->denyAccessUnlessGranted('USER_NOT_MUTED');
-        $this->denyAccessUnlessGranted('MESSAGE_OWNER', $message);
+        $this->denyAccessUnlessGranted('MESSAGE_SENDER', $message);
 
         $entityManager->flush();
         
@@ -155,7 +155,7 @@ class MessageController extends AbstractController
         }
 
         //? Checking if logged in user is the message sender
-        $this->denyAccessUnlessGranted('MESSAGE_OWNER', $message);
+        $this->denyAccessUnlessGranted('MESSAGE_SENDER', $message);
 
         //? Checking CSRF Token
         $token = $request->request->get('_token');
@@ -167,6 +167,63 @@ class MessageController extends AbstractController
         $entityManager->remove($message);
         $entityManager->flush();
 
+        return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/{user_receiver_id}/mark-as-read', name: 'app_message_mark-conversation-as-read', methods: ['POST'], defaults: ['_format' => 'json'])]
+    #[Entity('userReceiver', expr: 'repository.find(user_receiver_id)')]
+    public function markConversationAsRead(
+        Request $request, EntityManagerInterface $entityManager, 
+        MessageRepository $messageRepository, User $userReceiver = null, 
+        UserInterface $user
+        ): JsonResponse
+    {
+        if (null === $userReceiver) {
+            throw $this->createNotFoundException('Receiver not found.');
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid('mark conversation as read', $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
+        }
+
+        //? Getting & editing messages (targeted messages only are the ones sended by the other user, here $userReceiver)
+        $messages = $messageRepository->findBy(['userSender' => $userReceiver, 'userReceiver' => $user, 'isRead' => false]);
+        foreach ($messages as $message) {
+            $message->setIsRead(true);
+        }
+
+        //? Save
+        $entityManager->flush();
+        
+        return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/{id}/mark-as-unread', name: 'app_message_mark-message-as-unread', methods: ['PÖST'], defaults: ['_format' => 'json'])]
+    public function markMessageAsUnread(Request $request, EntityManagerInterface $entityManager, Message $message = null): JsonResponse
+    {
+        if (null === $message) {
+            throw $this->createNotFoundException('Message not found.');
+        }
+
+        //? Checking CSRF Token
+        $token = $request->request->get('token');
+        $isValidToken = $this->isCsrfTokenValid('mark message as unread', $token);
+        if (!$isValidToken) {
+            return $this->json('Invalid token', Response::HTTP_FORBIDDEN);
+        }
+
+        //? Checking if logged in user is the message receiver
+        $this->denyAccessUnlessGranted('MESSAGE_RECEIVER', $message);
+
+        //? Editing message
+        $message->setIsRead(false);
+
+        //? Save
+        $entityManager->flush();
+        
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }
