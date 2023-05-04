@@ -1,5 +1,7 @@
 # Moonsekai
 
+[En développement]
+
 Moonsekai est une application de nature informative sur le thème des animes, des mangas et de tout l'univers qui leur est lié. Les visiteurs peuvent voir les actualités et les ressources de leurs œuvres préférées. En se créant un compte, ils peuvent aussi interagir entre eux à l'aide d'un système de commentaires et d'une messagerie instantanée.
 
 ## Documentation
